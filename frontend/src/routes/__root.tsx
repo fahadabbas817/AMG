@@ -15,14 +15,12 @@ export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
   beforeLoad: async ({ location }) => {
-    // Import auth store dynamically to avoid circular dependencies
+    // Import auth store and service dynamically to avoid circular dependencies
     const { useAuthStore } = await import('@/stores/auth-store')
+    const { AuthService } = await import('@/services/auth')
     const { auth } = useAuthStore.getState()
 
-    // Check if user is authenticated (has token and user data)
-    const isAuthenticated = auth.accessToken && auth.user
-
-    // Allow access to auth routes without authentication
+    // Define auth routes
     const isAuthRoute =
       location.pathname.startsWith('/(auth)') ||
       location.pathname.includes('/sign-in') ||
@@ -30,9 +28,50 @@ export const Route = createRootRouteWithContext<{
       location.pathname.includes('/forgot-password') ||
       location.pathname.includes('/otp')
 
-    // If not authenticated and trying to access protected route, redirect to sign-in
-    if (!isAuthenticated && !isAuthRoute) {
-      throw redirect({ to: '/sign-in' })
+    // If user is already in auth store, they're authenticated
+    if (auth.user && auth.accessToken) {
+      // If authenticated user tries to access auth routes, redirect to dashboard
+      if (isAuthRoute) {
+        const role = Array.isArray(auth.user.role)
+          ? auth.user.role[0]
+          : auth.user.role
+        const targetPath = role === 'vendor' ? '/vendor' : '/'
+        throw redirect({ to: targetPath })
+      }
+      return // Allow access to protected routes
+    }
+
+    // Try to fetch profile if we have a cookie (auto-login)
+    try {
+      console.log('🔍 Checking for existing session...')
+      const profileData = await AuthService.getProfile()
+
+      console.log('✅ Session found, auto-logging in:', profileData)
+
+      // Profile exists, user is authenticated
+      const user = {
+        userId: profileData.userId,
+        email: profileData.email,
+        role: profileData.role.toLowerCase(),
+        exp: Date.now() + 2 * 60 * 60 * 1000,
+      }
+
+      // Store user in auth store
+      auth.setUser(user)
+      auth.setAccessToken('token-in-cookie')
+
+      // Redirect to appropriate dashboard if on auth route
+      if (isAuthRoute) {
+        const targetPath = user.role === 'vendor' ? '/vendor' : '/'
+        console.log('🚀 Redirecting authenticated user to:', targetPath)
+        throw redirect({ to: targetPath })
+      }
+    } catch (error) {
+      console.log('❌ No valid session found')
+      // No valid session, user needs to login
+      if (!isAuthRoute) {
+        throw redirect({ to: '/sign-in' })
+      }
     }
   },
   component: () => {

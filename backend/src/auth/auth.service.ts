@@ -46,8 +46,14 @@ export class AuthService {
     return null;
   }
 
-  async validateVendor(email: string, pass: string): Promise<any> {
-    const user = await this.prisma.vendor.findUnique({ where: { email } });
+  async validateVendor(
+    email: string,
+    pass: string,
+    vendorId: string,
+  ): Promise<any> {
+    const user = await this.prisma.vendor.findUnique({
+      where: { email, vendorNumber: vendorId },
+    });
     if (user && (await bcrypt.compare(pass, user.password))) {
       const { password, ...result } = user;
       return { ...result, role: 'VENDOR' };

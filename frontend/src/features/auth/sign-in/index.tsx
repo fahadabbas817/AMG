@@ -25,16 +25,16 @@ export function SignIn() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue='admin' className='w-full'>
+          <Tabs defaultValue='vendor' className='w-full'>
             <TabsList className='mb-4 grid w-full grid-cols-2'>
-              <TabsTrigger value='admin'>Admin</TabsTrigger>
               <TabsTrigger value='vendor'>Vendor</TabsTrigger>
+              <TabsTrigger value='admin'>Admin</TabsTrigger>
             </TabsList>
-            <TabsContent value='admin'>
-              <UserAuthForm redirectTo={redirect} userType='admin' />
-            </TabsContent>
             <TabsContent value='vendor'>
               <UserAuthForm redirectTo={redirect} userType='vendor' />
+            </TabsContent>
+            <TabsContent value='admin'>
+              <UserAuthForm redirectTo={redirect} userType='admin' />
             </TabsContent>
           </Tabs>
         </CardContent>

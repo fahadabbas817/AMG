@@ -3,10 +3,11 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
+import { AuthService } from '@/services/auth'
 import { Loader2, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
-import { sleep, cn } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -36,7 +37,7 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
 export function UserAuthForm({
   className,
   redirectTo,
-  userType = 'admin',
+  userType = 'vendor',
   ...props
 }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false)
@@ -52,7 +53,7 @@ export function UserAuthForm({
     },
   })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     // Validate vendor ID for vendors
     if (userType === 'vendor' && !data.vendorId) {
       form.setError('vendorId', {
@@ -64,44 +65,78 @@ export function UserAuthForm({
 
     setIsLoading(true)
 
-    toast.promise(sleep(2000), {
-      loading: 'Signing in...',
-      success: () => {
-        setIsLoading(false)
+    try {
+      let response: any
 
-        // Mock successful authentication response
-        const mockResponse = {
-          userId: 1,
+      console.log('🔐 Attempting login with:', {
+        userType,
+        email: data.email,
+        hasPassword: !!data.password,
+        vendorId: data.vendorId || 'N/A',
+      })
+
+      // Call appropriate API based on user type
+      if (userType === 'admin') {
+        response = await AuthService.loginAdmin({
           email: data.email,
-          role: userType,
+          password: data.password,
+        })
+      } else {
+        response = await AuthService.loginVendor({
+          email: data.email,
+          password: data.password,
           vendorId: data.vendorId,
-        }
+        })
+      }
 
-        const mockUser = {
-          userId: mockResponse.userId,
-          email: mockResponse.email,
-          role: mockResponse.role,
-          exp: Date.now() + 24 * 60 * 60 * 1000,
-        }
+      console.log('✅ Login response:', response)
 
-        // Set user and access token
-        auth.setUser(mockUser)
-        auth.setAccessToken('mock-access-token')
+      // Backend now returns: { message, user: { id, role, email } }
+      const userData = response.user
 
-        // Redirect logic
-        let targetPath = '/'
-        if (mockUser.role === 'vendor') {
-          targetPath = '/vendor'
-        } else if (mockUser.role === 'admin') {
-          targetPath = '/'
-        }
+      // Store user data in auth store
+      const user = {
+        userId: userData.id,
+        email: userData.email,
+        role: userData.role.toLowerCase(), // Convert 'ADMIN' to 'admin', 'VENDOR' to 'vendor'
+        exp: Date.now() + 2 * 60 * 60 * 1000, // 2 hours (matching cookie expiry)
+      }
 
-        navigate({ to: targetPath, replace: true })
+      console.log('💾 Storing user:', user)
 
-        return `Welcome back, ${data.email}!`
-      },
-      error: 'Error',
-    })
+      auth.setUser(user)
+      auth.setAccessToken('token-stored-in-cookie') // Token is in httpOnly cookie
+
+      // Show success toast
+      toast.success(`Welcome back, ${userData.email}!`)
+
+      // Redirect based on role
+      const targetPath = user.role === 'vendor' ? '/vendor' : '/'
+      console.log('🚀 Redirecting to:', targetPath)
+
+      navigate({ to: targetPath, replace: true })
+    } catch (error: any) {
+      setIsLoading(false)
+
+      console.error('❌ Login error:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        fullError: error,
+      })
+
+      // Handle different error scenarios
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        'Invalid credentials. Please try again.'
+
+      toast.error(errorMessage)
+
+      // Clear form password on error
+      form.setValue('password', '')
+    }
   }
 
   return (
@@ -118,7 +153,11 @@ export function UserAuthForm({
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder='name@example.com' {...field} />
+                <Input
+                  placeholder='name@example.com'
+                  {...field}
+                  disabled={isLoading}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -134,7 +173,11 @@ export function UserAuthForm({
               <FormItem>
                 <FormLabel>Vendor ID</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter your vendor ID' {...field} />
+                  <Input
+                    placeholder='Enter your vendor ID'
+                    {...field}
+                    disabled={isLoading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -149,7 +192,11 @@ export function UserAuthForm({
             <FormItem className='relative'>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <PasswordInput placeholder='********' {...field} />
+                <PasswordInput
+                  placeholder='********'
+                  {...field}
+                  disabled={isLoading}
+                />
               </FormControl>
               <FormMessage />
               <Link
