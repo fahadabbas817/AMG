@@ -1,0 +1,127 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../prisma/generated"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String // Hashed
+  createdAt DateTime @default(now())
+}
+
+model Vendor {
+  id           String  @id @default(uuid())
+  vendorNumber String  @unique // e.g., "001"
+  companyName  String
+  contactName  String
+  email        String  @unique
+  password     String // Hashed
+  phone        String?
+
+  // Critical for matching CSV rows to this vendor
+  subLabels String[] // e.g. ["PornMegaLoad", "Score", "PornMegaWorld"]
+
+  // Banking Info
+  bankDetails Json? // { bankName, accountNo, routing, iban, swift, currency, method }
+  qbVendorId  String? // QuickBooks Link
+
+  platformSplits PlatformSplit[]
+  revenueRecords RevenueRecord[]
+  payouts        Payout[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Platform {
+  id            String  @id @default(uuid())
+  name          String  @unique // The "Display Name" (e.g. "AEBN")
+  corporateName String? // The legal/internal name (e.g. "Data Tech")
+  defaultSplit  Float // Default AMG Commission (e.g., 0.25 for 25%)
+
+  splits         PlatformSplit[]
+  revenueRecords RevenueRecord[]
+}
+
+// Custom split per Vendor per Platform
+model PlatformSplit {
+  id         String   @id @default(uuid())
+  vendorId   String
+  vendor     Vendor   @relation(fields: [vendorId], references: [id])
+  platformId String
+  platform   Platform @relation(fields: [platformId], references: [id])
+
+  commissionRate Float // Overrides Platform.defaultSplit if set
+
+  @@unique([vendorId, platformId])
+}
+
+model RevenueReport {
+  id         String   @id @default(uuid())
+  filename   String
+  uploadDate DateTime @default(now())
+  status     String // PENDING, PROCESSED, ERROR
+  rawFileUrl String
+  platformId String? // If the file is specific to one platform
+
+  records RevenueRecord[]
+}
+
+model RevenueRecord {
+  id String @id @default(uuid())
+
+  // Optional because records can be created MANUALLY without a file
+  reportId String?
+  report   RevenueReport? @relation(fields: [reportId], references: [id])
+
+  vendorId String
+  vendor   Vendor @relation(fields: [vendorId], references: [id])
+
+  platformId String
+  platform   Platform @relation(fields: [platformId], references: [id])
+
+  periodStart DateTime // e.g. 2025-06-01
+  periodEnd   DateTime // e.g. 2025-06-30
+
+  // Financials
+  grossRevenue  Decimal
+  amgCommission Decimal
+  vendorNet     Decimal
+
+  // Parsing Metadata (for audit)
+  rawLineData Json? // Store the original CSV row for debugging
+
+  // Payout Linking
+  payoutId String?
+  payout   Payout? @relation(fields: [payoutId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Payout {
+  id           String @id @default(uuid())
+  payoutNumber Int    @default(autoincrement()) // e.g. 102
+  vendorId     String
+  vendor       Vendor @relation(fields: [vendorId], references: [id])
+
+  items RevenueRecord[] // The records being paid
+
+  totalAmount  Decimal // Sum of vendorNet of all items
+  status       String // PENDING, PAID
+  paymentDate  DateTime?
+  referenceRef String? // Check # or Transaction ID
+  qbBillId     String? // QuickBooks Bill ID
+
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  VENDOR
+}
