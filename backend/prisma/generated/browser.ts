@@ -38,6 +38,11 @@ export type Platform = Prisma.PlatformModel
  */
 export type PlatformSplit = Prisma.PlatformSplitModel
 /**
+ * Model BankDetails
+ * 
+ */
+export type BankDetails = Prisma.BankDetailsModel
+/**
  * Model RevenueReport
  * 
  */

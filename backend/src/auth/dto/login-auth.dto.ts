@@ -8,6 +8,7 @@ export class LoginAuthDto {
   email: string;
 
   @ApiProperty({ example: 'password123', description: 'User password' })
+  @IsNotEmpty()
   password: string;
 }
 
@@ -18,6 +19,7 @@ export class LoginVendorDto {
   email: string;
 
   @ApiProperty({ example: 'password123', description: 'Vendor password' })
+  @IsNotEmpty()
   password: string;
 
   @ApiProperty({ example: '001', description: 'Vendor ID' })

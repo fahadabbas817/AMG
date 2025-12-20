@@ -4,7 +4,10 @@ import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtCookieStrategy extends PassportStrategy(
+  Strategy,
+  'jwt-cookie',
+) {
   constructor() {
     super({
       // Extract JWT from cookie instead of Authorization header
@@ -19,6 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
+    console.log('JwtCookieStrategy validating payload:', payload);
     return { id: payload.sub, email: payload.email, role: payload.role };
   }
 }

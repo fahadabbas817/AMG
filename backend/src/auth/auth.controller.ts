@@ -60,6 +60,7 @@ export class AuthController {
 
     return {
       message: 'Login successful',
+      access_token: result.access_token, // 👈 Return token for Swagger/Postman
       user: { id: user.id, role: user.role, email: user.email },
     };
   }
@@ -91,6 +92,7 @@ export class AuthController {
 
     return {
       message: 'Login successful',
+      access_token: result.access_token, // 👈 Return token for Swagger/Postman
       user: { id: user.id, role: user.role, email: user.email },
     };
   }

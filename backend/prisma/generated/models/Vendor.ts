@@ -32,6 +32,8 @@ export type VendorMinAggregateOutputType = {
   email: string | null
   password: string | null
   phone: string | null
+  address: string | null
+  contractSignatory: string | null
   qbVendorId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -45,6 +47,8 @@ export type VendorMaxAggregateOutputType = {
   email: string | null
   password: string | null
   phone: string | null
+  address: string | null
+  contractSignatory: string | null
   qbVendorId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -58,8 +62,9 @@ export type VendorCountAggregateOutputType = {
   email: number
   password: number
   phone: number
+  address: number
+  contractSignatory: number
   subLabels: number
-  bankDetails: number
   qbVendorId: number
   createdAt: number
   updatedAt: number
@@ -75,6 +80,8 @@ export type VendorMinAggregateInputType = {
   email?: true
   password?: true
   phone?: true
+  address?: true
+  contractSignatory?: true
   qbVendorId?: true
   createdAt?: true
   updatedAt?: true
@@ -88,6 +95,8 @@ export type VendorMaxAggregateInputType = {
   email?: true
   password?: true
   phone?: true
+  address?: true
+  contractSignatory?: true
   qbVendorId?: true
   createdAt?: true
   updatedAt?: true
@@ -101,8 +110,9 @@ export type VendorCountAggregateInputType = {
   email?: true
   password?: true
   phone?: true
+  address?: true
+  contractSignatory?: true
   subLabels?: true
-  bankDetails?: true
   qbVendorId?: true
   createdAt?: true
   updatedAt?: true
@@ -189,8 +199,9 @@ export type VendorGroupByOutputType = {
   email: string
   password: string
   phone: string | null
+  address: string | null
+  contractSignatory: string | null
   subLabels: string[]
-  bankDetails: runtime.JsonValue | null
   qbVendorId: string | null
   createdAt: Date
   updatedAt: Date
@@ -225,11 +236,13 @@ export type VendorWhereInput = {
   email?: Prisma.StringFilter<"Vendor"> | string
   password?: Prisma.StringFilter<"Vendor"> | string
   phone?: Prisma.StringNullableFilter<"Vendor"> | string | null
+  address?: Prisma.StringNullableFilter<"Vendor"> | string | null
+  contractSignatory?: Prisma.StringNullableFilter<"Vendor"> | string | null
   subLabels?: Prisma.StringNullableListFilter<"Vendor">
-  bankDetails?: Prisma.JsonNullableFilter<"Vendor">
   qbVendorId?: Prisma.StringNullableFilter<"Vendor"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Vendor"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Vendor"> | Date | string
+  bankDetails?: Prisma.XOR<Prisma.BankDetailsNullableScalarRelationFilter, Prisma.BankDetailsWhereInput> | null
   platformSplits?: Prisma.PlatformSplitListRelationFilter
   revenueRecords?: Prisma.RevenueRecordListRelationFilter
   payouts?: Prisma.PayoutListRelationFilter
@@ -243,11 +256,13 @@ export type VendorOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  contractSignatory?: Prisma.SortOrderInput | Prisma.SortOrder
   subLabels?: Prisma.SortOrder
-  bankDetails?: Prisma.SortOrderInput | Prisma.SortOrder
   qbVendorId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  bankDetails?: Prisma.BankDetailsOrderByWithRelationInput
   platformSplits?: Prisma.PlatformSplitOrderByRelationAggregateInput
   revenueRecords?: Prisma.RevenueRecordOrderByRelationAggregateInput
   payouts?: Prisma.PayoutOrderByRelationAggregateInput
@@ -264,11 +279,13 @@ export type VendorWhereUniqueInput = Prisma.AtLeast<{
   contactName?: Prisma.StringFilter<"Vendor"> | string
   password?: Prisma.StringFilter<"Vendor"> | string
   phone?: Prisma.StringNullableFilter<"Vendor"> | string | null
+  address?: Prisma.StringNullableFilter<"Vendor"> | string | null
+  contractSignatory?: Prisma.StringNullableFilter<"Vendor"> | string | null
   subLabels?: Prisma.StringNullableListFilter<"Vendor">
-  bankDetails?: Prisma.JsonNullableFilter<"Vendor">
   qbVendorId?: Prisma.StringNullableFilter<"Vendor"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Vendor"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Vendor"> | Date | string
+  bankDetails?: Prisma.XOR<Prisma.BankDetailsNullableScalarRelationFilter, Prisma.BankDetailsWhereInput> | null
   platformSplits?: Prisma.PlatformSplitListRelationFilter
   revenueRecords?: Prisma.RevenueRecordListRelationFilter
   payouts?: Prisma.PayoutListRelationFilter
@@ -282,8 +299,9 @@ export type VendorOrderByWithAggregationInput = {
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  contractSignatory?: Prisma.SortOrderInput | Prisma.SortOrder
   subLabels?: Prisma.SortOrder
-  bankDetails?: Prisma.SortOrderInput | Prisma.SortOrder
   qbVendorId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -303,8 +321,9 @@ export type VendorScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"Vendor"> | string
   password?: Prisma.StringWithAggregatesFilter<"Vendor"> | string
   phone?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
+  address?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
+  contractSignatory?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
   subLabels?: Prisma.StringNullableListFilter<"Vendor">
-  bankDetails?: Prisma.JsonNullableWithAggregatesFilter<"Vendor">
   qbVendorId?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Vendor"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Vendor"> | Date | string
@@ -318,11 +337,13 @@ export type VendorCreateInput = {
   email: string
   password: string
   phone?: string | null
+  address?: string | null
+  contractSignatory?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankDetails?: Prisma.BankDetailsCreateNestedOneWithoutVendorInput
   platformSplits?: Prisma.PlatformSplitCreateNestedManyWithoutVendorInput
   revenueRecords?: Prisma.RevenueRecordCreateNestedManyWithoutVendorInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutVendorInput
@@ -336,11 +357,13 @@ export type VendorUncheckedCreateInput = {
   email: string
   password: string
   phone?: string | null
+  address?: string | null
+  contractSignatory?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankDetails?: Prisma.BankDetailsUncheckedCreateNestedOneWithoutVendorInput
   platformSplits?: Prisma.PlatformSplitUncheckedCreateNestedManyWithoutVendorInput
   revenueRecords?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutVendorInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutVendorInput
@@ -354,11 +377,13 @@ export type VendorUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankDetails?: Prisma.BankDetailsUpdateOneWithoutVendorNestedInput
   platformSplits?: Prisma.PlatformSplitUpdateManyWithoutVendorNestedInput
   revenueRecords?: Prisma.RevenueRecordUpdateManyWithoutVendorNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutVendorNestedInput
@@ -372,11 +397,13 @@ export type VendorUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankDetails?: Prisma.BankDetailsUncheckedUpdateOneWithoutVendorNestedInput
   platformSplits?: Prisma.PlatformSplitUncheckedUpdateManyWithoutVendorNestedInput
   revenueRecords?: Prisma.RevenueRecordUncheckedUpdateManyWithoutVendorNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutVendorNestedInput
@@ -390,8 +417,9 @@ export type VendorCreateManyInput = {
   email: string
   password: string
   phone?: string | null
+  address?: string | null
+  contractSignatory?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -405,8 +433,9 @@ export type VendorUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -420,8 +449,9 @@ export type VendorUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -443,8 +473,9 @@ export type VendorCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  contractSignatory?: Prisma.SortOrder
   subLabels?: Prisma.SortOrder
-  bankDetails?: Prisma.SortOrder
   qbVendorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -458,6 +489,8 @@ export type VendorMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  contractSignatory?: Prisma.SortOrder
   qbVendorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -471,6 +504,8 @@ export type VendorMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  contractSignatory?: Prisma.SortOrder
   qbVendorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -506,6 +541,20 @@ export type VendorUpdateOneRequiredWithoutPlatformSplitsNestedInput = {
   upsert?: Prisma.VendorUpsertWithoutPlatformSplitsInput
   connect?: Prisma.VendorWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.VendorUpdateToOneWithWhereWithoutPlatformSplitsInput, Prisma.VendorUpdateWithoutPlatformSplitsInput>, Prisma.VendorUncheckedUpdateWithoutPlatformSplitsInput>
+}
+
+export type VendorCreateNestedOneWithoutBankDetailsInput = {
+  create?: Prisma.XOR<Prisma.VendorCreateWithoutBankDetailsInput, Prisma.VendorUncheckedCreateWithoutBankDetailsInput>
+  connectOrCreate?: Prisma.VendorCreateOrConnectWithoutBankDetailsInput
+  connect?: Prisma.VendorWhereUniqueInput
+}
+
+export type VendorUpdateOneRequiredWithoutBankDetailsNestedInput = {
+  create?: Prisma.XOR<Prisma.VendorCreateWithoutBankDetailsInput, Prisma.VendorUncheckedCreateWithoutBankDetailsInput>
+  connectOrCreate?: Prisma.VendorCreateOrConnectWithoutBankDetailsInput
+  upsert?: Prisma.VendorUpsertWithoutBankDetailsInput
+  connect?: Prisma.VendorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.VendorUpdateToOneWithWhereWithoutBankDetailsInput, Prisma.VendorUpdateWithoutBankDetailsInput>, Prisma.VendorUncheckedUpdateWithoutBankDetailsInput>
 }
 
 export type VendorCreateNestedOneWithoutRevenueRecordsInput = {
@@ -544,11 +593,13 @@ export type VendorCreateWithoutPlatformSplitsInput = {
   email: string
   password: string
   phone?: string | null
+  address?: string | null
+  contractSignatory?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankDetails?: Prisma.BankDetailsCreateNestedOneWithoutVendorInput
   revenueRecords?: Prisma.RevenueRecordCreateNestedManyWithoutVendorInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutVendorInput
 }
@@ -561,11 +612,13 @@ export type VendorUncheckedCreateWithoutPlatformSplitsInput = {
   email: string
   password: string
   phone?: string | null
+  address?: string | null
+  contractSignatory?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankDetails?: Prisma.BankDetailsUncheckedCreateNestedOneWithoutVendorInput
   revenueRecords?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutVendorInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutVendorInput
 }
@@ -594,11 +647,13 @@ export type VendorUpdateWithoutPlatformSplitsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankDetails?: Prisma.BankDetailsUpdateOneWithoutVendorNestedInput
   revenueRecords?: Prisma.RevenueRecordUpdateManyWithoutVendorNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutVendorNestedInput
 }
@@ -611,11 +666,105 @@ export type VendorUncheckedUpdateWithoutPlatformSplitsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankDetails?: Prisma.BankDetailsUncheckedUpdateOneWithoutVendorNestedInput
+  revenueRecords?: Prisma.RevenueRecordUncheckedUpdateManyWithoutVendorNestedInput
+  payouts?: Prisma.PayoutUncheckedUpdateManyWithoutVendorNestedInput
+}
+
+export type VendorCreateWithoutBankDetailsInput = {
+  id?: string
+  vendorNumber: string
+  companyName: string
+  contactName: string
+  email: string
+  password: string
+  phone?: string | null
+  address?: string | null
+  contractSignatory?: string | null
+  subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
+  qbVendorId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  platformSplits?: Prisma.PlatformSplitCreateNestedManyWithoutVendorInput
+  revenueRecords?: Prisma.RevenueRecordCreateNestedManyWithoutVendorInput
+  payouts?: Prisma.PayoutCreateNestedManyWithoutVendorInput
+}
+
+export type VendorUncheckedCreateWithoutBankDetailsInput = {
+  id?: string
+  vendorNumber: string
+  companyName: string
+  contactName: string
+  email: string
+  password: string
+  phone?: string | null
+  address?: string | null
+  contractSignatory?: string | null
+  subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
+  qbVendorId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  platformSplits?: Prisma.PlatformSplitUncheckedCreateNestedManyWithoutVendorInput
+  revenueRecords?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutVendorInput
+  payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutVendorInput
+}
+
+export type VendorCreateOrConnectWithoutBankDetailsInput = {
+  where: Prisma.VendorWhereUniqueInput
+  create: Prisma.XOR<Prisma.VendorCreateWithoutBankDetailsInput, Prisma.VendorUncheckedCreateWithoutBankDetailsInput>
+}
+
+export type VendorUpsertWithoutBankDetailsInput = {
+  update: Prisma.XOR<Prisma.VendorUpdateWithoutBankDetailsInput, Prisma.VendorUncheckedUpdateWithoutBankDetailsInput>
+  create: Prisma.XOR<Prisma.VendorCreateWithoutBankDetailsInput, Prisma.VendorUncheckedCreateWithoutBankDetailsInput>
+  where?: Prisma.VendorWhereInput
+}
+
+export type VendorUpdateToOneWithWhereWithoutBankDetailsInput = {
+  where?: Prisma.VendorWhereInput
+  data: Prisma.XOR<Prisma.VendorUpdateWithoutBankDetailsInput, Prisma.VendorUncheckedUpdateWithoutBankDetailsInput>
+}
+
+export type VendorUpdateWithoutBankDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  vendorNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
+  qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  platformSplits?: Prisma.PlatformSplitUpdateManyWithoutVendorNestedInput
+  revenueRecords?: Prisma.RevenueRecordUpdateManyWithoutVendorNestedInput
+  payouts?: Prisma.PayoutUpdateManyWithoutVendorNestedInput
+}
+
+export type VendorUncheckedUpdateWithoutBankDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  vendorNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
+  qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  platformSplits?: Prisma.PlatformSplitUncheckedUpdateManyWithoutVendorNestedInput
   revenueRecords?: Prisma.RevenueRecordUncheckedUpdateManyWithoutVendorNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutVendorNestedInput
 }
@@ -628,11 +777,13 @@ export type VendorCreateWithoutRevenueRecordsInput = {
   email: string
   password: string
   phone?: string | null
+  address?: string | null
+  contractSignatory?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankDetails?: Prisma.BankDetailsCreateNestedOneWithoutVendorInput
   platformSplits?: Prisma.PlatformSplitCreateNestedManyWithoutVendorInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutVendorInput
 }
@@ -645,11 +796,13 @@ export type VendorUncheckedCreateWithoutRevenueRecordsInput = {
   email: string
   password: string
   phone?: string | null
+  address?: string | null
+  contractSignatory?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankDetails?: Prisma.BankDetailsUncheckedCreateNestedOneWithoutVendorInput
   platformSplits?: Prisma.PlatformSplitUncheckedCreateNestedManyWithoutVendorInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutVendorInput
 }
@@ -678,11 +831,13 @@ export type VendorUpdateWithoutRevenueRecordsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankDetails?: Prisma.BankDetailsUpdateOneWithoutVendorNestedInput
   platformSplits?: Prisma.PlatformSplitUpdateManyWithoutVendorNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutVendorNestedInput
 }
@@ -695,11 +850,13 @@ export type VendorUncheckedUpdateWithoutRevenueRecordsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankDetails?: Prisma.BankDetailsUncheckedUpdateOneWithoutVendorNestedInput
   platformSplits?: Prisma.PlatformSplitUncheckedUpdateManyWithoutVendorNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutVendorNestedInput
 }
@@ -712,11 +869,13 @@ export type VendorCreateWithoutPayoutsInput = {
   email: string
   password: string
   phone?: string | null
+  address?: string | null
+  contractSignatory?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankDetails?: Prisma.BankDetailsCreateNestedOneWithoutVendorInput
   platformSplits?: Prisma.PlatformSplitCreateNestedManyWithoutVendorInput
   revenueRecords?: Prisma.RevenueRecordCreateNestedManyWithoutVendorInput
 }
@@ -729,11 +888,13 @@ export type VendorUncheckedCreateWithoutPayoutsInput = {
   email: string
   password: string
   phone?: string | null
+  address?: string | null
+  contractSignatory?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankDetails?: Prisma.BankDetailsUncheckedCreateNestedOneWithoutVendorInput
   platformSplits?: Prisma.PlatformSplitUncheckedCreateNestedManyWithoutVendorInput
   revenueRecords?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutVendorInput
 }
@@ -762,11 +923,13 @@ export type VendorUpdateWithoutPayoutsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankDetails?: Prisma.BankDetailsUpdateOneWithoutVendorNestedInput
   platformSplits?: Prisma.PlatformSplitUpdateManyWithoutVendorNestedInput
   revenueRecords?: Prisma.RevenueRecordUpdateManyWithoutVendorNestedInput
 }
@@ -779,11 +942,13 @@ export type VendorUncheckedUpdateWithoutPayoutsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
-  bankDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankDetails?: Prisma.BankDetailsUncheckedUpdateOneWithoutVendorNestedInput
   platformSplits?: Prisma.PlatformSplitUncheckedUpdateManyWithoutVendorNestedInput
   revenueRecords?: Prisma.RevenueRecordUncheckedUpdateManyWithoutVendorNestedInput
 }
@@ -845,11 +1010,13 @@ export type VendorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   email?: boolean
   password?: boolean
   phone?: boolean
+  address?: boolean
+  contractSignatory?: boolean
   subLabels?: boolean
-  bankDetails?: boolean
   qbVendorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  bankDetails?: boolean | Prisma.Vendor$bankDetailsArgs<ExtArgs>
   platformSplits?: boolean | Prisma.Vendor$platformSplitsArgs<ExtArgs>
   revenueRecords?: boolean | Prisma.Vendor$revenueRecordsArgs<ExtArgs>
   payouts?: boolean | Prisma.Vendor$payoutsArgs<ExtArgs>
@@ -864,8 +1031,9 @@ export type VendorSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   email?: boolean
   password?: boolean
   phone?: boolean
+  address?: boolean
+  contractSignatory?: boolean
   subLabels?: boolean
-  bankDetails?: boolean
   qbVendorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -879,8 +1047,9 @@ export type VendorSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   email?: boolean
   password?: boolean
   phone?: boolean
+  address?: boolean
+  contractSignatory?: boolean
   subLabels?: boolean
-  bankDetails?: boolean
   qbVendorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -894,15 +1063,17 @@ export type VendorSelectScalar = {
   email?: boolean
   password?: boolean
   phone?: boolean
+  address?: boolean
+  contractSignatory?: boolean
   subLabels?: boolean
-  bankDetails?: boolean
   qbVendorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type VendorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "vendorNumber" | "companyName" | "contactName" | "email" | "password" | "phone" | "subLabels" | "bankDetails" | "qbVendorId" | "createdAt" | "updatedAt", ExtArgs["result"]["vendor"]>
+export type VendorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "vendorNumber" | "companyName" | "contactName" | "email" | "password" | "phone" | "address" | "contractSignatory" | "subLabels" | "qbVendorId" | "createdAt" | "updatedAt", ExtArgs["result"]["vendor"]>
 export type VendorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bankDetails?: boolean | Prisma.Vendor$bankDetailsArgs<ExtArgs>
   platformSplits?: boolean | Prisma.Vendor$platformSplitsArgs<ExtArgs>
   revenueRecords?: boolean | Prisma.Vendor$revenueRecordsArgs<ExtArgs>
   payouts?: boolean | Prisma.Vendor$payoutsArgs<ExtArgs>
@@ -914,6 +1085,7 @@ export type VendorIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type $VendorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Vendor"
   objects: {
+    bankDetails: Prisma.$BankDetailsPayload<ExtArgs> | null
     platformSplits: Prisma.$PlatformSplitPayload<ExtArgs>[]
     revenueRecords: Prisma.$RevenueRecordPayload<ExtArgs>[]
     payouts: Prisma.$PayoutPayload<ExtArgs>[]
@@ -926,8 +1098,9 @@ export type $VendorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     email: string
     password: string
     phone: string | null
+    address: string | null
+    contractSignatory: string | null
     subLabels: string[]
-    bankDetails: runtime.JsonValue | null
     qbVendorId: string | null
     createdAt: Date
     updatedAt: Date
@@ -1325,6 +1498,7 @@ readonly fields: VendorFieldRefs;
  */
 export interface Prisma__VendorClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  bankDetails<T extends Prisma.Vendor$bankDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vendor$bankDetailsArgs<ExtArgs>>): Prisma.Prisma__BankDetailsClient<runtime.Types.Result.GetResult<Prisma.$BankDetailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   platformSplits<T extends Prisma.Vendor$platformSplitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vendor$platformSplitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformSplitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   revenueRecords<T extends Prisma.Vendor$revenueRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vendor$revenueRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RevenueRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payouts<T extends Prisma.Vendor$payoutsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vendor$payoutsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1364,8 +1538,9 @@ export interface VendorFieldRefs {
   readonly email: Prisma.FieldRef<"Vendor", 'String'>
   readonly password: Prisma.FieldRef<"Vendor", 'String'>
   readonly phone: Prisma.FieldRef<"Vendor", 'String'>
+  readonly address: Prisma.FieldRef<"Vendor", 'String'>
+  readonly contractSignatory: Prisma.FieldRef<"Vendor", 'String'>
   readonly subLabels: Prisma.FieldRef<"Vendor", 'String[]'>
-  readonly bankDetails: Prisma.FieldRef<"Vendor", 'Json'>
   readonly qbVendorId: Prisma.FieldRef<"Vendor", 'String'>
   readonly createdAt: Prisma.FieldRef<"Vendor", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Vendor", 'DateTime'>
@@ -1754,6 +1929,25 @@ export type VendorDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Vendors to delete.
    */
   limit?: number
+}
+
+/**
+ * Vendor.bankDetails
+ */
+export type Vendor$bankDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BankDetails
+   */
+  select?: Prisma.BankDetailsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BankDetails
+   */
+  omit?: Prisma.BankDetailsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BankDetailsInclude<ExtArgs> | null
+  where?: Prisma.BankDetailsWhereInput
 }
 
 /**

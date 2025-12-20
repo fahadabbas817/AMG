@@ -7,7 +7,13 @@ import cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // 🗑️ Automatically removes properties NOT in your DTO (Security)
+      forbidNonWhitelisted: true, // 🛑 Throws an error if extra fields are sent
+      transform: true, // 🪄 Automatically converts "123" (string) to 123 (number) for DTOs
+    }),
+  );
   app.use(cookieParser());
 
   app.enableCors({
@@ -19,6 +25,7 @@ async function bootstrap() {
     .setTitle('AMG API')
     .setDescription('Your API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
