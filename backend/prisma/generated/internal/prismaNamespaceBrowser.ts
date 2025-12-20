@@ -55,6 +55,7 @@ export const ModelName = {
   Vendor: 'Vendor',
   Platform: 'Platform',
   PlatformSplit: 'PlatformSplit',
+  BankDetails: 'BankDetails',
   RevenueReport: 'RevenueReport',
   RevenueRecord: 'RevenueRecord',
   Payout: 'Payout'
@@ -94,8 +95,9 @@ export const VendorScalarFieldEnum = {
   email: 'email',
   password: 'password',
   phone: 'phone',
+  address: 'address',
+  contractSignatory: 'contractSignatory',
   subLabels: 'subLabels',
-  bankDetails: 'bankDetails',
   qbVendorId: 'qbVendorId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -122,6 +124,23 @@ export const PlatformSplitScalarFieldEnum = {
 } as const
 
 export type PlatformSplitScalarFieldEnum = (typeof PlatformSplitScalarFieldEnum)[keyof typeof PlatformSplitScalarFieldEnum]
+
+
+export const BankDetailsScalarFieldEnum = {
+  id: 'id',
+  vendorId: 'vendorId',
+  bankName: 'bankName',
+  bankAddress: 'bankAddress',
+  accountNumber: 'accountNumber',
+  ibanRouting: 'ibanRouting',
+  swiftCode: 'swiftCode',
+  currency: 'currency',
+  payoutMethod: 'payoutMethod',
+  paypalEmail: 'paypalEmail',
+  accountType: 'accountType'
+} as const
+
+export type BankDetailsScalarFieldEnum = (typeof BankDetailsScalarFieldEnum)[keyof typeof BankDetailsScalarFieldEnum]
 
 
 export const RevenueReportScalarFieldEnum = {
@@ -193,6 +212,14 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
 export const JsonNullValueFilter = {
   DbNull: 'DbNull',
   JsonNull: 'JsonNull',
@@ -200,12 +227,4 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

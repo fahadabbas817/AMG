@@ -1,28 +1,16 @@
 import {
-  Construction,
   LayoutDashboard,
   Monitor,
-  Bug,
-  ListTodo,
-  FileX,
   HelpCircle,
-  Lock,
   Bell,
-  Package,
   Palette,
-  ServerOff,
   Settings,
   Wrench,
   UserCog,
-  UserX,
   Users,
-  MessagesSquare,
-  ShieldCheck,
-  AudioWaveform,
+  Layers,
   Command,
-  GalleryVerticalEnd,
 } from 'lucide-react'
-import { ClerkLogo } from '@/assets/clerk-logo'
 import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
@@ -75,8 +63,13 @@ export const sidebarData: SidebarData = {
         // },
         {
           title: 'Vendors',
-          url: '/users',
+          url: '/vendors',
           icon: Users,
+        },
+        {
+          title: 'Platforms',
+          url: '/platforms',
+          icon: Layers,
         },
         // {
         //   title: 'Secured by Clerk',

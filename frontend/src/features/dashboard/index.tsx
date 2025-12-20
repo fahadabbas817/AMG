@@ -1,3 +1,4 @@
+import { useNavigate } from '@tanstack/react-router'
 import { CreditCard, Layers, UploadCloud, UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -20,112 +21,157 @@ import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 
 export function Dashboard() {
+  const navigate = useNavigate()
   return (
     <>
       {/* ===== Top Heading ===== */}
       <Header>
-        {/* <TopNav links={topNav} /> */}
         <div className='ms-auto flex items-center space-x-4'>
-          {/* <Search /> */}
           <ThemeSwitch />
-          {/* <ConfigDrawer /> */}
           <ProfileDropdown />
         </div>
       </Header>
 
       {/* ===== Main ===== */}
       <Main>
-        <div className='mb-2 flex items-center justify-between space-y-2'>
-          <h1 className='text-2xl font-bold tracking-tight'>Admin Dashboard</h1>
-          <div className='flex items-center space-x-2'>
-            {/* <Button>Download</Button> */}
+        <div className='mb-8 flex items-center justify-between space-y-2'>
+          <div>
+            <h1 className='from-primary bg-gradient-to-r to-blue-600 bg-clip-text text-3xl font-bold tracking-tight text-transparent'>
+              Admin Dashboard
+            </h1>
+            <p className='text-muted-foreground mt-2'>
+              Welcome back, manage your platform efficiently.
+            </p>
           </div>
         </div>
-        <Tabs
-          orientation='vertical'
-          defaultValue='overview'
-          className='space-y-4'
-        >
-          <div className='w-full overflow-x-auto pb-2'>
-            {/* <TabsList>
-              <TabsTrigger value='overview'>Overview</TabsTrigger>
-              <TabsTrigger value='analytics'>Analytics</TabsTrigger> */}
-            {/* <TabsTrigger value='reports' disabled>
-                Reports
-              </TabsTrigger> */}
-            {/* <TabsTrigger value='notifications' disabled>
-                Notifications
-              </TabsTrigger> */}
-            {/* </TabsList> */}
-          </div>
-          <TabsContent value='overview' className='space-y-4'>
-            <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-              {/* Action 1: Add Vendor */}
-              <Button
-                variant='outline'
-                className='flex h-32 flex-col items-center justify-center gap-3 border-2 border-dashed text-lg font-medium hover:bg-slate-50'
-                onClick={() => console.log('Navigate to Add Vendor')} // Replace with navigation
-              >
-                <UserPlus className='h-8 w-8 text-blue-600' />
+
+        <div className='mb-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
+          {/* Action 1: Add Vendor */}
+          <Card
+            className='group from-background to-muted/50 relative cursor-pointer overflow-hidden border-none bg-gradient-to-br shadow-md transition-all duration-300 hover:shadow-xl'
+            onClick={() => navigate({ to: '/vendors' })}
+          >
+            <div className='absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-blue-500/10 blur-3xl transition-all group-hover:bg-blue-500/20' />
+            <CardHeader className='pb-2'>
+              <div className='mb-2 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-blue-600 shadow-sm transition-transform duration-300 group-hover:scale-110 dark:bg-blue-900/30 dark:text-blue-400'>
+                <UserPlus size={28} strokeWidth={2} />
+              </div>
+              <CardTitle className='text-lg font-bold transition-colors group-hover:text-blue-600'>
                 Add Vendor
-              </Button>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Register and onboard new vendors.
+              </CardDescription>
+            </CardContent>
+          </Card>
 
-              {/* Action 2: Add New Platform */}
-              <Button
-                variant='outline'
-                className='flex h-32 flex-col items-center justify-center gap-3 border-2 border-dashed text-lg font-medium hover:bg-slate-50'
-                onClick={() => console.log('Navigate to Add Platform')}
-              >
-                <Layers className='h-8 w-8 text-purple-600' />
+          {/* Action 2: Add New Platform */}
+          <Card
+            className='group from-background to-muted/50 relative cursor-pointer overflow-hidden border-none bg-gradient-to-br shadow-md transition-all duration-300 hover:shadow-xl'
+            onClick={() => navigate({ to: '/platforms' })}
+          >
+            <div className='absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-purple-500/10 blur-3xl transition-all group-hover:bg-purple-500/20' />
+            <CardHeader className='pb-2'>
+              <div className='mb-2 flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 text-purple-600 shadow-sm transition-transform duration-300 group-hover:scale-110 dark:bg-purple-900/30 dark:text-purple-400'>
+                <Layers size={28} strokeWidth={2} />
+              </div>
+              <CardTitle className='text-lg font-bold transition-colors group-hover:text-purple-600'>
                 Add New Platform
-              </Button>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Configure new platform integrations.
+              </CardDescription>
+            </CardContent>
+          </Card>
 
-              {/* Action 3: Upload Report */}
-              <Button
-                variant='outline'
-                className='flex h-32 flex-col items-center justify-center gap-3 border-2 border-dashed text-lg font-medium hover:bg-slate-50'
-                onClick={() => console.log('Navigate to Upload')}
-              >
-                <UploadCloud className='h-8 w-8 text-green-600' />
-                Upload Platform Report
-              </Button>
+          {/* Action 3: Upload Report */}
+          <Card
+            className='group from-background to-muted/50 relative cursor-pointer overflow-hidden border-none bg-gradient-to-br shadow-md transition-all duration-300 hover:shadow-xl'
+            onClick={() => console.log('Navigate to Upload')}
+          >
+            <div className='absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-emerald-500/10 blur-3xl transition-all group-hover:bg-emerald-500/20' />
+            <CardHeader className='pb-2'>
+              <div className='mb-2 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600 shadow-sm transition-transform duration-300 group-hover:scale-110 dark:bg-emerald-900/30 dark:text-emerald-400'>
+                <UploadCloud size={28} strokeWidth={2} />
+              </div>
+              <CardTitle className='text-lg font-bold transition-colors group-hover:text-emerald-600'>
+                Upload Report
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Upload platform performance reports.
+              </CardDescription>
+            </CardContent>
+          </Card>
 
-              {/* Action 4: Payment Tracking */}
-              <Button
-                variant='outline'
-                className='flex h-32 flex-col items-center justify-center gap-3 border-2 border-dashed text-lg font-medium hover:bg-slate-50'
-                onClick={() => console.log('Navigate to Payments')}
-              >
-                <CreditCard className='h-8 w-8 text-orange-600' />
+          {/* Action 4: Payment Tracking */}
+          <Card
+            className='group from-background to-muted/50 relative cursor-pointer overflow-hidden border-none bg-gradient-to-br shadow-md transition-all duration-300 hover:shadow-xl'
+            onClick={() => console.log('Navigate to Payments')}
+          >
+            <div className='absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-orange-500/10 blur-3xl transition-all group-hover:bg-orange-500/20' />
+            <CardHeader className='pb-2'>
+              <div className='mb-2 flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-orange-600 shadow-sm transition-transform duration-300 group-hover:scale-110 dark:bg-orange-900/30 dark:text-orange-400'>
+                <CreditCard size={28} strokeWidth={2} />
+              </div>
+              <CardTitle className='text-lg font-bold transition-colors group-hover:text-orange-600'>
                 Payment Tracking
-              </Button>
-            </div>
-            {/* <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
-              <Card className='col-span-1 lg:col-span-4'>
-                <CardHeader>
-                  <CardTitle>Overview</CardTitle>
-                </CardHeader>
-                <CardContent className='ps-2'>
-                  <Overview />
-                </CardContent>
-              </Card>
-              <Card className='col-span-1 lg:col-span-3'>
-                <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
-                  <CardDescription>
-                    You made 265 sales this month.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <RecentSales />
-                </CardContent>
-              </Card>
-            </div> */}
-          </TabsContent>
-          <TabsContent value='analytics' className='space-y-4'>
-            <Analytics />
-          </TabsContent>
-        </Tabs>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Monitor payments and transactions.
+              </CardDescription>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Recent Activity / Overview Placeholder */}
+        {/* <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
+          <Card className='col-span-1 shadow-sm'>
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+              <CardDescription>
+                Latest actions performed in the system
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='space-y-4'>
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className='flex items-center gap-4 border-b pb-4 last:border-0 last:pb-0'
+                  >
+                    <div className='h-2 w-2 rounded-full bg-blue-500' />
+                    <div className='flex-1 space-y-1'>
+                      <p className='text-sm leading-none font-medium'>
+                        New Vendor Added
+                      </p>
+                      <p className='text-muted-foreground text-xs'>Just now</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className='col-span-1 shadow-sm'>
+            <CardHeader>
+              <CardTitle>Quick Stats</CardTitle>
+              <CardDescription>Overview of system performance</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='text-muted-foreground text-sm'>
+                Stats visualization will go here.
+              </div>
+            </CardContent>
+          </Card>
+        </div> */}
       </Main>
     </>
   )

@@ -388,6 +388,7 @@ export const ModelName = {
   Vendor: 'Vendor',
   Platform: 'Platform',
   PlatformSplit: 'PlatformSplit',
+  BankDetails: 'BankDetails',
   RevenueReport: 'RevenueReport',
   RevenueRecord: 'RevenueRecord',
   Payout: 'Payout'
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "admin" | "vendor" | "platform" | "platformSplit" | "revenueReport" | "revenueRecord" | "payout"
+    modelProps: "admin" | "vendor" | "platform" | "platformSplit" | "bankDetails" | "revenueReport" | "revenueRecord" | "payout"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -706,6 +707,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BankDetails: {
+      payload: Prisma.$BankDetailsPayload<ExtArgs>
+      fields: Prisma.BankDetailsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BankDetailsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankDetailsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BankDetailsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankDetailsPayload>
+        }
+        findFirst: {
+          args: Prisma.BankDetailsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankDetailsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BankDetailsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankDetailsPayload>
+        }
+        findMany: {
+          args: Prisma.BankDetailsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankDetailsPayload>[]
+        }
+        create: {
+          args: Prisma.BankDetailsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankDetailsPayload>
+        }
+        createMany: {
+          args: Prisma.BankDetailsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BankDetailsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankDetailsPayload>[]
+        }
+        delete: {
+          args: Prisma.BankDetailsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankDetailsPayload>
+        }
+        update: {
+          args: Prisma.BankDetailsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankDetailsPayload>
+        }
+        deleteMany: {
+          args: Prisma.BankDetailsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BankDetailsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BankDetailsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankDetailsPayload>[]
+        }
+        upsert: {
+          args: Prisma.BankDetailsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankDetailsPayload>
+        }
+        aggregate: {
+          args: Prisma.BankDetailsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBankDetails>
+        }
+        groupBy: {
+          args: Prisma.BankDetailsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BankDetailsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BankDetailsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BankDetailsCountAggregateOutputType> | number
+        }
+      }
+    }
     RevenueReport: {
       payload: Prisma.$RevenueReportPayload<ExtArgs>
       fields: Prisma.RevenueReportFieldRefs
@@ -985,8 +1060,9 @@ export const VendorScalarFieldEnum = {
   email: 'email',
   password: 'password',
   phone: 'phone',
+  address: 'address',
+  contractSignatory: 'contractSignatory',
   subLabels: 'subLabels',
-  bankDetails: 'bankDetails',
   qbVendorId: 'qbVendorId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1013,6 +1089,23 @@ export const PlatformSplitScalarFieldEnum = {
 } as const
 
 export type PlatformSplitScalarFieldEnum = (typeof PlatformSplitScalarFieldEnum)[keyof typeof PlatformSplitScalarFieldEnum]
+
+
+export const BankDetailsScalarFieldEnum = {
+  id: 'id',
+  vendorId: 'vendorId',
+  bankName: 'bankName',
+  bankAddress: 'bankAddress',
+  accountNumber: 'accountNumber',
+  ibanRouting: 'ibanRouting',
+  swiftCode: 'swiftCode',
+  currency: 'currency',
+  payoutMethod: 'payoutMethod',
+  paypalEmail: 'paypalEmail',
+  accountType: 'accountType'
+} as const
+
+export type BankDetailsScalarFieldEnum = (typeof BankDetailsScalarFieldEnum)[keyof typeof BankDetailsScalarFieldEnum]
 
 
 export const RevenueReportScalarFieldEnum = {
@@ -1084,6 +1177,14 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -1091,14 +1192,6 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 
@@ -1136,20 +1229,6 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1164,6 +1243,20 @@ export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMode
 
 
 /**
+ * Reference to a field of type 'PayoutMethod'
+ */
+export type EnumPayoutMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PayoutMethod'>
+    
+
+
+/**
+ * Reference to a field of type 'PayoutMethod[]'
+ */
+export type ListEnumPayoutMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PayoutMethod[]'>
+    
+
+
+/**
  * Reference to a field of type 'Decimal'
  */
 export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -1174,6 +1267,20 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Decimal[]'
  */
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -1289,6 +1396,7 @@ export type GlobalOmitConfig = {
   vendor?: Prisma.VendorOmit
   platform?: Prisma.PlatformOmit
   platformSplit?: Prisma.PlatformSplitOmit
+  bankDetails?: Prisma.BankDetailsOmit
   revenueReport?: Prisma.RevenueReportOmit
   revenueRecord?: Prisma.RevenueRecordOmit
   payout?: Prisma.PayoutOmit

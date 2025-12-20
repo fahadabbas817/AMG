@@ -1,0 +1,33 @@
+{
+  "create-vendor": {
+    "companyName": "Tech Solutions Inc",
+    "contactName": "John Doe",
+    "email": "john.doe@techsolutions.com",
+    "vendorNumber": "VEND-2023-001",
+    "password": "StrongPassword123!",
+    "phone": "+1-555-0123",
+    "address": "123 Tech Park, Silicon Valley, CA",
+    "contractSignatory": "Jane Smith",
+    "subLabels": ["IT Services", "High Priority"],
+    "bankDetails": {
+      "bankName": "Silicon Valley Bank",
+      "accountNumber": "9876543210",
+      "bankAddress": "3003 Tasman Dr, Santa Clara, CA 95054",
+      "ibanRouting": "121000358",
+      "swiftCode": "SVBUS6S",
+      "currency": "USD",
+      "payoutMethod": "PAYPAL",
+      "paypalEmail": "payments@techsolutions.com",
+      "accountType": "Business Checking"
+    }
+  },
+  "create-platform": {
+    "name": "Super Streaming Platform",
+    "corporateName": "Streaming Services Global Ltd",
+    "defaultSplit": 0.3
+  },
+  "add-vendor-split": {
+    "platformId": "REPLACE_WITH_VALID_PLATFORM_UUID",
+    "commissionRate": 0.25
+  }
+}

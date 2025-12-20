@@ -1,0 +1,53 @@
+import { getRouteApi } from '@tanstack/react-router'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { useGetPlatforms } from './api/useGetPlatforms'
+import { PlatformsDialogs } from './components/platforms-dialogs'
+import { PlatformsPrimaryButtons } from './components/platforms-primary-buttons'
+import { PlatformsProvider } from './components/platforms-provider'
+import { PlatformsTable } from './components/platforms-table'
+import { PlatformsTableSkeleton } from './components/platforms-table-skeleton'
+
+const route = getRouteApi('/_authenticated/platforms/')
+
+export function Platforms() {
+  const search = route.useSearch()
+  const navigate = route.useNavigate()
+  const { data: platforms = [], isLoading } = useGetPlatforms()
+
+  return (
+    <PlatformsProvider>
+      <Header fixed>
+        <div className='ms-auto flex items-center space-x-4'>
+          <ThemeSwitch />
+          <ProfileDropdown />
+        </div>
+      </Header>
+
+      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+        <div className='flex flex-wrap items-end justify-between gap-2'>
+          <div>
+            <h2 className='text-2xl font-bold tracking-tight'>Platform List</h2>
+            <p className='text-muted-foreground'>
+              Manage your supported platforms and commission rates.
+            </p>
+          </div>
+          <PlatformsPrimaryButtons />
+        </div>
+        {isLoading ? (
+          <PlatformsTableSkeleton />
+        ) : (
+          <PlatformsTable
+            data={platforms}
+            search={search}
+            navigate={navigate}
+          />
+        )}
+      </Main>
+
+      <PlatformsDialogs />
+    </PlatformsProvider>
+  )
+}
