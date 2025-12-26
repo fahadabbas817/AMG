@@ -387,6 +387,7 @@ export const ModelName = {
   Admin: 'Admin',
   Vendor: 'Vendor',
   Platform: 'Platform',
+  PlatformMappingTemplate: 'PlatformMappingTemplate',
   PlatformSplit: 'PlatformSplit',
   BankDetails: 'BankDetails',
   RevenueReport: 'RevenueReport',
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "admin" | "vendor" | "platform" | "platformSplit" | "bankDetails" | "revenueReport" | "revenueRecord" | "payout"
+    modelProps: "admin" | "vendor" | "platform" | "platformMappingTemplate" | "platformSplit" | "bankDetails" | "revenueReport" | "revenueRecord" | "payout"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -630,6 +631,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PlatformCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PlatformCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlatformMappingTemplate: {
+      payload: Prisma.$PlatformMappingTemplatePayload<ExtArgs>
+      fields: Prisma.PlatformMappingTemplateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlatformMappingTemplateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMappingTemplatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlatformMappingTemplateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMappingTemplatePayload>
+        }
+        findFirst: {
+          args: Prisma.PlatformMappingTemplateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMappingTemplatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlatformMappingTemplateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMappingTemplatePayload>
+        }
+        findMany: {
+          args: Prisma.PlatformMappingTemplateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMappingTemplatePayload>[]
+        }
+        create: {
+          args: Prisma.PlatformMappingTemplateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMappingTemplatePayload>
+        }
+        createMany: {
+          args: Prisma.PlatformMappingTemplateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlatformMappingTemplateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMappingTemplatePayload>[]
+        }
+        delete: {
+          args: Prisma.PlatformMappingTemplateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMappingTemplatePayload>
+        }
+        update: {
+          args: Prisma.PlatformMappingTemplateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMappingTemplatePayload>
+        }
+        deleteMany: {
+          args: Prisma.PlatformMappingTemplateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlatformMappingTemplateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlatformMappingTemplateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMappingTemplatePayload>[]
+        }
+        upsert: {
+          args: Prisma.PlatformMappingTemplateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMappingTemplatePayload>
+        }
+        aggregate: {
+          args: Prisma.PlatformMappingTemplateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlatformMappingTemplate>
+        }
+        groupBy: {
+          args: Prisma.PlatformMappingTemplateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformMappingTemplateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlatformMappingTemplateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformMappingTemplateCountAggregateOutputType> | number
         }
       }
     }
@@ -1081,6 +1156,17 @@ export const PlatformScalarFieldEnum = {
 export type PlatformScalarFieldEnum = (typeof PlatformScalarFieldEnum)[keyof typeof PlatformScalarFieldEnum]
 
 
+export const PlatformMappingTemplateScalarFieldEnum = {
+  id: 'id',
+  platformId: 'platformId',
+  mappingRules: 'mappingRules',
+  headerRowIndex: 'headerRowIndex',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlatformMappingTemplateScalarFieldEnum = (typeof PlatformMappingTemplateScalarFieldEnum)[keyof typeof PlatformMappingTemplateScalarFieldEnum]
+
+
 export const PlatformSplitScalarFieldEnum = {
   id: 'id',
   vendorId: 'vendorId',
@@ -1114,7 +1200,11 @@ export const RevenueReportScalarFieldEnum = {
   uploadDate: 'uploadDate',
   status: 'status',
   rawFileUrl: 'rawFileUrl',
-  platformId: 'platformId'
+  platformId: 'platformId',
+  totalAmount: 'totalAmount',
+  invoiceRef: 'invoiceRef',
+  paymentStatus: 'paymentStatus',
+  month: 'month'
 } as const
 
 export type RevenueReportScalarFieldEnum = (typeof RevenueReportScalarFieldEnum)[keyof typeof RevenueReportScalarFieldEnum]
@@ -1124,13 +1214,17 @@ export const RevenueRecordScalarFieldEnum = {
   id: 'id',
   reportId: 'reportId',
   vendorId: 'vendorId',
+  rawVendorName: 'rawVendorName',
   platformId: 'platformId',
   periodStart: 'periodStart',
   periodEnd: 'periodEnd',
   grossRevenue: 'grossRevenue',
   amgCommission: 'amgCommission',
   vendorNet: 'vendorNet',
+  lineItemName: 'lineItemName',
+  metadata: 'metadata',
   rawLineData: 'rawLineData',
+  status: 'status',
   payoutId: 'payoutId',
   createdAt: 'createdAt'
 } as const
@@ -1159,6 +1253,13 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const NullableJsonNullValueInput = {
@@ -1243,6 +1344,34 @@ export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMode
 
 
 /**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'PayoutMethod'
  */
 export type EnumPayoutMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PayoutMethod'>
@@ -1271,30 +1400,16 @@ export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMo
 
 
 /**
- * Reference to a field of type 'Json'
+ * Reference to a field of type 'RevenuePaymentStatus'
  */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+export type EnumRevenuePaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RevenuePaymentStatus'>
     
 
 
 /**
- * Reference to a field of type 'QueryMode'
+ * Reference to a field of type 'RevenuePaymentStatus[]'
  */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+export type ListEnumRevenuePaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RevenuePaymentStatus[]'>
     
 
 /**
@@ -1395,6 +1510,7 @@ export type GlobalOmitConfig = {
   admin?: Prisma.AdminOmit
   vendor?: Prisma.VendorOmit
   platform?: Prisma.PlatformOmit
+  platformMappingTemplate?: Prisma.PlatformMappingTemplateOmit
   platformSplit?: Prisma.PlatformSplitOmit
   bankDetails?: Prisma.BankDetailsOmit
   revenueReport?: Prisma.RevenueReportOmit

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { z } from 'zod'
+import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSuspenseQuery } from '@tanstack/react-query'
@@ -65,6 +66,8 @@ import { DatePicker } from '@/components/date-picker'
 import { Header } from '@/components/layout/header'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { useCreatePayout } from '@/features/payouts/api/useCreatePayout'
+import { useGetUnpaidSummaries } from '@/features/payouts/api/useGetUnpaidSummaries'
 import { PlatformSplit, useRemoveSplit } from '@/features/vendors/api/splits'
 import { getVendorQueryOptions } from '@/features/vendors/api/useGetVendor'
 import { ResetPasswordDialog } from '@/features/vendors/components/reset-password-dialog'
@@ -97,6 +100,71 @@ function VendorDetails() {
 
   const { mutateAsync: removeSplit, isPending: isDeletingSplit } =
     useRemoveSplit(vendorId)
+
+  // Payout Management
+  console.log('UseGetUnpaidSummaries Hook Call - VendorID:', vendorId)
+  const {
+    data: unpaidSummaries,
+    error,
+    isLoading,
+  } = useGetUnpaidSummaries(vendorId)
+
+  if (error) console.error('Unpaid Summaries Error:', error)
+  if (isLoading) console.log('Loading summaries...')
+
+  const { mutate: createPayout, isPending: isCreatingPayout } =
+    useCreatePayout()
+  // Logic: We select "summary rows", but API needs "recordIds".
+  // So when I select a row, I add all its `recordIds` to the selection set?
+  // Or I just track "selected indices" and derive the ID list at submission.
+  // Let's track selected INDICES or KEYS (platformId + month).
+  const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
+
+  const toggleSelection = (key: string) => {
+    const next = new Set(selectedKeys)
+    if (next.has(key)) {
+      next.delete(key)
+    } else {
+      next.add(key)
+    }
+    setSelectedKeys(next)
+  }
+
+  const toggleAll = () => {
+    if (!unpaidSummaries) return
+    if (selectedKeys.size === unpaidSummaries.length) {
+      setSelectedKeys(new Set())
+    } else {
+      const allKeys = unpaidSummaries.map((s) => `${s.platformId}-${s.month}`)
+      setSelectedKeys(new Set(allKeys))
+    }
+  }
+
+  // Derived totals
+  const selectedSummaries =
+    unpaidSummaries?.filter((s) =>
+      selectedKeys.has(`${s.platformId}-${s.month}`)
+    ) || []
+
+  const totalNetPayout = selectedSummaries.reduce(
+    (sum, item) => sum + item.netPayout,
+    0
+  )
+
+  const handleGeneratePayout = () => {
+    // Flatten recordIds from selected summaries
+    const recordIds = selectedSummaries.flatMap((s) => s.recordIds)
+    if (recordIds.length === 0) return
+
+    createPayout(
+      { vendorId, recordIds },
+      {
+        onSuccess: () => {
+          setSelectedKeys(new Set())
+        },
+      }
+    )
+  }
 
   return (
     <>
@@ -448,64 +516,103 @@ function VendorDetails() {
                   <TableHeader>
                     <TableRow className='bg-muted/50 hover:bg-muted/50'>
                       <TableHead className='w-[50px]'>
-                        <Checkbox />
+                        <Checkbox
+                          checked={
+                            unpaidSummaries &&
+                            unpaidSummaries.length > 0 &&
+                            selectedKeys.size === unpaidSummaries.length
+                          }
+                          onCheckedChange={toggleAll}
+                          disabled={!unpaidSummaries?.length}
+                        />
                       </TableHead>
                       <TableHead>Platform</TableHead>
                       <TableHead>Month</TableHead>
-                      <TableHead className='text-right'>Amount</TableHead>
-                      <TableHead className='text-right'>
-                        Payout Actions
+                      <TableHead className='text-right'>Gross</TableHead>
+                      <TableHead className='text-right'>Comm. Rate</TableHead>
+                      <TableHead className='text-right'>Comm. Amt</TableHead>
+                      <TableHead className='text-right font-bold'>
+                        Net Payout
                       </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {/* Dummy Data as requested */}
-                    <TableRow>
-                      <TableCell>
-                        <Checkbox />
-                      </TableCell>
-                      <TableCell>AEBN</TableCell>
-                      <TableCell>June 2025</TableCell>
-                      <TableCell className='text-right'>$186.05</TableCell>
-                      <TableCell className='text-right'>True</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <Checkbox />
-                      </TableCell>
-                      <TableCell>ManyVids</TableCell>
-                      <TableCell>June 2025</TableCell>
-                      <TableCell className='text-right'>$450.00</TableCell>
-                      <TableCell className='text-right'>False</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <Checkbox />
-                      </TableCell>
-                      <TableCell>Clips4Sale</TableCell>
-                      <TableCell>May 2025</TableCell>
-                      <TableCell className='text-right'>$1,200.50</TableCell>
-                      <TableCell className='text-right'>True</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <Checkbox />
-                      </TableCell>
-                      <TableCell>MetaHub</TableCell>
-                      <TableCell>July 2025</TableCell>
-                      <TableCell className='text-right'>$95.20</TableCell>
-                      <TableCell className='text-right'>False</TableCell>
-                    </TableRow>
+                    {unpaidSummaries?.length ? (
+                      unpaidSummaries.map((summary) => {
+                        const key = `${summary.platformId}-${summary.month}`
+                        const isSelected = selectedKeys.has(key)
+                        return (
+                          <TableRow
+                            key={key}
+                            data-state={isSelected ? 'selected' : undefined}
+                          >
+                            <TableCell>
+                              <Checkbox
+                                checked={isSelected}
+                                onCheckedChange={() => toggleSelection(key)}
+                              />
+                            </TableCell>
+                            <TableCell className='font-medium'>
+                              {summary.platformName}
+                            </TableCell>
+                            <TableCell>
+                              {format(new Date(summary.month), 'MMMM yyyy')}
+                            </TableCell>
+                            <TableCell className='text-right'>
+                              ${summary.grossAmount.toFixed(2)}
+                            </TableCell>
+                            <TableCell className='text-right'>
+                              {(summary.commissionRate * 100).toFixed(1)}%
+                            </TableCell>
+                            <TableCell className='text-right text-red-500'>
+                              -${summary.commissionAmount.toFixed(2)}
+                            </TableCell>
+                            <TableCell className='text-right font-bold'>
+                              ${summary.netPayout.toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                        )
+                      })
+                    ) : (
+                      <TableRow>
+                        <TableCell
+                          colSpan={7}
+                          className='text-muted-foreground h-24 text-center'
+                        >
+                          No unpaid items found.
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </div>
-              <div className='flex justify-end'>
-                <Button
-                  onClick={() => console.log('Creating payout report...')}
-                >
-                  <Calculator className='mr-2 h-4 w-4' />
-                  Create Payout Report
-                </Button>
+
+              {/* Footer / Actions */}
+              <div className='bg-muted/20 flex items-center justify-between rounded-lg border p-4'>
+                <div className='text-sm'>
+                  <span className='text-muted-foreground'>Selected Items:</span>{' '}
+                  <span className='font-medium'>{selectedKeys.size}</span>
+                </div>
+                <div className='flex items-center gap-6'>
+                  <div className='text-right'>
+                    <div className='text-muted-foreground text-xs font-medium uppercase'>
+                      Total To Pay
+                    </div>
+                    <div className='text-primary text-2xl font-bold'>
+                      ${totalNetPayout.toFixed(2)}
+                    </div>
+                  </div>
+                  <Button
+                    onClick={handleGeneratePayout}
+                    disabled={selectedKeys.size === 0 || isCreatingPayout}
+                    size='lg'
+                  >
+                    <Calculator className='mr-2 h-4 w-4' />
+                    {isCreatingPayout
+                      ? 'Generating...'
+                      : 'Generate Payout Report'}
+                  </Button>
+                </div>
               </div>
             </div>
           </CardContent>

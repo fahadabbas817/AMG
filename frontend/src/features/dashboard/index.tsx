@@ -1,6 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
 import { CreditCard, Layers, UploadCloud, UserPlus } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -8,17 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { TopNav } from '@/components/layout/top-nav'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { Analytics } from './components/analytics'
-import { Overview } from './components/overview'
-import { RecentSales } from './components/recent-sales'
 
 export function Dashboard() {
   const navigate = useNavigate()
@@ -91,7 +83,7 @@ export function Dashboard() {
           {/* Action 3: Upload Report */}
           <Card
             className='group from-background to-muted/50 relative cursor-pointer overflow-hidden border-none bg-gradient-to-br shadow-md transition-all duration-300 hover:shadow-xl'
-            onClick={() => console.log('Navigate to Upload')}
+            onClick={() => navigate({ to: '/revenue/upload' })}
           >
             <div className='absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-emerald-500/10 blur-3xl transition-all group-hover:bg-emerald-500/20' />
             <CardHeader className='pb-2'>
@@ -112,7 +104,7 @@ export function Dashboard() {
           {/* Action 4: Payment Tracking */}
           <Card
             className='group from-background to-muted/50 relative cursor-pointer overflow-hidden border-none bg-gradient-to-br shadow-md transition-all duration-300 hover:shadow-xl'
-            onClick={() => console.log('Navigate to Payments')}
+            onClick={() => navigate({ to: '/payouts' })}
           >
             <div className='absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-orange-500/10 blur-3xl transition-all group-hover:bg-orange-500/20' />
             <CardHeader className='pb-2'>
@@ -176,30 +168,3 @@ export function Dashboard() {
     </>
   )
 }
-
-const topNav = [
-  {
-    title: 'Overview',
-    href: 'dashboard/overview',
-    isActive: true,
-    disabled: false,
-  },
-  {
-    title: 'Customers',
-    href: 'dashboard/customers',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Products',
-    href: 'dashboard/products',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Settings',
-    href: 'dashboard/settings',
-    isActive: false,
-    disabled: true,
-  },
-]

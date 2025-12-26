@@ -54,6 +54,7 @@ export const ModelName = {
   Admin: 'Admin',
   Vendor: 'Vendor',
   Platform: 'Platform',
+  PlatformMappingTemplate: 'PlatformMappingTemplate',
   PlatformSplit: 'PlatformSplit',
   BankDetails: 'BankDetails',
   RevenueReport: 'RevenueReport',
@@ -116,6 +117,17 @@ export const PlatformScalarFieldEnum = {
 export type PlatformScalarFieldEnum = (typeof PlatformScalarFieldEnum)[keyof typeof PlatformScalarFieldEnum]
 
 
+export const PlatformMappingTemplateScalarFieldEnum = {
+  id: 'id',
+  platformId: 'platformId',
+  mappingRules: 'mappingRules',
+  headerRowIndex: 'headerRowIndex',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlatformMappingTemplateScalarFieldEnum = (typeof PlatformMappingTemplateScalarFieldEnum)[keyof typeof PlatformMappingTemplateScalarFieldEnum]
+
+
 export const PlatformSplitScalarFieldEnum = {
   id: 'id',
   vendorId: 'vendorId',
@@ -149,7 +161,11 @@ export const RevenueReportScalarFieldEnum = {
   uploadDate: 'uploadDate',
   status: 'status',
   rawFileUrl: 'rawFileUrl',
-  platformId: 'platformId'
+  platformId: 'platformId',
+  totalAmount: 'totalAmount',
+  invoiceRef: 'invoiceRef',
+  paymentStatus: 'paymentStatus',
+  month: 'month'
 } as const
 
 export type RevenueReportScalarFieldEnum = (typeof RevenueReportScalarFieldEnum)[keyof typeof RevenueReportScalarFieldEnum]
@@ -159,13 +175,17 @@ export const RevenueRecordScalarFieldEnum = {
   id: 'id',
   reportId: 'reportId',
   vendorId: 'vendorId',
+  rawVendorName: 'rawVendorName',
   platformId: 'platformId',
   periodStart: 'periodStart',
   periodEnd: 'periodEnd',
   grossRevenue: 'grossRevenue',
   amgCommission: 'amgCommission',
   vendorNet: 'vendorNet',
+  lineItemName: 'lineItemName',
+  metadata: 'metadata',
   rawLineData: 'rawLineData',
+  status: 'status',
   payoutId: 'payoutId',
   createdAt: 'createdAt'
 } as const
@@ -194,6 +214,13 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: 'JsonNull'
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const NullableJsonNullValueInput = {

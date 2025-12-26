@@ -516,6 +516,11 @@ export type VendorScalarRelationFilter = {
   isNot?: Prisma.VendorWhereInput
 }
 
+export type VendorNullableScalarRelationFilter = {
+  is?: Prisma.VendorWhereInput | null
+  isNot?: Prisma.VendorWhereInput | null
+}
+
 export type VendorCreatesubLabelsInput = {
   set: string[]
 }
@@ -563,10 +568,12 @@ export type VendorCreateNestedOneWithoutRevenueRecordsInput = {
   connect?: Prisma.VendorWhereUniqueInput
 }
 
-export type VendorUpdateOneRequiredWithoutRevenueRecordsNestedInput = {
+export type VendorUpdateOneWithoutRevenueRecordsNestedInput = {
   create?: Prisma.XOR<Prisma.VendorCreateWithoutRevenueRecordsInput, Prisma.VendorUncheckedCreateWithoutRevenueRecordsInput>
   connectOrCreate?: Prisma.VendorCreateOrConnectWithoutRevenueRecordsInput
   upsert?: Prisma.VendorUpsertWithoutRevenueRecordsInput
+  disconnect?: Prisma.VendorWhereInput | boolean
+  delete?: Prisma.VendorWhereInput | boolean
   connect?: Prisma.VendorWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.VendorUpdateToOneWithWhereWithoutRevenueRecordsInput, Prisma.VendorUpdateWithoutRevenueRecordsInput>, Prisma.VendorUncheckedUpdateWithoutRevenueRecordsInput>
 }
