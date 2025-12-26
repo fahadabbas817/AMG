@@ -525,18 +525,6 @@ export type PayoutUpdateOneWithoutItemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PayoutUpdateToOneWithWhereWithoutItemsInput, Prisma.PayoutUpdateWithoutItemsInput>, Prisma.PayoutUncheckedUpdateWithoutItemsInput>
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type PayoutCreateWithoutVendorInput = {
   id?: string
   payoutNumber?: number

@@ -42,12 +42,15 @@ export type RevenueRecordMinAggregateOutputType = {
   id: string | null
   reportId: string | null
   vendorId: string | null
+  rawVendorName: string | null
   platformId: string | null
   periodStart: Date | null
   periodEnd: Date | null
   grossRevenue: runtime.Decimal | null
   amgCommission: runtime.Decimal | null
   vendorNet: runtime.Decimal | null
+  lineItemName: string | null
+  status: string | null
   payoutId: string | null
   createdAt: Date | null
 }
@@ -56,12 +59,15 @@ export type RevenueRecordMaxAggregateOutputType = {
   id: string | null
   reportId: string | null
   vendorId: string | null
+  rawVendorName: string | null
   platformId: string | null
   periodStart: Date | null
   periodEnd: Date | null
   grossRevenue: runtime.Decimal | null
   amgCommission: runtime.Decimal | null
   vendorNet: runtime.Decimal | null
+  lineItemName: string | null
+  status: string | null
   payoutId: string | null
   createdAt: Date | null
 }
@@ -70,13 +76,17 @@ export type RevenueRecordCountAggregateOutputType = {
   id: number
   reportId: number
   vendorId: number
+  rawVendorName: number
   platformId: number
   periodStart: number
   periodEnd: number
   grossRevenue: number
   amgCommission: number
   vendorNet: number
+  lineItemName: number
+  metadata: number
   rawLineData: number
+  status: number
   payoutId: number
   createdAt: number
   _all: number
@@ -99,12 +109,15 @@ export type RevenueRecordMinAggregateInputType = {
   id?: true
   reportId?: true
   vendorId?: true
+  rawVendorName?: true
   platformId?: true
   periodStart?: true
   periodEnd?: true
   grossRevenue?: true
   amgCommission?: true
   vendorNet?: true
+  lineItemName?: true
+  status?: true
   payoutId?: true
   createdAt?: true
 }
@@ -113,12 +126,15 @@ export type RevenueRecordMaxAggregateInputType = {
   id?: true
   reportId?: true
   vendorId?: true
+  rawVendorName?: true
   platformId?: true
   periodStart?: true
   periodEnd?: true
   grossRevenue?: true
   amgCommission?: true
   vendorNet?: true
+  lineItemName?: true
+  status?: true
   payoutId?: true
   createdAt?: true
 }
@@ -127,13 +143,17 @@ export type RevenueRecordCountAggregateInputType = {
   id?: true
   reportId?: true
   vendorId?: true
+  rawVendorName?: true
   platformId?: true
   periodStart?: true
   periodEnd?: true
   grossRevenue?: true
   amgCommission?: true
   vendorNet?: true
+  lineItemName?: true
+  metadata?: true
   rawLineData?: true
+  status?: true
   payoutId?: true
   createdAt?: true
   _all?: true
@@ -228,14 +248,18 @@ export type RevenueRecordGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 export type RevenueRecordGroupByOutputType = {
   id: string
   reportId: string | null
-  vendorId: string
+  vendorId: string | null
+  rawVendorName: string
   platformId: string
   periodStart: Date
   periodEnd: Date
   grossRevenue: runtime.Decimal
   amgCommission: runtime.Decimal
   vendorNet: runtime.Decimal
+  lineItemName: string | null
+  metadata: runtime.JsonValue | null
   rawLineData: runtime.JsonValue | null
+  status: string
   payoutId: string | null
   createdAt: Date
   _count: RevenueRecordCountAggregateOutputType | null
@@ -266,18 +290,22 @@ export type RevenueRecordWhereInput = {
   NOT?: Prisma.RevenueRecordWhereInput | Prisma.RevenueRecordWhereInput[]
   id?: Prisma.StringFilter<"RevenueRecord"> | string
   reportId?: Prisma.StringNullableFilter<"RevenueRecord"> | string | null
-  vendorId?: Prisma.StringFilter<"RevenueRecord"> | string
+  vendorId?: Prisma.StringNullableFilter<"RevenueRecord"> | string | null
+  rawVendorName?: Prisma.StringFilter<"RevenueRecord"> | string
   platformId?: Prisma.StringFilter<"RevenueRecord"> | string
   periodStart?: Prisma.DateTimeFilter<"RevenueRecord"> | Date | string
   periodEnd?: Prisma.DateTimeFilter<"RevenueRecord"> | Date | string
   grossRevenue?: Prisma.DecimalFilter<"RevenueRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFilter<"RevenueRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFilter<"RevenueRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.StringNullableFilter<"RevenueRecord"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"RevenueRecord">
   rawLineData?: Prisma.JsonNullableFilter<"RevenueRecord">
+  status?: Prisma.StringFilter<"RevenueRecord"> | string
   payoutId?: Prisma.StringNullableFilter<"RevenueRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RevenueRecord"> | Date | string
   report?: Prisma.XOR<Prisma.RevenueReportNullableScalarRelationFilter, Prisma.RevenueReportWhereInput> | null
-  vendor?: Prisma.XOR<Prisma.VendorScalarRelationFilter, Prisma.VendorWhereInput>
+  vendor?: Prisma.XOR<Prisma.VendorNullableScalarRelationFilter, Prisma.VendorWhereInput> | null
   platform?: Prisma.XOR<Prisma.PlatformScalarRelationFilter, Prisma.PlatformWhereInput>
   payout?: Prisma.XOR<Prisma.PayoutNullableScalarRelationFilter, Prisma.PayoutWhereInput> | null
 }
@@ -285,14 +313,18 @@ export type RevenueRecordWhereInput = {
 export type RevenueRecordOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   reportId?: Prisma.SortOrderInput | Prisma.SortOrder
-  vendorId?: Prisma.SortOrder
+  vendorId?: Prisma.SortOrderInput | Prisma.SortOrder
+  rawVendorName?: Prisma.SortOrder
   platformId?: Prisma.SortOrder
   periodStart?: Prisma.SortOrder
   periodEnd?: Prisma.SortOrder
   grossRevenue?: Prisma.SortOrder
   amgCommission?: Prisma.SortOrder
   vendorNet?: Prisma.SortOrder
+  lineItemName?: Prisma.SortOrderInput | Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   rawLineData?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   payoutId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   report?: Prisma.RevenueReportOrderByWithRelationInput
@@ -307,18 +339,22 @@ export type RevenueRecordWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.RevenueRecordWhereInput[]
   NOT?: Prisma.RevenueRecordWhereInput | Prisma.RevenueRecordWhereInput[]
   reportId?: Prisma.StringNullableFilter<"RevenueRecord"> | string | null
-  vendorId?: Prisma.StringFilter<"RevenueRecord"> | string
+  vendorId?: Prisma.StringNullableFilter<"RevenueRecord"> | string | null
+  rawVendorName?: Prisma.StringFilter<"RevenueRecord"> | string
   platformId?: Prisma.StringFilter<"RevenueRecord"> | string
   periodStart?: Prisma.DateTimeFilter<"RevenueRecord"> | Date | string
   periodEnd?: Prisma.DateTimeFilter<"RevenueRecord"> | Date | string
   grossRevenue?: Prisma.DecimalFilter<"RevenueRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFilter<"RevenueRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFilter<"RevenueRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.StringNullableFilter<"RevenueRecord"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"RevenueRecord">
   rawLineData?: Prisma.JsonNullableFilter<"RevenueRecord">
+  status?: Prisma.StringFilter<"RevenueRecord"> | string
   payoutId?: Prisma.StringNullableFilter<"RevenueRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RevenueRecord"> | Date | string
   report?: Prisma.XOR<Prisma.RevenueReportNullableScalarRelationFilter, Prisma.RevenueReportWhereInput> | null
-  vendor?: Prisma.XOR<Prisma.VendorScalarRelationFilter, Prisma.VendorWhereInput>
+  vendor?: Prisma.XOR<Prisma.VendorNullableScalarRelationFilter, Prisma.VendorWhereInput> | null
   platform?: Prisma.XOR<Prisma.PlatformScalarRelationFilter, Prisma.PlatformWhereInput>
   payout?: Prisma.XOR<Prisma.PayoutNullableScalarRelationFilter, Prisma.PayoutWhereInput> | null
 }, "id">
@@ -326,14 +362,18 @@ export type RevenueRecordWhereUniqueInput = Prisma.AtLeast<{
 export type RevenueRecordOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   reportId?: Prisma.SortOrderInput | Prisma.SortOrder
-  vendorId?: Prisma.SortOrder
+  vendorId?: Prisma.SortOrderInput | Prisma.SortOrder
+  rawVendorName?: Prisma.SortOrder
   platformId?: Prisma.SortOrder
   periodStart?: Prisma.SortOrder
   periodEnd?: Prisma.SortOrder
   grossRevenue?: Prisma.SortOrder
   amgCommission?: Prisma.SortOrder
   vendorNet?: Prisma.SortOrder
+  lineItemName?: Prisma.SortOrderInput | Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   rawLineData?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   payoutId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.RevenueRecordCountOrderByAggregateInput
@@ -349,29 +389,37 @@ export type RevenueRecordScalarWhereWithAggregatesInput = {
   NOT?: Prisma.RevenueRecordScalarWhereWithAggregatesInput | Prisma.RevenueRecordScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"RevenueRecord"> | string
   reportId?: Prisma.StringNullableWithAggregatesFilter<"RevenueRecord"> | string | null
-  vendorId?: Prisma.StringWithAggregatesFilter<"RevenueRecord"> | string
+  vendorId?: Prisma.StringNullableWithAggregatesFilter<"RevenueRecord"> | string | null
+  rawVendorName?: Prisma.StringWithAggregatesFilter<"RevenueRecord"> | string
   platformId?: Prisma.StringWithAggregatesFilter<"RevenueRecord"> | string
   periodStart?: Prisma.DateTimeWithAggregatesFilter<"RevenueRecord"> | Date | string
   periodEnd?: Prisma.DateTimeWithAggregatesFilter<"RevenueRecord"> | Date | string
   grossRevenue?: Prisma.DecimalWithAggregatesFilter<"RevenueRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalWithAggregatesFilter<"RevenueRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalWithAggregatesFilter<"RevenueRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.StringNullableWithAggregatesFilter<"RevenueRecord"> | string | null
+  metadata?: Prisma.JsonNullableWithAggregatesFilter<"RevenueRecord">
   rawLineData?: Prisma.JsonNullableWithAggregatesFilter<"RevenueRecord">
+  status?: Prisma.StringWithAggregatesFilter<"RevenueRecord"> | string
   payoutId?: Prisma.StringNullableWithAggregatesFilter<"RevenueRecord"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"RevenueRecord"> | Date | string
 }
 
 export type RevenueRecordCreateInput = {
   id?: string
+  rawVendorName: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   createdAt?: Date | string
   report?: Prisma.RevenueReportCreateNestedOneWithoutRecordsInput
-  vendor: Prisma.VendorCreateNestedOneWithoutRevenueRecordsInput
+  vendor?: Prisma.VendorCreateNestedOneWithoutRevenueRecordsInput
   platform: Prisma.PlatformCreateNestedOneWithoutRevenueRecordsInput
   payout?: Prisma.PayoutCreateNestedOneWithoutItemsInput
 }
@@ -379,29 +427,37 @@ export type RevenueRecordCreateInput = {
 export type RevenueRecordUncheckedCreateInput = {
   id?: string
   reportId?: string | null
-  vendorId: string
+  vendorId?: string | null
+  rawVendorName: string
   platformId: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   payoutId?: string | null
   createdAt?: Date | string
 }
 
 export type RevenueRecordUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   report?: Prisma.RevenueReportUpdateOneWithoutRecordsNestedInput
-  vendor?: Prisma.VendorUpdateOneRequiredWithoutRevenueRecordsNestedInput
+  vendor?: Prisma.VendorUpdateOneWithoutRevenueRecordsNestedInput
   platform?: Prisma.PlatformUpdateOneRequiredWithoutRevenueRecordsNestedInput
   payout?: Prisma.PayoutUpdateOneWithoutItemsNestedInput
 }
@@ -409,14 +465,18 @@ export type RevenueRecordUpdateInput = {
 export type RevenueRecordUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reportId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  vendorId?: Prisma.StringFieldUpdateOperationsInput | string
+  vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   platformId?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   payoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -424,40 +484,52 @@ export type RevenueRecordUncheckedUpdateInput = {
 export type RevenueRecordCreateManyInput = {
   id?: string
   reportId?: string | null
-  vendorId: string
+  vendorId?: string | null
+  rawVendorName: string
   platformId: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   payoutId?: string | null
   createdAt?: Date | string
 }
 
 export type RevenueRecordUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type RevenueRecordUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reportId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  vendorId?: Prisma.StringFieldUpdateOperationsInput | string
+  vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   platformId?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   payoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -476,13 +548,17 @@ export type RevenueRecordCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   reportId?: Prisma.SortOrder
   vendorId?: Prisma.SortOrder
+  rawVendorName?: Prisma.SortOrder
   platformId?: Prisma.SortOrder
   periodStart?: Prisma.SortOrder
   periodEnd?: Prisma.SortOrder
   grossRevenue?: Prisma.SortOrder
   amgCommission?: Prisma.SortOrder
   vendorNet?: Prisma.SortOrder
+  lineItemName?: Prisma.SortOrder
+  metadata?: Prisma.SortOrder
   rawLineData?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   payoutId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -497,12 +573,15 @@ export type RevenueRecordMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   reportId?: Prisma.SortOrder
   vendorId?: Prisma.SortOrder
+  rawVendorName?: Prisma.SortOrder
   platformId?: Prisma.SortOrder
   periodStart?: Prisma.SortOrder
   periodEnd?: Prisma.SortOrder
   grossRevenue?: Prisma.SortOrder
   amgCommission?: Prisma.SortOrder
   vendorNet?: Prisma.SortOrder
+  lineItemName?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   payoutId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -511,12 +590,15 @@ export type RevenueRecordMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   reportId?: Prisma.SortOrder
   vendorId?: Prisma.SortOrder
+  rawVendorName?: Prisma.SortOrder
   platformId?: Prisma.SortOrder
   periodStart?: Prisma.SortOrder
   periodEnd?: Prisma.SortOrder
   grossRevenue?: Prisma.SortOrder
   amgCommission?: Prisma.SortOrder
   vendorNet?: Prisma.SortOrder
+  lineItemName?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   payoutId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -705,12 +787,16 @@ export type RevenueRecordUncheckedUpdateManyWithoutPayoutNestedInput = {
 
 export type RevenueRecordCreateWithoutVendorInput = {
   id?: string
+  rawVendorName: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   createdAt?: Date | string
   report?: Prisma.RevenueReportCreateNestedOneWithoutRecordsInput
   platform: Prisma.PlatformCreateNestedOneWithoutRevenueRecordsInput
@@ -720,13 +806,17 @@ export type RevenueRecordCreateWithoutVendorInput = {
 export type RevenueRecordUncheckedCreateWithoutVendorInput = {
   id?: string
   reportId?: string | null
+  rawVendorName: string
   platformId: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   payoutId?: string | null
   createdAt?: Date | string
 }
@@ -763,42 +853,54 @@ export type RevenueRecordScalarWhereInput = {
   NOT?: Prisma.RevenueRecordScalarWhereInput | Prisma.RevenueRecordScalarWhereInput[]
   id?: Prisma.StringFilter<"RevenueRecord"> | string
   reportId?: Prisma.StringNullableFilter<"RevenueRecord"> | string | null
-  vendorId?: Prisma.StringFilter<"RevenueRecord"> | string
+  vendorId?: Prisma.StringNullableFilter<"RevenueRecord"> | string | null
+  rawVendorName?: Prisma.StringFilter<"RevenueRecord"> | string
   platformId?: Prisma.StringFilter<"RevenueRecord"> | string
   periodStart?: Prisma.DateTimeFilter<"RevenueRecord"> | Date | string
   periodEnd?: Prisma.DateTimeFilter<"RevenueRecord"> | Date | string
   grossRevenue?: Prisma.DecimalFilter<"RevenueRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFilter<"RevenueRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFilter<"RevenueRecord"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.StringNullableFilter<"RevenueRecord"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"RevenueRecord">
   rawLineData?: Prisma.JsonNullableFilter<"RevenueRecord">
+  status?: Prisma.StringFilter<"RevenueRecord"> | string
   payoutId?: Prisma.StringNullableFilter<"RevenueRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RevenueRecord"> | Date | string
 }
 
 export type RevenueRecordCreateWithoutPlatformInput = {
   id?: string
+  rawVendorName: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   createdAt?: Date | string
   report?: Prisma.RevenueReportCreateNestedOneWithoutRecordsInput
-  vendor: Prisma.VendorCreateNestedOneWithoutRevenueRecordsInput
+  vendor?: Prisma.VendorCreateNestedOneWithoutRevenueRecordsInput
   payout?: Prisma.PayoutCreateNestedOneWithoutItemsInput
 }
 
 export type RevenueRecordUncheckedCreateWithoutPlatformInput = {
   id?: string
   reportId?: string | null
-  vendorId: string
+  vendorId?: string | null
+  rawVendorName: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   payoutId?: string | null
   createdAt?: Date | string
 }
@@ -831,28 +933,36 @@ export type RevenueRecordUpdateManyWithWhereWithoutPlatformInput = {
 
 export type RevenueRecordCreateWithoutReportInput = {
   id?: string
+  rawVendorName: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   createdAt?: Date | string
-  vendor: Prisma.VendorCreateNestedOneWithoutRevenueRecordsInput
+  vendor?: Prisma.VendorCreateNestedOneWithoutRevenueRecordsInput
   platform: Prisma.PlatformCreateNestedOneWithoutRevenueRecordsInput
   payout?: Prisma.PayoutCreateNestedOneWithoutItemsInput
 }
 
 export type RevenueRecordUncheckedCreateWithoutReportInput = {
   id?: string
-  vendorId: string
+  vendorId?: string | null
+  rawVendorName: string
   platformId: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   payoutId?: string | null
   createdAt?: Date | string
 }
@@ -885,29 +995,37 @@ export type RevenueRecordUpdateManyWithWhereWithoutReportInput = {
 
 export type RevenueRecordCreateWithoutPayoutInput = {
   id?: string
+  rawVendorName: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   createdAt?: Date | string
   report?: Prisma.RevenueReportCreateNestedOneWithoutRecordsInput
-  vendor: Prisma.VendorCreateNestedOneWithoutRevenueRecordsInput
+  vendor?: Prisma.VendorCreateNestedOneWithoutRevenueRecordsInput
   platform: Prisma.PlatformCreateNestedOneWithoutRevenueRecordsInput
 }
 
 export type RevenueRecordUncheckedCreateWithoutPayoutInput = {
   id?: string
   reportId?: string | null
-  vendorId: string
+  vendorId?: string | null
+  rawVendorName: string
   platformId: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   createdAt?: Date | string
 }
 
@@ -940,25 +1058,33 @@ export type RevenueRecordUpdateManyWithWhereWithoutPayoutInput = {
 export type RevenueRecordCreateManyVendorInput = {
   id?: string
   reportId?: string | null
+  rawVendorName: string
   platformId: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   payoutId?: string | null
   createdAt?: Date | string
 }
 
 export type RevenueRecordUpdateWithoutVendorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   report?: Prisma.RevenueReportUpdateOneWithoutRecordsNestedInput
   platform?: Prisma.PlatformUpdateOneRequiredWithoutRevenueRecordsNestedInput
@@ -968,13 +1094,17 @@ export type RevenueRecordUpdateWithoutVendorInput = {
 export type RevenueRecordUncheckedUpdateWithoutVendorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reportId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   platformId?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   payoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -982,13 +1112,17 @@ export type RevenueRecordUncheckedUpdateWithoutVendorInput = {
 export type RevenueRecordUncheckedUpdateManyWithoutVendorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reportId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   platformId?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   payoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -996,41 +1130,53 @@ export type RevenueRecordUncheckedUpdateManyWithoutVendorInput = {
 export type RevenueRecordCreateManyPlatformInput = {
   id?: string
   reportId?: string | null
-  vendorId: string
+  vendorId?: string | null
+  rawVendorName: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   payoutId?: string | null
   createdAt?: Date | string
 }
 
 export type RevenueRecordUpdateWithoutPlatformInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   report?: Prisma.RevenueReportUpdateOneWithoutRecordsNestedInput
-  vendor?: Prisma.VendorUpdateOneRequiredWithoutRevenueRecordsNestedInput
+  vendor?: Prisma.VendorUpdateOneWithoutRevenueRecordsNestedInput
   payout?: Prisma.PayoutUpdateOneWithoutItemsNestedInput
 }
 
 export type RevenueRecordUncheckedUpdateWithoutPlatformInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reportId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  vendorId?: Prisma.StringFieldUpdateOperationsInput | string
+  vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   payoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1038,69 +1184,89 @@ export type RevenueRecordUncheckedUpdateWithoutPlatformInput = {
 export type RevenueRecordUncheckedUpdateManyWithoutPlatformInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reportId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  vendorId?: Prisma.StringFieldUpdateOperationsInput | string
+  vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   payoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type RevenueRecordCreateManyReportInput = {
   id?: string
-  vendorId: string
+  vendorId?: string | null
+  rawVendorName: string
   platformId: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   payoutId?: string | null
   createdAt?: Date | string
 }
 
 export type RevenueRecordUpdateWithoutReportInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  vendor?: Prisma.VendorUpdateOneRequiredWithoutRevenueRecordsNestedInput
+  vendor?: Prisma.VendorUpdateOneWithoutRevenueRecordsNestedInput
   platform?: Prisma.PlatformUpdateOneRequiredWithoutRevenueRecordsNestedInput
   payout?: Prisma.PayoutUpdateOneWithoutItemsNestedInput
 }
 
 export type RevenueRecordUncheckedUpdateWithoutReportInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  vendorId?: Prisma.StringFieldUpdateOperationsInput | string
+  vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   platformId?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   payoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type RevenueRecordUncheckedUpdateManyWithoutReportInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  vendorId?: Prisma.StringFieldUpdateOperationsInput | string
+  vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   platformId?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   payoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1108,56 +1274,72 @@ export type RevenueRecordUncheckedUpdateManyWithoutReportInput = {
 export type RevenueRecordCreateManyPayoutInput = {
   id?: string
   reportId?: string | null
-  vendorId: string
+  vendorId?: string | null
+  rawVendorName: string
   platformId: string
   periodStart: Date | string
   periodEnd: Date | string
   grossRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  amgCommission: runtime.Decimal | runtime.DecimalJsLike | number | string
-  vendorNet: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amgCommission?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vendorNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
   createdAt?: Date | string
 }
 
 export type RevenueRecordUpdateWithoutPayoutInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   report?: Prisma.RevenueReportUpdateOneWithoutRecordsNestedInput
-  vendor?: Prisma.VendorUpdateOneRequiredWithoutRevenueRecordsNestedInput
+  vendor?: Prisma.VendorUpdateOneWithoutRevenueRecordsNestedInput
   platform?: Prisma.PlatformUpdateOneRequiredWithoutRevenueRecordsNestedInput
 }
 
 export type RevenueRecordUncheckedUpdateWithoutPayoutInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reportId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  vendorId?: Prisma.StringFieldUpdateOperationsInput | string
+  vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   platformId?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type RevenueRecordUncheckedUpdateManyWithoutPayoutInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reportId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  vendorId?: Prisma.StringFieldUpdateOperationsInput | string
+  vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawVendorName?: Prisma.StringFieldUpdateOperationsInput | string
   platformId?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   grossRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amgCommission?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   vendorNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lineItemName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawLineData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -1167,17 +1349,21 @@ export type RevenueRecordSelect<ExtArgs extends runtime.Types.Extensions.Interna
   id?: boolean
   reportId?: boolean
   vendorId?: boolean
+  rawVendorName?: boolean
   platformId?: boolean
   periodStart?: boolean
   periodEnd?: boolean
   grossRevenue?: boolean
   amgCommission?: boolean
   vendorNet?: boolean
+  lineItemName?: boolean
+  metadata?: boolean
   rawLineData?: boolean
+  status?: boolean
   payoutId?: boolean
   createdAt?: boolean
   report?: boolean | Prisma.RevenueRecord$reportArgs<ExtArgs>
-  vendor?: boolean | Prisma.VendorDefaultArgs<ExtArgs>
+  vendor?: boolean | Prisma.RevenueRecord$vendorArgs<ExtArgs>
   platform?: boolean | Prisma.PlatformDefaultArgs<ExtArgs>
   payout?: boolean | Prisma.RevenueRecord$payoutArgs<ExtArgs>
 }, ExtArgs["result"]["revenueRecord"]>
@@ -1186,17 +1372,21 @@ export type RevenueRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   id?: boolean
   reportId?: boolean
   vendorId?: boolean
+  rawVendorName?: boolean
   platformId?: boolean
   periodStart?: boolean
   periodEnd?: boolean
   grossRevenue?: boolean
   amgCommission?: boolean
   vendorNet?: boolean
+  lineItemName?: boolean
+  metadata?: boolean
   rawLineData?: boolean
+  status?: boolean
   payoutId?: boolean
   createdAt?: boolean
   report?: boolean | Prisma.RevenueRecord$reportArgs<ExtArgs>
-  vendor?: boolean | Prisma.VendorDefaultArgs<ExtArgs>
+  vendor?: boolean | Prisma.RevenueRecord$vendorArgs<ExtArgs>
   platform?: boolean | Prisma.PlatformDefaultArgs<ExtArgs>
   payout?: boolean | Prisma.RevenueRecord$payoutArgs<ExtArgs>
 }, ExtArgs["result"]["revenueRecord"]>
@@ -1205,17 +1395,21 @@ export type RevenueRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   id?: boolean
   reportId?: boolean
   vendorId?: boolean
+  rawVendorName?: boolean
   platformId?: boolean
   periodStart?: boolean
   periodEnd?: boolean
   grossRevenue?: boolean
   amgCommission?: boolean
   vendorNet?: boolean
+  lineItemName?: boolean
+  metadata?: boolean
   rawLineData?: boolean
+  status?: boolean
   payoutId?: boolean
   createdAt?: boolean
   report?: boolean | Prisma.RevenueRecord$reportArgs<ExtArgs>
-  vendor?: boolean | Prisma.VendorDefaultArgs<ExtArgs>
+  vendor?: boolean | Prisma.RevenueRecord$vendorArgs<ExtArgs>
   platform?: boolean | Prisma.PlatformDefaultArgs<ExtArgs>
   payout?: boolean | Prisma.RevenueRecord$payoutArgs<ExtArgs>
 }, ExtArgs["result"]["revenueRecord"]>
@@ -1224,33 +1418,37 @@ export type RevenueRecordSelectScalar = {
   id?: boolean
   reportId?: boolean
   vendorId?: boolean
+  rawVendorName?: boolean
   platformId?: boolean
   periodStart?: boolean
   periodEnd?: boolean
   grossRevenue?: boolean
   amgCommission?: boolean
   vendorNet?: boolean
+  lineItemName?: boolean
+  metadata?: boolean
   rawLineData?: boolean
+  status?: boolean
   payoutId?: boolean
   createdAt?: boolean
 }
 
-export type RevenueRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reportId" | "vendorId" | "platformId" | "periodStart" | "periodEnd" | "grossRevenue" | "amgCommission" | "vendorNet" | "rawLineData" | "payoutId" | "createdAt", ExtArgs["result"]["revenueRecord"]>
+export type RevenueRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reportId" | "vendorId" | "rawVendorName" | "platformId" | "periodStart" | "periodEnd" | "grossRevenue" | "amgCommission" | "vendorNet" | "lineItemName" | "metadata" | "rawLineData" | "status" | "payoutId" | "createdAt", ExtArgs["result"]["revenueRecord"]>
 export type RevenueRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   report?: boolean | Prisma.RevenueRecord$reportArgs<ExtArgs>
-  vendor?: boolean | Prisma.VendorDefaultArgs<ExtArgs>
+  vendor?: boolean | Prisma.RevenueRecord$vendorArgs<ExtArgs>
   platform?: boolean | Prisma.PlatformDefaultArgs<ExtArgs>
   payout?: boolean | Prisma.RevenueRecord$payoutArgs<ExtArgs>
 }
 export type RevenueRecordIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   report?: boolean | Prisma.RevenueRecord$reportArgs<ExtArgs>
-  vendor?: boolean | Prisma.VendorDefaultArgs<ExtArgs>
+  vendor?: boolean | Prisma.RevenueRecord$vendorArgs<ExtArgs>
   platform?: boolean | Prisma.PlatformDefaultArgs<ExtArgs>
   payout?: boolean | Prisma.RevenueRecord$payoutArgs<ExtArgs>
 }
 export type RevenueRecordIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   report?: boolean | Prisma.RevenueRecord$reportArgs<ExtArgs>
-  vendor?: boolean | Prisma.VendorDefaultArgs<ExtArgs>
+  vendor?: boolean | Prisma.RevenueRecord$vendorArgs<ExtArgs>
   platform?: boolean | Prisma.PlatformDefaultArgs<ExtArgs>
   payout?: boolean | Prisma.RevenueRecord$payoutArgs<ExtArgs>
 }
@@ -1259,21 +1457,25 @@ export type $RevenueRecordPayload<ExtArgs extends runtime.Types.Extensions.Inter
   name: "RevenueRecord"
   objects: {
     report: Prisma.$RevenueReportPayload<ExtArgs> | null
-    vendor: Prisma.$VendorPayload<ExtArgs>
+    vendor: Prisma.$VendorPayload<ExtArgs> | null
     platform: Prisma.$PlatformPayload<ExtArgs>
     payout: Prisma.$PayoutPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     reportId: string | null
-    vendorId: string
+    vendorId: string | null
+    rawVendorName: string
     platformId: string
     periodStart: Date
     periodEnd: Date
     grossRevenue: runtime.Decimal
     amgCommission: runtime.Decimal
     vendorNet: runtime.Decimal
+    lineItemName: string | null
+    metadata: runtime.JsonValue | null
     rawLineData: runtime.JsonValue | null
+    status: string
     payoutId: string | null
     createdAt: Date
   }, ExtArgs["result"]["revenueRecord"]>
@@ -1671,7 +1873,7 @@ readonly fields: RevenueRecordFieldRefs;
 export interface Prisma__RevenueRecordClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   report<T extends Prisma.RevenueRecord$reportArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RevenueRecord$reportArgs<ExtArgs>>): Prisma.Prisma__RevenueReportClient<runtime.Types.Result.GetResult<Prisma.$RevenueReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  vendor<T extends Prisma.VendorDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.VendorDefaultArgs<ExtArgs>>): Prisma.Prisma__VendorClient<runtime.Types.Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  vendor<T extends Prisma.RevenueRecord$vendorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RevenueRecord$vendorArgs<ExtArgs>>): Prisma.Prisma__VendorClient<runtime.Types.Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   platform<T extends Prisma.PlatformDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformDefaultArgs<ExtArgs>>): Prisma.Prisma__PlatformClient<runtime.Types.Result.GetResult<Prisma.$PlatformPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   payout<T extends Prisma.RevenueRecord$payoutArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RevenueRecord$payoutArgs<ExtArgs>>): Prisma.Prisma__PayoutClient<runtime.Types.Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1706,13 +1908,17 @@ export interface RevenueRecordFieldRefs {
   readonly id: Prisma.FieldRef<"RevenueRecord", 'String'>
   readonly reportId: Prisma.FieldRef<"RevenueRecord", 'String'>
   readonly vendorId: Prisma.FieldRef<"RevenueRecord", 'String'>
+  readonly rawVendorName: Prisma.FieldRef<"RevenueRecord", 'String'>
   readonly platformId: Prisma.FieldRef<"RevenueRecord", 'String'>
   readonly periodStart: Prisma.FieldRef<"RevenueRecord", 'DateTime'>
   readonly periodEnd: Prisma.FieldRef<"RevenueRecord", 'DateTime'>
   readonly grossRevenue: Prisma.FieldRef<"RevenueRecord", 'Decimal'>
   readonly amgCommission: Prisma.FieldRef<"RevenueRecord", 'Decimal'>
   readonly vendorNet: Prisma.FieldRef<"RevenueRecord", 'Decimal'>
+  readonly lineItemName: Prisma.FieldRef<"RevenueRecord", 'String'>
+  readonly metadata: Prisma.FieldRef<"RevenueRecord", 'Json'>
   readonly rawLineData: Prisma.FieldRef<"RevenueRecord", 'Json'>
+  readonly status: Prisma.FieldRef<"RevenueRecord", 'String'>
   readonly payoutId: Prisma.FieldRef<"RevenueRecord", 'String'>
   readonly createdAt: Prisma.FieldRef<"RevenueRecord", 'DateTime'>
 }
@@ -2127,6 +2333,25 @@ export type RevenueRecord$reportArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   include?: Prisma.RevenueReportInclude<ExtArgs> | null
   where?: Prisma.RevenueReportWhereInput
+}
+
+/**
+ * RevenueRecord.vendor
+ */
+export type RevenueRecord$vendorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Vendor
+   */
+  select?: Prisma.VendorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Vendor
+   */
+  omit?: Prisma.VendorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VendorInclude<ExtArgs> | null
+  where?: Prisma.VendorWhereInput
 }
 
 /**

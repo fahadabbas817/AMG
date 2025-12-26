@@ -1,0 +1,45 @@
+﻿sheetname,cell ,cell name,comment
+Add vendor+ details,D35,Select Platform,Should be able to select multiple platforms. Should have an option to "Show all outstanding" (monies owed to Vendor from all platforms)
+Add vendor+ details,C36,To (Time Frame),30-Jun-25
+Add vendor+ details,B36,From (Time Frame),"June 1, 2025
+"
+Add vendor+ details,A3,Labels,All variations shown on Platform reports should be added here in order to easily identify the Vendors statistics automatically
+Add vendor+ details,A25,Platforms Contracted,Should also have a drop down menu to add a new platform to each vendor if we need to update due to new contracts or expirations.
+AMG_Dashboard,D4,Vendor List,the Vendors as links and then when one is clicked you land on the Vendor Details for that Vendor I think it would be easiest to assign each Vendor a number so the statistics across the different reports can be associated with the correct Vendor. 
+Create Payout Report,F1,,"All months/Platforms paid below should be associated with this payout number: AEBN June 2025
+Adult Empire June & May 2025 
+etc.
+"
+Create Payout Report,F3,Net Payout,75% of Column D
+Payment Tracking,A4,102,"The Payout Numbers should be links that if clicked, you can see the payout details.
+"
+Payment Tracking,B2,7/12/2025,"When a date is entered next to a payout report number, all line items (Platform Payout by month) shall no longer show up as Unpaid.
+"
+Payment Tracking,B1,Date Paid,To be entered in manually by AMG accountant.
+Add New platforms,B4,Vendor Refference Number,"This is what the Vendors will see. 
+
+For Example: 
+Data Tech = Corporate Name
+AEBN = Vendor Reference Name
+
+Vendors don't know platform corporate names. 
+"
+Upload Platform Reports,B10,Upload Buttons,Allows browsing of computer to find the file for uploading.
+Upload Platform Reports,B12,Create Reports Manually,Leads to another page where stats can be entered in manually. Stats would be extremely basic - only totals per month.
+Create Reports Manually,A1,Create Reports Manually,"Leads to another page where stats can be entered in manually. Stats would be extremely basic - only totals per month.
+"
+Create Reports Manually,C5,,"I think these platforms would be easier to enter an overall total for the months than provide line item stats. 
+"
+Create Reports Manually,A8,Add Vendor,When you add Vendor another line is added with another drop down of Vendor ID's for selection
+Create Reports Manually,B7,Vendor Id,"Can be a dropdown menu. Maybe like:
+
+Vendor ID: Corporate Name: Sub-Label
+001: Quad Int'l: Score
+001: Quad Int'l: PornMegaLoad
+002: 
+003:
+etc
+"
+Create Reports Manually,D21,Sum of all vendor total here,"Auto-calculates based on above entries.
+"
+Vendor Dashboard Ui,A1,Hello Vendor 001,Some sort of greetings

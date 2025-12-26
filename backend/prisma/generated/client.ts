@@ -53,6 +53,11 @@ export type Vendor = Prisma.VendorModel
  */
 export type Platform = Prisma.PlatformModel
 /**
+ * Model PlatformMappingTemplate
+ * 
+ */
+export type PlatformMappingTemplate = Prisma.PlatformMappingTemplateModel
+/**
  * Model PlatformSplit
  * 
  */

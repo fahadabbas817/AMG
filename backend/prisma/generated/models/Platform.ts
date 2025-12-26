@@ -210,6 +210,8 @@ export type PlatformWhereInput = {
   defaultSplit?: Prisma.FloatFilter<"Platform"> | number
   splits?: Prisma.PlatformSplitListRelationFilter
   revenueRecords?: Prisma.RevenueRecordListRelationFilter
+  revenueReports?: Prisma.RevenueReportListRelationFilter
+  mappingTemplate?: Prisma.XOR<Prisma.PlatformMappingTemplateNullableScalarRelationFilter, Prisma.PlatformMappingTemplateWhereInput> | null
 }
 
 export type PlatformOrderByWithRelationInput = {
@@ -219,6 +221,8 @@ export type PlatformOrderByWithRelationInput = {
   defaultSplit?: Prisma.SortOrder
   splits?: Prisma.PlatformSplitOrderByRelationAggregateInput
   revenueRecords?: Prisma.RevenueRecordOrderByRelationAggregateInput
+  revenueReports?: Prisma.RevenueReportOrderByRelationAggregateInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateOrderByWithRelationInput
 }
 
 export type PlatformWhereUniqueInput = Prisma.AtLeast<{
@@ -231,6 +235,8 @@ export type PlatformWhereUniqueInput = Prisma.AtLeast<{
   defaultSplit?: Prisma.FloatFilter<"Platform"> | number
   splits?: Prisma.PlatformSplitListRelationFilter
   revenueRecords?: Prisma.RevenueRecordListRelationFilter
+  revenueReports?: Prisma.RevenueReportListRelationFilter
+  mappingTemplate?: Prisma.XOR<Prisma.PlatformMappingTemplateNullableScalarRelationFilter, Prisma.PlatformMappingTemplateWhereInput> | null
 }, "id" | "name">
 
 export type PlatformOrderByWithAggregationInput = {
@@ -262,6 +268,8 @@ export type PlatformCreateInput = {
   defaultSplit: number
   splits?: Prisma.PlatformSplitCreateNestedManyWithoutPlatformInput
   revenueRecords?: Prisma.RevenueRecordCreateNestedManyWithoutPlatformInput
+  revenueReports?: Prisma.RevenueReportCreateNestedManyWithoutPlatformInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateCreateNestedOneWithoutPlatformInput
 }
 
 export type PlatformUncheckedCreateInput = {
@@ -271,6 +279,8 @@ export type PlatformUncheckedCreateInput = {
   defaultSplit: number
   splits?: Prisma.PlatformSplitUncheckedCreateNestedManyWithoutPlatformInput
   revenueRecords?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutPlatformInput
+  revenueReports?: Prisma.RevenueReportUncheckedCreateNestedManyWithoutPlatformInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateUncheckedCreateNestedOneWithoutPlatformInput
 }
 
 export type PlatformUpdateInput = {
@@ -280,6 +290,8 @@ export type PlatformUpdateInput = {
   defaultSplit?: Prisma.FloatFieldUpdateOperationsInput | number
   splits?: Prisma.PlatformSplitUpdateManyWithoutPlatformNestedInput
   revenueRecords?: Prisma.RevenueRecordUpdateManyWithoutPlatformNestedInput
+  revenueReports?: Prisma.RevenueReportUpdateManyWithoutPlatformNestedInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateUpdateOneWithoutPlatformNestedInput
 }
 
 export type PlatformUncheckedUpdateInput = {
@@ -289,6 +301,8 @@ export type PlatformUncheckedUpdateInput = {
   defaultSplit?: Prisma.FloatFieldUpdateOperationsInput | number
   splits?: Prisma.PlatformSplitUncheckedUpdateManyWithoutPlatformNestedInput
   revenueRecords?: Prisma.RevenueRecordUncheckedUpdateManyWithoutPlatformNestedInput
+  revenueReports?: Prisma.RevenueReportUncheckedUpdateManyWithoutPlatformNestedInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateUncheckedUpdateOneWithoutPlatformNestedInput
 }
 
 export type PlatformCreateManyInput = {
@@ -346,12 +360,31 @@ export type PlatformScalarRelationFilter = {
   isNot?: Prisma.PlatformWhereInput
 }
 
+export type PlatformNullableScalarRelationFilter = {
+  is?: Prisma.PlatformWhereInput | null
+  isNot?: Prisma.PlatformWhereInput | null
+}
+
 export type FloatFieldUpdateOperationsInput = {
   set?: number
   increment?: number
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type PlatformCreateNestedOneWithoutMappingTemplateInput = {
+  create?: Prisma.XOR<Prisma.PlatformCreateWithoutMappingTemplateInput, Prisma.PlatformUncheckedCreateWithoutMappingTemplateInput>
+  connectOrCreate?: Prisma.PlatformCreateOrConnectWithoutMappingTemplateInput
+  connect?: Prisma.PlatformWhereUniqueInput
+}
+
+export type PlatformUpdateOneRequiredWithoutMappingTemplateNestedInput = {
+  create?: Prisma.XOR<Prisma.PlatformCreateWithoutMappingTemplateInput, Prisma.PlatformUncheckedCreateWithoutMappingTemplateInput>
+  connectOrCreate?: Prisma.PlatformCreateOrConnectWithoutMappingTemplateInput
+  upsert?: Prisma.PlatformUpsertWithoutMappingTemplateInput
+  connect?: Prisma.PlatformWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformUpdateToOneWithWhereWithoutMappingTemplateInput, Prisma.PlatformUpdateWithoutMappingTemplateInput>, Prisma.PlatformUncheckedUpdateWithoutMappingTemplateInput>
 }
 
 export type PlatformCreateNestedOneWithoutSplitsInput = {
@@ -368,6 +401,22 @@ export type PlatformUpdateOneRequiredWithoutSplitsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformUpdateToOneWithWhereWithoutSplitsInput, Prisma.PlatformUpdateWithoutSplitsInput>, Prisma.PlatformUncheckedUpdateWithoutSplitsInput>
 }
 
+export type PlatformCreateNestedOneWithoutRevenueReportsInput = {
+  create?: Prisma.XOR<Prisma.PlatformCreateWithoutRevenueReportsInput, Prisma.PlatformUncheckedCreateWithoutRevenueReportsInput>
+  connectOrCreate?: Prisma.PlatformCreateOrConnectWithoutRevenueReportsInput
+  connect?: Prisma.PlatformWhereUniqueInput
+}
+
+export type PlatformUpdateOneWithoutRevenueReportsNestedInput = {
+  create?: Prisma.XOR<Prisma.PlatformCreateWithoutRevenueReportsInput, Prisma.PlatformUncheckedCreateWithoutRevenueReportsInput>
+  connectOrCreate?: Prisma.PlatformCreateOrConnectWithoutRevenueReportsInput
+  upsert?: Prisma.PlatformUpsertWithoutRevenueReportsInput
+  disconnect?: Prisma.PlatformWhereInput | boolean
+  delete?: Prisma.PlatformWhereInput | boolean
+  connect?: Prisma.PlatformWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformUpdateToOneWithWhereWithoutRevenueReportsInput, Prisma.PlatformUpdateWithoutRevenueReportsInput>, Prisma.PlatformUncheckedUpdateWithoutRevenueReportsInput>
+}
+
 export type PlatformCreateNestedOneWithoutRevenueRecordsInput = {
   create?: Prisma.XOR<Prisma.PlatformCreateWithoutRevenueRecordsInput, Prisma.PlatformUncheckedCreateWithoutRevenueRecordsInput>
   connectOrCreate?: Prisma.PlatformCreateOrConnectWithoutRevenueRecordsInput
@@ -382,12 +431,70 @@ export type PlatformUpdateOneRequiredWithoutRevenueRecordsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformUpdateToOneWithWhereWithoutRevenueRecordsInput, Prisma.PlatformUpdateWithoutRevenueRecordsInput>, Prisma.PlatformUncheckedUpdateWithoutRevenueRecordsInput>
 }
 
+export type PlatformCreateWithoutMappingTemplateInput = {
+  id?: string
+  name: string
+  corporateName?: string | null
+  defaultSplit: number
+  splits?: Prisma.PlatformSplitCreateNestedManyWithoutPlatformInput
+  revenueRecords?: Prisma.RevenueRecordCreateNestedManyWithoutPlatformInput
+  revenueReports?: Prisma.RevenueReportCreateNestedManyWithoutPlatformInput
+}
+
+export type PlatformUncheckedCreateWithoutMappingTemplateInput = {
+  id?: string
+  name: string
+  corporateName?: string | null
+  defaultSplit: number
+  splits?: Prisma.PlatformSplitUncheckedCreateNestedManyWithoutPlatformInput
+  revenueRecords?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutPlatformInput
+  revenueReports?: Prisma.RevenueReportUncheckedCreateNestedManyWithoutPlatformInput
+}
+
+export type PlatformCreateOrConnectWithoutMappingTemplateInput = {
+  where: Prisma.PlatformWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlatformCreateWithoutMappingTemplateInput, Prisma.PlatformUncheckedCreateWithoutMappingTemplateInput>
+}
+
+export type PlatformUpsertWithoutMappingTemplateInput = {
+  update: Prisma.XOR<Prisma.PlatformUpdateWithoutMappingTemplateInput, Prisma.PlatformUncheckedUpdateWithoutMappingTemplateInput>
+  create: Prisma.XOR<Prisma.PlatformCreateWithoutMappingTemplateInput, Prisma.PlatformUncheckedCreateWithoutMappingTemplateInput>
+  where?: Prisma.PlatformWhereInput
+}
+
+export type PlatformUpdateToOneWithWhereWithoutMappingTemplateInput = {
+  where?: Prisma.PlatformWhereInput
+  data: Prisma.XOR<Prisma.PlatformUpdateWithoutMappingTemplateInput, Prisma.PlatformUncheckedUpdateWithoutMappingTemplateInput>
+}
+
+export type PlatformUpdateWithoutMappingTemplateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultSplit?: Prisma.FloatFieldUpdateOperationsInput | number
+  splits?: Prisma.PlatformSplitUpdateManyWithoutPlatformNestedInput
+  revenueRecords?: Prisma.RevenueRecordUpdateManyWithoutPlatformNestedInput
+  revenueReports?: Prisma.RevenueReportUpdateManyWithoutPlatformNestedInput
+}
+
+export type PlatformUncheckedUpdateWithoutMappingTemplateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultSplit?: Prisma.FloatFieldUpdateOperationsInput | number
+  splits?: Prisma.PlatformSplitUncheckedUpdateManyWithoutPlatformNestedInput
+  revenueRecords?: Prisma.RevenueRecordUncheckedUpdateManyWithoutPlatformNestedInput
+  revenueReports?: Prisma.RevenueReportUncheckedUpdateManyWithoutPlatformNestedInput
+}
+
 export type PlatformCreateWithoutSplitsInput = {
   id?: string
   name: string
   corporateName?: string | null
   defaultSplit: number
   revenueRecords?: Prisma.RevenueRecordCreateNestedManyWithoutPlatformInput
+  revenueReports?: Prisma.RevenueReportCreateNestedManyWithoutPlatformInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateCreateNestedOneWithoutPlatformInput
 }
 
 export type PlatformUncheckedCreateWithoutSplitsInput = {
@@ -396,6 +503,8 @@ export type PlatformUncheckedCreateWithoutSplitsInput = {
   corporateName?: string | null
   defaultSplit: number
   revenueRecords?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutPlatformInput
+  revenueReports?: Prisma.RevenueReportUncheckedCreateNestedManyWithoutPlatformInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateUncheckedCreateNestedOneWithoutPlatformInput
 }
 
 export type PlatformCreateOrConnectWithoutSplitsInput = {
@@ -420,6 +529,8 @@ export type PlatformUpdateWithoutSplitsInput = {
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultSplit?: Prisma.FloatFieldUpdateOperationsInput | number
   revenueRecords?: Prisma.RevenueRecordUpdateManyWithoutPlatformNestedInput
+  revenueReports?: Prisma.RevenueReportUpdateManyWithoutPlatformNestedInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateUpdateOneWithoutPlatformNestedInput
 }
 
 export type PlatformUncheckedUpdateWithoutSplitsInput = {
@@ -428,6 +539,64 @@ export type PlatformUncheckedUpdateWithoutSplitsInput = {
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultSplit?: Prisma.FloatFieldUpdateOperationsInput | number
   revenueRecords?: Prisma.RevenueRecordUncheckedUpdateManyWithoutPlatformNestedInput
+  revenueReports?: Prisma.RevenueReportUncheckedUpdateManyWithoutPlatformNestedInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateUncheckedUpdateOneWithoutPlatformNestedInput
+}
+
+export type PlatformCreateWithoutRevenueReportsInput = {
+  id?: string
+  name: string
+  corporateName?: string | null
+  defaultSplit: number
+  splits?: Prisma.PlatformSplitCreateNestedManyWithoutPlatformInput
+  revenueRecords?: Prisma.RevenueRecordCreateNestedManyWithoutPlatformInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateCreateNestedOneWithoutPlatformInput
+}
+
+export type PlatformUncheckedCreateWithoutRevenueReportsInput = {
+  id?: string
+  name: string
+  corporateName?: string | null
+  defaultSplit: number
+  splits?: Prisma.PlatformSplitUncheckedCreateNestedManyWithoutPlatformInput
+  revenueRecords?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutPlatformInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateUncheckedCreateNestedOneWithoutPlatformInput
+}
+
+export type PlatformCreateOrConnectWithoutRevenueReportsInput = {
+  where: Prisma.PlatformWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlatformCreateWithoutRevenueReportsInput, Prisma.PlatformUncheckedCreateWithoutRevenueReportsInput>
+}
+
+export type PlatformUpsertWithoutRevenueReportsInput = {
+  update: Prisma.XOR<Prisma.PlatformUpdateWithoutRevenueReportsInput, Prisma.PlatformUncheckedUpdateWithoutRevenueReportsInput>
+  create: Prisma.XOR<Prisma.PlatformCreateWithoutRevenueReportsInput, Prisma.PlatformUncheckedCreateWithoutRevenueReportsInput>
+  where?: Prisma.PlatformWhereInput
+}
+
+export type PlatformUpdateToOneWithWhereWithoutRevenueReportsInput = {
+  where?: Prisma.PlatformWhereInput
+  data: Prisma.XOR<Prisma.PlatformUpdateWithoutRevenueReportsInput, Prisma.PlatformUncheckedUpdateWithoutRevenueReportsInput>
+}
+
+export type PlatformUpdateWithoutRevenueReportsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultSplit?: Prisma.FloatFieldUpdateOperationsInput | number
+  splits?: Prisma.PlatformSplitUpdateManyWithoutPlatformNestedInput
+  revenueRecords?: Prisma.RevenueRecordUpdateManyWithoutPlatformNestedInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateUpdateOneWithoutPlatformNestedInput
+}
+
+export type PlatformUncheckedUpdateWithoutRevenueReportsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultSplit?: Prisma.FloatFieldUpdateOperationsInput | number
+  splits?: Prisma.PlatformSplitUncheckedUpdateManyWithoutPlatformNestedInput
+  revenueRecords?: Prisma.RevenueRecordUncheckedUpdateManyWithoutPlatformNestedInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateUncheckedUpdateOneWithoutPlatformNestedInput
 }
 
 export type PlatformCreateWithoutRevenueRecordsInput = {
@@ -436,6 +605,8 @@ export type PlatformCreateWithoutRevenueRecordsInput = {
   corporateName?: string | null
   defaultSplit: number
   splits?: Prisma.PlatformSplitCreateNestedManyWithoutPlatformInput
+  revenueReports?: Prisma.RevenueReportCreateNestedManyWithoutPlatformInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateCreateNestedOneWithoutPlatformInput
 }
 
 export type PlatformUncheckedCreateWithoutRevenueRecordsInput = {
@@ -444,6 +615,8 @@ export type PlatformUncheckedCreateWithoutRevenueRecordsInput = {
   corporateName?: string | null
   defaultSplit: number
   splits?: Prisma.PlatformSplitUncheckedCreateNestedManyWithoutPlatformInput
+  revenueReports?: Prisma.RevenueReportUncheckedCreateNestedManyWithoutPlatformInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateUncheckedCreateNestedOneWithoutPlatformInput
 }
 
 export type PlatformCreateOrConnectWithoutRevenueRecordsInput = {
@@ -468,6 +641,8 @@ export type PlatformUpdateWithoutRevenueRecordsInput = {
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultSplit?: Prisma.FloatFieldUpdateOperationsInput | number
   splits?: Prisma.PlatformSplitUpdateManyWithoutPlatformNestedInput
+  revenueReports?: Prisma.RevenueReportUpdateManyWithoutPlatformNestedInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateUpdateOneWithoutPlatformNestedInput
 }
 
 export type PlatformUncheckedUpdateWithoutRevenueRecordsInput = {
@@ -476,6 +651,8 @@ export type PlatformUncheckedUpdateWithoutRevenueRecordsInput = {
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultSplit?: Prisma.FloatFieldUpdateOperationsInput | number
   splits?: Prisma.PlatformSplitUncheckedUpdateManyWithoutPlatformNestedInput
+  revenueReports?: Prisma.RevenueReportUncheckedUpdateManyWithoutPlatformNestedInput
+  mappingTemplate?: Prisma.PlatformMappingTemplateUncheckedUpdateOneWithoutPlatformNestedInput
 }
 
 
@@ -486,11 +663,13 @@ export type PlatformUncheckedUpdateWithoutRevenueRecordsInput = {
 export type PlatformCountOutputType = {
   splits: number
   revenueRecords: number
+  revenueReports: number
 }
 
 export type PlatformCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   splits?: boolean | PlatformCountOutputTypeCountSplitsArgs
   revenueRecords?: boolean | PlatformCountOutputTypeCountRevenueRecordsArgs
+  revenueReports?: boolean | PlatformCountOutputTypeCountRevenueReportsArgs
 }
 
 /**
@@ -517,6 +696,13 @@ export type PlatformCountOutputTypeCountRevenueRecordsArgs<ExtArgs extends runti
   where?: Prisma.RevenueRecordWhereInput
 }
 
+/**
+ * PlatformCountOutputType without action
+ */
+export type PlatformCountOutputTypeCountRevenueReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RevenueReportWhereInput
+}
+
 
 export type PlatformSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -525,6 +711,8 @@ export type PlatformSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   defaultSplit?: boolean
   splits?: boolean | Prisma.Platform$splitsArgs<ExtArgs>
   revenueRecords?: boolean | Prisma.Platform$revenueRecordsArgs<ExtArgs>
+  revenueReports?: boolean | Prisma.Platform$revenueReportsArgs<ExtArgs>
+  mappingTemplate?: boolean | Prisma.Platform$mappingTemplateArgs<ExtArgs>
   _count?: boolean | Prisma.PlatformCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["platform"]>
 
@@ -553,6 +741,8 @@ export type PlatformOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type PlatformInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   splits?: boolean | Prisma.Platform$splitsArgs<ExtArgs>
   revenueRecords?: boolean | Prisma.Platform$revenueRecordsArgs<ExtArgs>
+  revenueReports?: boolean | Prisma.Platform$revenueReportsArgs<ExtArgs>
+  mappingTemplate?: boolean | Prisma.Platform$mappingTemplateArgs<ExtArgs>
   _count?: boolean | Prisma.PlatformCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PlatformIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -563,6 +753,8 @@ export type $PlatformPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   objects: {
     splits: Prisma.$PlatformSplitPayload<ExtArgs>[]
     revenueRecords: Prisma.$RevenueRecordPayload<ExtArgs>[]
+    revenueReports: Prisma.$RevenueReportPayload<ExtArgs>[]
+    mappingTemplate: Prisma.$PlatformMappingTemplatePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -965,6 +1157,8 @@ export interface Prisma__PlatformClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   splits<T extends Prisma.Platform$splitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Platform$splitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformSplitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   revenueRecords<T extends Prisma.Platform$revenueRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Platform$revenueRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RevenueRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  revenueReports<T extends Prisma.Platform$revenueReportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Platform$revenueReportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RevenueReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  mappingTemplate<T extends Prisma.Platform$mappingTemplateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Platform$mappingTemplateArgs<ExtArgs>>): Prisma.Prisma__PlatformMappingTemplateClient<runtime.Types.Result.GetResult<Prisma.$PlatformMappingTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1431,6 +1625,49 @@ export type Platform$revenueRecordsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.RevenueRecordScalarFieldEnum | Prisma.RevenueRecordScalarFieldEnum[]
+}
+
+/**
+ * Platform.revenueReports
+ */
+export type Platform$revenueReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RevenueReport
+   */
+  select?: Prisma.RevenueReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RevenueReport
+   */
+  omit?: Prisma.RevenueReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RevenueReportInclude<ExtArgs> | null
+  where?: Prisma.RevenueReportWhereInput
+  orderBy?: Prisma.RevenueReportOrderByWithRelationInput | Prisma.RevenueReportOrderByWithRelationInput[]
+  cursor?: Prisma.RevenueReportWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RevenueReportScalarFieldEnum | Prisma.RevenueReportScalarFieldEnum[]
+}
+
+/**
+ * Platform.mappingTemplate
+ */
+export type Platform$mappingTemplateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlatformMappingTemplate
+   */
+  select?: Prisma.PlatformMappingTemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlatformMappingTemplate
+   */
+  omit?: Prisma.PlatformMappingTemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlatformMappingTemplateInclude<ExtArgs> | null
+  where?: Prisma.PlatformMappingTemplateWhereInput
 }
 
 /**

@@ -20,8 +20,18 @@ export type RevenueReportModel = runtime.Types.Result.DefaultSelection<Prisma.$R
 
 export type AggregateRevenueReport = {
   _count: RevenueReportCountAggregateOutputType | null
+  _avg: RevenueReportAvgAggregateOutputType | null
+  _sum: RevenueReportSumAggregateOutputType | null
   _min: RevenueReportMinAggregateOutputType | null
   _max: RevenueReportMaxAggregateOutputType | null
+}
+
+export type RevenueReportAvgAggregateOutputType = {
+  totalAmount: runtime.Decimal | null
+}
+
+export type RevenueReportSumAggregateOutputType = {
+  totalAmount: runtime.Decimal | null
 }
 
 export type RevenueReportMinAggregateOutputType = {
@@ -31,6 +41,10 @@ export type RevenueReportMinAggregateOutputType = {
   status: string | null
   rawFileUrl: string | null
   platformId: string | null
+  totalAmount: runtime.Decimal | null
+  invoiceRef: string | null
+  paymentStatus: $Enums.RevenuePaymentStatus | null
+  month: Date | null
 }
 
 export type RevenueReportMaxAggregateOutputType = {
@@ -40,6 +54,10 @@ export type RevenueReportMaxAggregateOutputType = {
   status: string | null
   rawFileUrl: string | null
   platformId: string | null
+  totalAmount: runtime.Decimal | null
+  invoiceRef: string | null
+  paymentStatus: $Enums.RevenuePaymentStatus | null
+  month: Date | null
 }
 
 export type RevenueReportCountAggregateOutputType = {
@@ -49,9 +67,21 @@ export type RevenueReportCountAggregateOutputType = {
   status: number
   rawFileUrl: number
   platformId: number
+  totalAmount: number
+  invoiceRef: number
+  paymentStatus: number
+  month: number
   _all: number
 }
 
+
+export type RevenueReportAvgAggregateInputType = {
+  totalAmount?: true
+}
+
+export type RevenueReportSumAggregateInputType = {
+  totalAmount?: true
+}
 
 export type RevenueReportMinAggregateInputType = {
   id?: true
@@ -60,6 +90,10 @@ export type RevenueReportMinAggregateInputType = {
   status?: true
   rawFileUrl?: true
   platformId?: true
+  totalAmount?: true
+  invoiceRef?: true
+  paymentStatus?: true
+  month?: true
 }
 
 export type RevenueReportMaxAggregateInputType = {
@@ -69,6 +103,10 @@ export type RevenueReportMaxAggregateInputType = {
   status?: true
   rawFileUrl?: true
   platformId?: true
+  totalAmount?: true
+  invoiceRef?: true
+  paymentStatus?: true
+  month?: true
 }
 
 export type RevenueReportCountAggregateInputType = {
@@ -78,6 +116,10 @@ export type RevenueReportCountAggregateInputType = {
   status?: true
   rawFileUrl?: true
   platformId?: true
+  totalAmount?: true
+  invoiceRef?: true
+  paymentStatus?: true
+  month?: true
   _all?: true
 }
 
@@ -119,6 +161,18 @@ export type RevenueReportAggregateArgs<ExtArgs extends runtime.Types.Extensions.
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: RevenueReportAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: RevenueReportSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: RevenueReportMinAggregateInputType
@@ -149,6 +203,8 @@ export type RevenueReportGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   _count?: RevenueReportCountAggregateInputType | true
+  _avg?: RevenueReportAvgAggregateInputType
+  _sum?: RevenueReportSumAggregateInputType
   _min?: RevenueReportMinAggregateInputType
   _max?: RevenueReportMaxAggregateInputType
 }
@@ -160,7 +216,13 @@ export type RevenueReportGroupByOutputType = {
   status: string
   rawFileUrl: string
   platformId: string | null
+  totalAmount: runtime.Decimal | null
+  invoiceRef: string | null
+  paymentStatus: $Enums.RevenuePaymentStatus | null
+  month: Date | null
   _count: RevenueReportCountAggregateOutputType | null
+  _avg: RevenueReportAvgAggregateOutputType | null
+  _sum: RevenueReportSumAggregateOutputType | null
   _min: RevenueReportMinAggregateOutputType | null
   _max: RevenueReportMaxAggregateOutputType | null
 }
@@ -190,6 +252,11 @@ export type RevenueReportWhereInput = {
   status?: Prisma.StringFilter<"RevenueReport"> | string
   rawFileUrl?: Prisma.StringFilter<"RevenueReport"> | string
   platformId?: Prisma.StringNullableFilter<"RevenueReport"> | string | null
+  totalAmount?: Prisma.DecimalNullableFilter<"RevenueReport"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: Prisma.StringNullableFilter<"RevenueReport"> | string | null
+  paymentStatus?: Prisma.EnumRevenuePaymentStatusNullableFilter<"RevenueReport"> | $Enums.RevenuePaymentStatus | null
+  month?: Prisma.DateTimeNullableFilter<"RevenueReport"> | Date | string | null
+  platform?: Prisma.XOR<Prisma.PlatformNullableScalarRelationFilter, Prisma.PlatformWhereInput> | null
   records?: Prisma.RevenueRecordListRelationFilter
 }
 
@@ -200,6 +267,11 @@ export type RevenueReportOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   rawFileUrl?: Prisma.SortOrder
   platformId?: Prisma.SortOrderInput | Prisma.SortOrder
+  totalAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceRef?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  month?: Prisma.SortOrderInput | Prisma.SortOrder
+  platform?: Prisma.PlatformOrderByWithRelationInput
   records?: Prisma.RevenueRecordOrderByRelationAggregateInput
 }
 
@@ -213,6 +285,11 @@ export type RevenueReportWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.StringFilter<"RevenueReport"> | string
   rawFileUrl?: Prisma.StringFilter<"RevenueReport"> | string
   platformId?: Prisma.StringNullableFilter<"RevenueReport"> | string | null
+  totalAmount?: Prisma.DecimalNullableFilter<"RevenueReport"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: Prisma.StringNullableFilter<"RevenueReport"> | string | null
+  paymentStatus?: Prisma.EnumRevenuePaymentStatusNullableFilter<"RevenueReport"> | $Enums.RevenuePaymentStatus | null
+  month?: Prisma.DateTimeNullableFilter<"RevenueReport"> | Date | string | null
+  platform?: Prisma.XOR<Prisma.PlatformNullableScalarRelationFilter, Prisma.PlatformWhereInput> | null
   records?: Prisma.RevenueRecordListRelationFilter
 }, "id">
 
@@ -223,9 +300,15 @@ export type RevenueReportOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   rawFileUrl?: Prisma.SortOrder
   platformId?: Prisma.SortOrderInput | Prisma.SortOrder
+  totalAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceRef?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  month?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.RevenueReportCountOrderByAggregateInput
+  _avg?: Prisma.RevenueReportAvgOrderByAggregateInput
   _max?: Prisma.RevenueReportMaxOrderByAggregateInput
   _min?: Prisma.RevenueReportMinOrderByAggregateInput
+  _sum?: Prisma.RevenueReportSumOrderByAggregateInput
 }
 
 export type RevenueReportScalarWhereWithAggregatesInput = {
@@ -238,6 +321,10 @@ export type RevenueReportScalarWhereWithAggregatesInput = {
   status?: Prisma.StringWithAggregatesFilter<"RevenueReport"> | string
   rawFileUrl?: Prisma.StringWithAggregatesFilter<"RevenueReport"> | string
   platformId?: Prisma.StringNullableWithAggregatesFilter<"RevenueReport"> | string | null
+  totalAmount?: Prisma.DecimalNullableWithAggregatesFilter<"RevenueReport"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: Prisma.StringNullableWithAggregatesFilter<"RevenueReport"> | string | null
+  paymentStatus?: Prisma.EnumRevenuePaymentStatusNullableWithAggregatesFilter<"RevenueReport"> | $Enums.RevenuePaymentStatus | null
+  month?: Prisma.DateTimeNullableWithAggregatesFilter<"RevenueReport"> | Date | string | null
 }
 
 export type RevenueReportCreateInput = {
@@ -246,7 +333,11 @@ export type RevenueReportCreateInput = {
   uploadDate?: Date | string
   status: string
   rawFileUrl: string
-  platformId?: string | null
+  totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: string | null
+  paymentStatus?: $Enums.RevenuePaymentStatus | null
+  month?: Date | string | null
+  platform?: Prisma.PlatformCreateNestedOneWithoutRevenueReportsInput
   records?: Prisma.RevenueRecordCreateNestedManyWithoutReportInput
 }
 
@@ -257,6 +348,10 @@ export type RevenueReportUncheckedCreateInput = {
   status: string
   rawFileUrl: string
   platformId?: string | null
+  totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: string | null
+  paymentStatus?: $Enums.RevenuePaymentStatus | null
+  month?: Date | string | null
   records?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutReportInput
 }
 
@@ -266,7 +361,11 @@ export type RevenueReportUpdateInput = {
   uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  platformId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableEnumRevenuePaymentStatusFieldUpdateOperationsInput | $Enums.RevenuePaymentStatus | null
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  platform?: Prisma.PlatformUpdateOneWithoutRevenueReportsNestedInput
   records?: Prisma.RevenueRecordUpdateManyWithoutReportNestedInput
 }
 
@@ -277,6 +376,10 @@ export type RevenueReportUncheckedUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   platformId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableEnumRevenuePaymentStatusFieldUpdateOperationsInput | $Enums.RevenuePaymentStatus | null
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   records?: Prisma.RevenueRecordUncheckedUpdateManyWithoutReportNestedInput
 }
 
@@ -287,6 +390,10 @@ export type RevenueReportCreateManyInput = {
   status: string
   rawFileUrl: string
   platformId?: string | null
+  totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: string | null
+  paymentStatus?: $Enums.RevenuePaymentStatus | null
+  month?: Date | string | null
 }
 
 export type RevenueReportUpdateManyMutationInput = {
@@ -295,7 +402,10 @@ export type RevenueReportUpdateManyMutationInput = {
   uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  platformId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableEnumRevenuePaymentStatusFieldUpdateOperationsInput | $Enums.RevenuePaymentStatus | null
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type RevenueReportUncheckedUpdateManyInput = {
@@ -305,6 +415,20 @@ export type RevenueReportUncheckedUpdateManyInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   platformId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableEnumRevenuePaymentStatusFieldUpdateOperationsInput | $Enums.RevenuePaymentStatus | null
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type RevenueReportListRelationFilter = {
+  every?: Prisma.RevenueReportWhereInput
+  some?: Prisma.RevenueReportWhereInput
+  none?: Prisma.RevenueReportWhereInput
+}
+
+export type RevenueReportOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type RevenueReportCountOrderByAggregateInput = {
@@ -314,6 +438,14 @@ export type RevenueReportCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   rawFileUrl?: Prisma.SortOrder
   platformId?: Prisma.SortOrder
+  totalAmount?: Prisma.SortOrder
+  invoiceRef?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  month?: Prisma.SortOrder
+}
+
+export type RevenueReportAvgOrderByAggregateInput = {
+  totalAmount?: Prisma.SortOrder
 }
 
 export type RevenueReportMaxOrderByAggregateInput = {
@@ -323,6 +455,10 @@ export type RevenueReportMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   rawFileUrl?: Prisma.SortOrder
   platformId?: Prisma.SortOrder
+  totalAmount?: Prisma.SortOrder
+  invoiceRef?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  month?: Prisma.SortOrder
 }
 
 export type RevenueReportMinOrderByAggregateInput = {
@@ -332,11 +468,77 @@ export type RevenueReportMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   rawFileUrl?: Prisma.SortOrder
   platformId?: Prisma.SortOrder
+  totalAmount?: Prisma.SortOrder
+  invoiceRef?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  month?: Prisma.SortOrder
+}
+
+export type RevenueReportSumOrderByAggregateInput = {
+  totalAmount?: Prisma.SortOrder
 }
 
 export type RevenueReportNullableScalarRelationFilter = {
   is?: Prisma.RevenueReportWhereInput | null
   isNot?: Prisma.RevenueReportWhereInput | null
+}
+
+export type RevenueReportCreateNestedManyWithoutPlatformInput = {
+  create?: Prisma.XOR<Prisma.RevenueReportCreateWithoutPlatformInput, Prisma.RevenueReportUncheckedCreateWithoutPlatformInput> | Prisma.RevenueReportCreateWithoutPlatformInput[] | Prisma.RevenueReportUncheckedCreateWithoutPlatformInput[]
+  connectOrCreate?: Prisma.RevenueReportCreateOrConnectWithoutPlatformInput | Prisma.RevenueReportCreateOrConnectWithoutPlatformInput[]
+  createMany?: Prisma.RevenueReportCreateManyPlatformInputEnvelope
+  connect?: Prisma.RevenueReportWhereUniqueInput | Prisma.RevenueReportWhereUniqueInput[]
+}
+
+export type RevenueReportUncheckedCreateNestedManyWithoutPlatformInput = {
+  create?: Prisma.XOR<Prisma.RevenueReportCreateWithoutPlatformInput, Prisma.RevenueReportUncheckedCreateWithoutPlatformInput> | Prisma.RevenueReportCreateWithoutPlatformInput[] | Prisma.RevenueReportUncheckedCreateWithoutPlatformInput[]
+  connectOrCreate?: Prisma.RevenueReportCreateOrConnectWithoutPlatformInput | Prisma.RevenueReportCreateOrConnectWithoutPlatformInput[]
+  createMany?: Prisma.RevenueReportCreateManyPlatformInputEnvelope
+  connect?: Prisma.RevenueReportWhereUniqueInput | Prisma.RevenueReportWhereUniqueInput[]
+}
+
+export type RevenueReportUpdateManyWithoutPlatformNestedInput = {
+  create?: Prisma.XOR<Prisma.RevenueReportCreateWithoutPlatformInput, Prisma.RevenueReportUncheckedCreateWithoutPlatformInput> | Prisma.RevenueReportCreateWithoutPlatformInput[] | Prisma.RevenueReportUncheckedCreateWithoutPlatformInput[]
+  connectOrCreate?: Prisma.RevenueReportCreateOrConnectWithoutPlatformInput | Prisma.RevenueReportCreateOrConnectWithoutPlatformInput[]
+  upsert?: Prisma.RevenueReportUpsertWithWhereUniqueWithoutPlatformInput | Prisma.RevenueReportUpsertWithWhereUniqueWithoutPlatformInput[]
+  createMany?: Prisma.RevenueReportCreateManyPlatformInputEnvelope
+  set?: Prisma.RevenueReportWhereUniqueInput | Prisma.RevenueReportWhereUniqueInput[]
+  disconnect?: Prisma.RevenueReportWhereUniqueInput | Prisma.RevenueReportWhereUniqueInput[]
+  delete?: Prisma.RevenueReportWhereUniqueInput | Prisma.RevenueReportWhereUniqueInput[]
+  connect?: Prisma.RevenueReportWhereUniqueInput | Prisma.RevenueReportWhereUniqueInput[]
+  update?: Prisma.RevenueReportUpdateWithWhereUniqueWithoutPlatformInput | Prisma.RevenueReportUpdateWithWhereUniqueWithoutPlatformInput[]
+  updateMany?: Prisma.RevenueReportUpdateManyWithWhereWithoutPlatformInput | Prisma.RevenueReportUpdateManyWithWhereWithoutPlatformInput[]
+  deleteMany?: Prisma.RevenueReportScalarWhereInput | Prisma.RevenueReportScalarWhereInput[]
+}
+
+export type RevenueReportUncheckedUpdateManyWithoutPlatformNestedInput = {
+  create?: Prisma.XOR<Prisma.RevenueReportCreateWithoutPlatformInput, Prisma.RevenueReportUncheckedCreateWithoutPlatformInput> | Prisma.RevenueReportCreateWithoutPlatformInput[] | Prisma.RevenueReportUncheckedCreateWithoutPlatformInput[]
+  connectOrCreate?: Prisma.RevenueReportCreateOrConnectWithoutPlatformInput | Prisma.RevenueReportCreateOrConnectWithoutPlatformInput[]
+  upsert?: Prisma.RevenueReportUpsertWithWhereUniqueWithoutPlatformInput | Prisma.RevenueReportUpsertWithWhereUniqueWithoutPlatformInput[]
+  createMany?: Prisma.RevenueReportCreateManyPlatformInputEnvelope
+  set?: Prisma.RevenueReportWhereUniqueInput | Prisma.RevenueReportWhereUniqueInput[]
+  disconnect?: Prisma.RevenueReportWhereUniqueInput | Prisma.RevenueReportWhereUniqueInput[]
+  delete?: Prisma.RevenueReportWhereUniqueInput | Prisma.RevenueReportWhereUniqueInput[]
+  connect?: Prisma.RevenueReportWhereUniqueInput | Prisma.RevenueReportWhereUniqueInput[]
+  update?: Prisma.RevenueReportUpdateWithWhereUniqueWithoutPlatformInput | Prisma.RevenueReportUpdateWithWhereUniqueWithoutPlatformInput[]
+  updateMany?: Prisma.RevenueReportUpdateManyWithWhereWithoutPlatformInput | Prisma.RevenueReportUpdateManyWithWhereWithoutPlatformInput[]
+  deleteMany?: Prisma.RevenueReportScalarWhereInput | Prisma.RevenueReportScalarWhereInput[]
+}
+
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type NullableEnumRevenuePaymentStatusFieldUpdateOperationsInput = {
+  set?: $Enums.RevenuePaymentStatus | null
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type RevenueReportCreateNestedOneWithoutRecordsInput = {
@@ -355,13 +557,85 @@ export type RevenueReportUpdateOneWithoutRecordsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.RevenueReportUpdateToOneWithWhereWithoutRecordsInput, Prisma.RevenueReportUpdateWithoutRecordsInput>, Prisma.RevenueReportUncheckedUpdateWithoutRecordsInput>
 }
 
+export type RevenueReportCreateWithoutPlatformInput = {
+  id?: string
+  filename: string
+  uploadDate?: Date | string
+  status: string
+  rawFileUrl: string
+  totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: string | null
+  paymentStatus?: $Enums.RevenuePaymentStatus | null
+  month?: Date | string | null
+  records?: Prisma.RevenueRecordCreateNestedManyWithoutReportInput
+}
+
+export type RevenueReportUncheckedCreateWithoutPlatformInput = {
+  id?: string
+  filename: string
+  uploadDate?: Date | string
+  status: string
+  rawFileUrl: string
+  totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: string | null
+  paymentStatus?: $Enums.RevenuePaymentStatus | null
+  month?: Date | string | null
+  records?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutReportInput
+}
+
+export type RevenueReportCreateOrConnectWithoutPlatformInput = {
+  where: Prisma.RevenueReportWhereUniqueInput
+  create: Prisma.XOR<Prisma.RevenueReportCreateWithoutPlatformInput, Prisma.RevenueReportUncheckedCreateWithoutPlatformInput>
+}
+
+export type RevenueReportCreateManyPlatformInputEnvelope = {
+  data: Prisma.RevenueReportCreateManyPlatformInput | Prisma.RevenueReportCreateManyPlatformInput[]
+  skipDuplicates?: boolean
+}
+
+export type RevenueReportUpsertWithWhereUniqueWithoutPlatformInput = {
+  where: Prisma.RevenueReportWhereUniqueInput
+  update: Prisma.XOR<Prisma.RevenueReportUpdateWithoutPlatformInput, Prisma.RevenueReportUncheckedUpdateWithoutPlatformInput>
+  create: Prisma.XOR<Prisma.RevenueReportCreateWithoutPlatformInput, Prisma.RevenueReportUncheckedCreateWithoutPlatformInput>
+}
+
+export type RevenueReportUpdateWithWhereUniqueWithoutPlatformInput = {
+  where: Prisma.RevenueReportWhereUniqueInput
+  data: Prisma.XOR<Prisma.RevenueReportUpdateWithoutPlatformInput, Prisma.RevenueReportUncheckedUpdateWithoutPlatformInput>
+}
+
+export type RevenueReportUpdateManyWithWhereWithoutPlatformInput = {
+  where: Prisma.RevenueReportScalarWhereInput
+  data: Prisma.XOR<Prisma.RevenueReportUpdateManyMutationInput, Prisma.RevenueReportUncheckedUpdateManyWithoutPlatformInput>
+}
+
+export type RevenueReportScalarWhereInput = {
+  AND?: Prisma.RevenueReportScalarWhereInput | Prisma.RevenueReportScalarWhereInput[]
+  OR?: Prisma.RevenueReportScalarWhereInput[]
+  NOT?: Prisma.RevenueReportScalarWhereInput | Prisma.RevenueReportScalarWhereInput[]
+  id?: Prisma.StringFilter<"RevenueReport"> | string
+  filename?: Prisma.StringFilter<"RevenueReport"> | string
+  uploadDate?: Prisma.DateTimeFilter<"RevenueReport"> | Date | string
+  status?: Prisma.StringFilter<"RevenueReport"> | string
+  rawFileUrl?: Prisma.StringFilter<"RevenueReport"> | string
+  platformId?: Prisma.StringNullableFilter<"RevenueReport"> | string | null
+  totalAmount?: Prisma.DecimalNullableFilter<"RevenueReport"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: Prisma.StringNullableFilter<"RevenueReport"> | string | null
+  paymentStatus?: Prisma.EnumRevenuePaymentStatusNullableFilter<"RevenueReport"> | $Enums.RevenuePaymentStatus | null
+  month?: Prisma.DateTimeNullableFilter<"RevenueReport"> | Date | string | null
+}
+
 export type RevenueReportCreateWithoutRecordsInput = {
   id?: string
   filename: string
   uploadDate?: Date | string
   status: string
   rawFileUrl: string
-  platformId?: string | null
+  totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: string | null
+  paymentStatus?: $Enums.RevenuePaymentStatus | null
+  month?: Date | string | null
+  platform?: Prisma.PlatformCreateNestedOneWithoutRevenueReportsInput
 }
 
 export type RevenueReportUncheckedCreateWithoutRecordsInput = {
@@ -371,6 +645,10 @@ export type RevenueReportUncheckedCreateWithoutRecordsInput = {
   status: string
   rawFileUrl: string
   platformId?: string | null
+  totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: string | null
+  paymentStatus?: $Enums.RevenuePaymentStatus | null
+  month?: Date | string | null
 }
 
 export type RevenueReportCreateOrConnectWithoutRecordsInput = {
@@ -395,7 +673,11 @@ export type RevenueReportUpdateWithoutRecordsInput = {
   uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  platformId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableEnumRevenuePaymentStatusFieldUpdateOperationsInput | $Enums.RevenuePaymentStatus | null
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  platform?: Prisma.PlatformUpdateOneWithoutRevenueReportsNestedInput
 }
 
 export type RevenueReportUncheckedUpdateWithoutRecordsInput = {
@@ -405,6 +687,60 @@ export type RevenueReportUncheckedUpdateWithoutRecordsInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   platformId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableEnumRevenuePaymentStatusFieldUpdateOperationsInput | $Enums.RevenuePaymentStatus | null
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type RevenueReportCreateManyPlatformInput = {
+  id?: string
+  filename: string
+  uploadDate?: Date | string
+  status: string
+  rawFileUrl: string
+  totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: string | null
+  paymentStatus?: $Enums.RevenuePaymentStatus | null
+  month?: Date | string | null
+}
+
+export type RevenueReportUpdateWithoutPlatformInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  totalAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableEnumRevenuePaymentStatusFieldUpdateOperationsInput | $Enums.RevenuePaymentStatus | null
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  records?: Prisma.RevenueRecordUpdateManyWithoutReportNestedInput
+}
+
+export type RevenueReportUncheckedUpdateWithoutPlatformInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  totalAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableEnumRevenuePaymentStatusFieldUpdateOperationsInput | $Enums.RevenuePaymentStatus | null
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  records?: Prisma.RevenueRecordUncheckedUpdateManyWithoutReportNestedInput
+}
+
+export type RevenueReportUncheckedUpdateManyWithoutPlatformInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  totalAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  invoiceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableEnumRevenuePaymentStatusFieldUpdateOperationsInput | $Enums.RevenuePaymentStatus | null
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -445,6 +781,11 @@ export type RevenueReportSelect<ExtArgs extends runtime.Types.Extensions.Interna
   status?: boolean
   rawFileUrl?: boolean
   platformId?: boolean
+  totalAmount?: boolean
+  invoiceRef?: boolean
+  paymentStatus?: boolean
+  month?: boolean
+  platform?: boolean | Prisma.RevenueReport$platformArgs<ExtArgs>
   records?: boolean | Prisma.RevenueReport$recordsArgs<ExtArgs>
   _count?: boolean | Prisma.RevenueReportCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["revenueReport"]>
@@ -456,6 +797,11 @@ export type RevenueReportSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   status?: boolean
   rawFileUrl?: boolean
   platformId?: boolean
+  totalAmount?: boolean
+  invoiceRef?: boolean
+  paymentStatus?: boolean
+  month?: boolean
+  platform?: boolean | Prisma.RevenueReport$platformArgs<ExtArgs>
 }, ExtArgs["result"]["revenueReport"]>
 
 export type RevenueReportSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -465,6 +811,11 @@ export type RevenueReportSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   status?: boolean
   rawFileUrl?: boolean
   platformId?: boolean
+  totalAmount?: boolean
+  invoiceRef?: boolean
+  paymentStatus?: boolean
+  month?: boolean
+  platform?: boolean | Prisma.RevenueReport$platformArgs<ExtArgs>
 }, ExtArgs["result"]["revenueReport"]>
 
 export type RevenueReportSelectScalar = {
@@ -474,19 +825,29 @@ export type RevenueReportSelectScalar = {
   status?: boolean
   rawFileUrl?: boolean
   platformId?: boolean
+  totalAmount?: boolean
+  invoiceRef?: boolean
+  paymentStatus?: boolean
+  month?: boolean
 }
 
-export type RevenueReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "filename" | "uploadDate" | "status" | "rawFileUrl" | "platformId", ExtArgs["result"]["revenueReport"]>
+export type RevenueReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "filename" | "uploadDate" | "status" | "rawFileUrl" | "platformId" | "totalAmount" | "invoiceRef" | "paymentStatus" | "month", ExtArgs["result"]["revenueReport"]>
 export type RevenueReportInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  platform?: boolean | Prisma.RevenueReport$platformArgs<ExtArgs>
   records?: boolean | Prisma.RevenueReport$recordsArgs<ExtArgs>
   _count?: boolean | Prisma.RevenueReportCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type RevenueReportIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type RevenueReportIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type RevenueReportIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  platform?: boolean | Prisma.RevenueReport$platformArgs<ExtArgs>
+}
+export type RevenueReportIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  platform?: boolean | Prisma.RevenueReport$platformArgs<ExtArgs>
+}
 
 export type $RevenueReportPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "RevenueReport"
   objects: {
+    platform: Prisma.$PlatformPayload<ExtArgs> | null
     records: Prisma.$RevenueRecordPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -496,6 +857,10 @@ export type $RevenueReportPayload<ExtArgs extends runtime.Types.Extensions.Inter
     status: string
     rawFileUrl: string
     platformId: string | null
+    totalAmount: runtime.Decimal | null
+    invoiceRef: string | null
+    paymentStatus: $Enums.RevenuePaymentStatus | null
+    month: Date | null
   }, ExtArgs["result"]["revenueReport"]>
   composites: {}
 }
@@ -890,6 +1255,7 @@ readonly fields: RevenueReportFieldRefs;
  */
 export interface Prisma__RevenueReportClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  platform<T extends Prisma.RevenueReport$platformArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RevenueReport$platformArgs<ExtArgs>>): Prisma.Prisma__PlatformClient<runtime.Types.Result.GetResult<Prisma.$PlatformPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   records<T extends Prisma.RevenueReport$recordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RevenueReport$recordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RevenueRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -926,6 +1292,10 @@ export interface RevenueReportFieldRefs {
   readonly status: Prisma.FieldRef<"RevenueReport", 'String'>
   readonly rawFileUrl: Prisma.FieldRef<"RevenueReport", 'String'>
   readonly platformId: Prisma.FieldRef<"RevenueReport", 'String'>
+  readonly totalAmount: Prisma.FieldRef<"RevenueReport", 'Decimal'>
+  readonly invoiceRef: Prisma.FieldRef<"RevenueReport", 'String'>
+  readonly paymentStatus: Prisma.FieldRef<"RevenueReport", 'RevenuePaymentStatus'>
+  readonly month: Prisma.FieldRef<"RevenueReport", 'DateTime'>
 }
     
 
@@ -1175,6 +1545,10 @@ export type RevenueReportCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    */
   data: Prisma.RevenueReportCreateManyInput | Prisma.RevenueReportCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RevenueReportIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1245,6 +1619,10 @@ export type RevenueReportUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * Limit how many RevenueReports to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RevenueReportIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1311,6 +1689,25 @@ export type RevenueReportDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many RevenueReports to delete.
    */
   limit?: number
+}
+
+/**
+ * RevenueReport.platform
+ */
+export type RevenueReport$platformArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Platform
+   */
+  select?: Prisma.PlatformSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Platform
+   */
+  omit?: Prisma.PlatformOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlatformInclude<ExtArgs> | null
+  where?: Prisma.PlatformWhereInput
 }
 
 /**

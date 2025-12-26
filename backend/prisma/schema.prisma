@@ -47,8 +47,24 @@ model Platform {
   corporateName String? // The legal/internal name (e.g. "Data Tech")
   defaultSplit  Float // Default AMG Commission (e.g., 0.25 for 25%)
 
-  splits         PlatformSplit[]
-  revenueRecords RevenueRecord[]
+  splits          PlatformSplit[]
+  revenueRecords  RevenueRecord[]
+  revenueReports  RevenueReport[]
+  mappingTemplate PlatformMappingTemplate? // Relation to the mapping template
+}
+
+model PlatformMappingTemplate {
+  id         String   @id @default(uuid())
+  platformId String   @unique
+  platform   Platform @relation(fields: [platformId], references: [id])
+
+  // JSON object storing which CSV column maps to which System field
+  // e.g. { "Studio": "lineItemName", "Total": "grossRevenue" }
+  mappingRules Json
+
+  headerRowIndex Int // The row number where data starts (0-indexed)
+
+  updatedAt DateTime @updatedAt
 }
 
 // Custom split per Vendor per Platform
@@ -85,41 +101,54 @@ model BankDetails {
 }
 
 model RevenueReport {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   filename   String
-  uploadDate DateTime @default(now())
-  status     String // PENDING, PROCESSED, ERROR
+  uploadDate DateTime  @default(now())
+  status     String // "PENDING", "PROCESSED", "ERROR"
   rawFileUrl String
-  platformId String? // If the file is specific to one platform
+  platformId String?
+  platform   Platform? @relation(fields: [platformId], references: [id])
+
+  // New: Metadata about the "Big Check" from the Admin UI
+  totalAmount   Decimal?              @db.Decimal(10, 2) // "Paid to AMG" amount
+  invoiceRef    String? // Invoice # provided by Admin
+  paymentStatus RevenuePaymentStatus? @default(PENDING)
+  month         DateTime? // The reporting month (e.g., 2025-06-01)
 
   records RevenueRecord[]
 }
 
 model RevenueRecord {
-  id String @id @default(uuid())
-
-  // Optional because records can be created MANUALLY without a file
+  id       String         @id @default(uuid())
   reportId String?
   report   RevenueReport? @relation(fields: [reportId], references: [id])
 
-  vendorId String
-  vendor   Vendor @relation(fields: [vendorId], references: [id])
+  // NEW: Tracking the raw name from the file vs. the matched ID
+  vendorId      String? // Null if UNMATCHED
+  vendor        Vendor? @relation(fields: [vendorId], references: [id])
+  rawVendorName String // e.g., "Porn_Mega_Load" or "Simply Anal"
 
   platformId String
   platform   Platform @relation(fields: [platformId], references: [id])
 
-  periodStart DateTime // e.g. 2025-06-01
-  periodEnd   DateTime // e.g. 2025-06-30
+  periodStart DateTime
+  periodEnd   DateTime
 
   // Financials
-  grossRevenue  Decimal
-  amgCommission Decimal
-  vendorNet     Decimal
+  grossRevenue  Decimal @db.Decimal(10, 2)
+  amgCommission Decimal @default(0) // Calculated in M4
+  vendorNet     Decimal @default(0) // Calculated in M4
 
-  // Parsing Metadata (for audit)
-  rawLineData Json? // Store the original CSV row for debugging
+  // NEW: Details for the "Drill-down" view
+  lineItemName String? // Video Title (e.g., "Big Tits Scene 1")
 
-  // Payout Linking
+  // THE FLEXIBLE FIELDS
+  metadata    Json? // Stores extra cols: { "PPM": 2.3, "Rental": 1.2 }
+  rawLineData Json? // Full original row for audit logs
+
+  // Matching Status
+  status String @default("UNPROCESSED") // "MATCHED", "UNMATCHED", "MANUAL"
+
   payoutId String?
   payout   Payout? @relation(fields: [payoutId], references: [id])
 
@@ -143,7 +172,10 @@ model Payout {
   createdAt DateTime @default(now())
 }
 
-// ENUMs
+enum RevenuePaymentStatus {
+  PAID
+  PENDING
+}
 
 enum Role {
   ADMIN

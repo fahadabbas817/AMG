@@ -8,6 +8,8 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ClerkRouteRouteImport } from './routes/clerk/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -42,7 +44,18 @@ import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
+import { Route as AuthenticatedPayoutsPayoutIdRouteImport } from './routes/_authenticated/payouts/$payoutId'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+
+const AuthenticatedPayoutsIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/payouts/',
+)()
+const AuthenticatedRevenueUploadLazyRouteImport = createFileRoute(
+  '/_authenticated/revenue/upload',
+)()
+const AuthenticatedRevenueManualLazyRouteImport = createFileRoute(
+  '/_authenticated/revenue/manual',
+)()
 
 const ClerkRouteRoute = ClerkRouteRouteImport.update({
   id: '/clerk',
@@ -122,6 +135,14 @@ const AuthenticatedSettingsRouteRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPayoutsIndexLazyRoute =
+  AuthenticatedPayoutsIndexLazyRouteImport.update({
+    id: '/payouts/',
+    path: '/payouts/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/payouts/index.lazy').then((d) => d.Route),
+  )
 const AuthenticatedVendorsIndexRoute =
   AuthenticatedVendorsIndexRouteImport.update({
     id: '/vendors/',
@@ -172,6 +193,22 @@ const AuthenticatedAppsIndexRoute = AuthenticatedAppsIndexRouteImport.update({
   path: '/apps/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRevenueUploadLazyRoute =
+  AuthenticatedRevenueUploadLazyRouteImport.update({
+    id: '/revenue/upload',
+    path: '/revenue/upload',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/revenue/upload.lazy').then((d) => d.Route),
+  )
+const AuthenticatedRevenueManualLazyRoute =
+  AuthenticatedRevenueManualLazyRouteImport.update({
+    id: '/revenue/manual',
+    path: '/revenue/manual',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/revenue/manual.lazy').then((d) => d.Route),
+  )
 const ClerkAuthenticatedUserManagementRoute =
   ClerkAuthenticatedUserManagementRouteImport.update({
     id: '/user-management',
@@ -218,6 +255,12 @@ const AuthenticatedSettingsAccountRoute =
     path: '/account',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedPayoutsPayoutIdRoute =
+  AuthenticatedPayoutsPayoutIdRouteImport.update({
+    id: '/payouts/$payoutId',
+    path: '/payouts/$payoutId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedErrorsErrorRoute =
   AuthenticatedErrorsErrorRouteImport.update({
     id: '/errors/$error',
@@ -240,6 +283,7 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/payouts/$payoutId': typeof AuthenticatedPayoutsPayoutIdRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -248,6 +292,8 @@ export interface FileRoutesByFullPath {
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
+  '/revenue/manual': typeof AuthenticatedRevenueManualLazyRoute
+  '/revenue/upload': typeof AuthenticatedRevenueUploadLazyRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
@@ -257,6 +303,7 @@ export interface FileRoutesByFullPath {
   '/users': typeof AuthenticatedUsersIndexRoute
   '/vendor': typeof AuthenticatedVendorIndexRoute
   '/vendors': typeof AuthenticatedVendorsIndexRoute
+  '/payouts': typeof AuthenticatedPayoutsIndexLazyRoute
 }
 export interface FileRoutesByTo {
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
@@ -272,6 +319,7 @@ export interface FileRoutesByTo {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/payouts/$payoutId': typeof AuthenticatedPayoutsPayoutIdRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -280,6 +328,8 @@ export interface FileRoutesByTo {
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
+  '/revenue/manual': typeof AuthenticatedRevenueManualLazyRoute
+  '/revenue/upload': typeof AuthenticatedRevenueUploadLazyRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
@@ -289,6 +339,7 @@ export interface FileRoutesByTo {
   '/users': typeof AuthenticatedUsersIndexRoute
   '/vendor': typeof AuthenticatedVendorIndexRoute
   '/vendors': typeof AuthenticatedVendorsIndexRoute
+  '/payouts': typeof AuthenticatedPayoutsIndexLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -309,6 +360,7 @@ export interface FileRoutesById {
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/_authenticated/payouts/$payoutId': typeof AuthenticatedPayoutsPayoutIdRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -317,6 +369,8 @@ export interface FileRoutesById {
   '/clerk/(auth)/sign-in': typeof ClerkauthSignInRoute
   '/clerk/(auth)/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/_authenticated/user-management': typeof ClerkAuthenticatedUserManagementRoute
+  '/_authenticated/revenue/manual': typeof AuthenticatedRevenueManualLazyRoute
+  '/_authenticated/revenue/upload': typeof AuthenticatedRevenueUploadLazyRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
@@ -326,6 +380,7 @@ export interface FileRoutesById {
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/vendor/': typeof AuthenticatedVendorIndexRoute
   '/_authenticated/vendors/': typeof AuthenticatedVendorsIndexRoute
+  '/_authenticated/payouts/': typeof AuthenticatedPayoutsIndexLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -344,6 +399,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/errors/$error'
+    | '/payouts/$payoutId'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
@@ -352,6 +408,8 @@ export interface FileRouteTypes {
     | '/clerk/sign-in'
     | '/clerk/sign-up'
     | '/clerk/user-management'
+    | '/revenue/manual'
+    | '/revenue/upload'
     | '/apps'
     | '/chats'
     | '/help-center'
@@ -361,6 +419,7 @@ export interface FileRouteTypes {
     | '/users'
     | '/vendor'
     | '/vendors'
+    | '/payouts'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/clerk'
@@ -376,6 +435,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/errors/$error'
+    | '/payouts/$payoutId'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
@@ -384,6 +444,8 @@ export interface FileRouteTypes {
     | '/clerk/sign-in'
     | '/clerk/sign-up'
     | '/clerk/user-management'
+    | '/revenue/manual'
+    | '/revenue/upload'
     | '/apps'
     | '/chats'
     | '/help-center'
@@ -393,6 +455,7 @@ export interface FileRouteTypes {
     | '/users'
     | '/vendor'
     | '/vendors'
+    | '/payouts'
   id:
     | '__root__'
     | '/_authenticated'
@@ -412,6 +475,7 @@ export interface FileRouteTypes {
     | '/(errors)/503'
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
+    | '/_authenticated/payouts/$payoutId'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
@@ -420,6 +484,8 @@ export interface FileRouteTypes {
     | '/clerk/(auth)/sign-in'
     | '/clerk/(auth)/sign-up'
     | '/clerk/_authenticated/user-management'
+    | '/_authenticated/revenue/manual'
+    | '/_authenticated/revenue/upload'
     | '/_authenticated/apps/'
     | '/_authenticated/chats/'
     | '/_authenticated/help-center/'
@@ -429,6 +495,7 @@ export interface FileRouteTypes {
     | '/_authenticated/users/'
     | '/_authenticated/vendor/'
     | '/_authenticated/vendors/'
+    | '/_authenticated/payouts/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -560,6 +627,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/payouts/': {
+      id: '/_authenticated/payouts/'
+      path: '/payouts'
+      fullPath: '/payouts'
+      preLoaderRoute: typeof AuthenticatedPayoutsIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/vendors/': {
       id: '/_authenticated/vendors/'
       path: '/vendors'
@@ -623,6 +697,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/revenue/upload': {
+      id: '/_authenticated/revenue/upload'
+      path: '/revenue/upload'
+      fullPath: '/revenue/upload'
+      preLoaderRoute: typeof AuthenticatedRevenueUploadLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/revenue/manual': {
+      id: '/_authenticated/revenue/manual'
+      path: '/revenue/manual'
+      fullPath: '/revenue/manual'
+      preLoaderRoute: typeof AuthenticatedRevenueManualLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/clerk/_authenticated/user-management': {
       id: '/clerk/_authenticated/user-management'
       path: '/user-management'
@@ -679,6 +767,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/payouts/$payoutId': {
+      id: '/_authenticated/payouts/$payoutId'
+      path: '/payouts/$payoutId'
+      fullPath: '/payouts/$payoutId'
+      preLoaderRoute: typeof AuthenticatedPayoutsPayoutIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/errors/$error': {
       id: '/_authenticated/errors/$error'
       path: '/errors/$error'
@@ -716,7 +811,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedPayoutsPayoutIdRoute: typeof AuthenticatedPayoutsPayoutIdRoute
   AuthenticatedVendorsVendorIdRoute: typeof AuthenticatedVendorsVendorIdRoute
+  AuthenticatedRevenueManualLazyRoute: typeof AuthenticatedRevenueManualLazyRoute
+  AuthenticatedRevenueUploadLazyRoute: typeof AuthenticatedRevenueUploadLazyRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
@@ -725,13 +823,17 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedVendorIndexRoute: typeof AuthenticatedVendorIndexRoute
   AuthenticatedVendorsIndexRoute: typeof AuthenticatedVendorsIndexRoute
+  AuthenticatedPayoutsIndexLazyRoute: typeof AuthenticatedPayoutsIndexLazyRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedPayoutsPayoutIdRoute: AuthenticatedPayoutsPayoutIdRoute,
   AuthenticatedVendorsVendorIdRoute: AuthenticatedVendorsVendorIdRoute,
+  AuthenticatedRevenueManualLazyRoute: AuthenticatedRevenueManualLazyRoute,
+  AuthenticatedRevenueUploadLazyRoute: AuthenticatedRevenueUploadLazyRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
@@ -740,6 +842,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedVendorIndexRoute: AuthenticatedVendorIndexRoute,
   AuthenticatedVendorsIndexRoute: AuthenticatedVendorsIndexRoute,
+  AuthenticatedPayoutsIndexLazyRoute: AuthenticatedPayoutsIndexLazyRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

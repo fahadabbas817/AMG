@@ -10,6 +10,8 @@ import {
   Users,
   Layers,
   Command,
+  DollarSign,
+  Upload,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -67,9 +69,19 @@ export const sidebarData: SidebarData = {
           icon: Users,
         },
         {
+          title: 'Revenue',
+          url: '/revenue/upload',
+          icon: Upload, // You might want a different icon like FileText or Upload
+        },
+        {
           title: 'Platforms',
           url: '/platforms',
           icon: Layers,
+        },
+        {
+          title: 'Payouts',
+          url: '/payouts',
+          icon: DollarSign,
         },
         // {
         //   title: 'Secured by Clerk',
