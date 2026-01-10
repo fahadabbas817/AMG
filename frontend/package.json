@@ -8,6 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "start": "serve -s dist -l $PORT",
+    "postinstall": "npm run build",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "knip": "knip",
