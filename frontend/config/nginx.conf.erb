@@ -1,0 +1,48 @@
+daemon off;
+# Heroku dynos have at least 4 cores
+worker_processes <%= ENV['NGINX_WORKERS'] || 4 %>;
+
+events {
+    use epoll;
+    accept_mutex on;
+    worker_connections <%= ENV['NGINX_WORKER_CONNECTIONS'] || 1024 %>;
+}
+
+http {
+    gzip on;
+    gzip_comp_level 2;
+    gzip_min_length 512;
+    server_tokens off;
+
+    log_format l2met 'measure#nginx.service=$request_time request_id=$http_x_request_id';
+    access_log logs/access.log l2met;
+    error_log stderr error;
+
+    include mime.types;
+    default_type application/octet-stream;
+    sendfile on;
+
+    # Must read the body in 5 seconds
+    client_body_timeout 5;
+
+    server {
+        listen <%= ENV["PORT"] %>;
+        server_name _;
+        keepalive_timeout 5;
+        
+        # Vite builds to the 'dist' folder
+        root /app/dist;
+
+        location / {
+            # This handles React Router / SPA navigation
+            try_files $uri $uri/ /index.html;
+        }
+
+        # Optional: Cache static assets
+        location ~* \.(?:ico|css|js|gif|jpe?g|png)$ {
+            expires max;
+            add_header Pragma public;
+            add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+        }
+    }
+}
