@@ -37,7 +37,7 @@ export class VendorsService {
     }
 
     // Default password if not provided
-    const rawPassword = vendorData.password || 'TemporaryPassword123!';
+    const rawPassword = vendorData.password || 'Vendor@123';
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(rawPassword, salt);
 
@@ -138,6 +138,9 @@ export class VendorsService {
 
   async update(id: string, updateVendorDto: UpdateVendorDto) {
     const { bankDetails, platformIds, ...vendorData } = updateVendorDto;
+
+    // Remove password from payload to prevent accidental updates/hashing in this generic method
+    delete vendorData.password;
 
     const vendor = await this.prisma.vendor.findUnique({ where: { id } });
     if (!vendor) {
@@ -324,5 +327,26 @@ export class VendorsService {
     return this.prisma.platformSplit.delete({
       where: { id: splitId },
     });
+  }
+
+  async resetPassword(vendorId: string, password: string) {
+    const vendor = await this.prisma.vendor.findUnique({
+      where: { id: vendorId },
+    });
+    if (!vendor) {
+      throw new NotFoundException('Vendor not found');
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    await this.prisma.vendor.update({
+      where: { id: vendorId },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    return { message: 'Password reset successfully' };
   }
 }

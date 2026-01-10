@@ -1,0 +1,122 @@
+
+> shadcn-admin@2.2.1 build
+> tsc -b && vite build
+
+src/components/confirm-delete-dialog.tsx(12,1): error TS6133: 'Button' is declared but its value is never read.
+src/components/layout/nav-user.tsx(1,1): error TS6133: 'Link' is declared but its value is never read.
+src/components/layout/nav-user.tsx(2,10): error TS6133: 'BadgeCheck' is declared but its value is never read.
+src/components/layout/nav-user.tsx(8,3): error TS6133: 'DropdownMenuGroup' is declared but its value is never read.
+src/features/apps/index.tsx(22,27): error TS2345: Argument of type '"/_authenticated/apps/"' is not assignable to parameter of type 'ConstrainLiteral<"/_authenticated/apps/", "__root__" | "/_authenticated" | "/_authenticated/" | "/(errors)/503" | "/(errors)/500" | "/(errors)/404" | "/(errors)/403" | "/(errors)/401" | ... 27 more ... | "/_authenticated/vendor/payouts/$payoutid">'.
+src/features/apps/index.tsx(62,7): error TS2322: Type '(prev: never) => any' is not assignable to type 'true | ParamsReducerFn<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, { queryClient: QueryClient; }, AnyContext, ({ location }: BeforeLoadContextOptions<Register, ... 6 more ..., undefined>) => Promise<...>, ... 6 more ..., undefined>, "never", false, RouterHistory, Record<...>>, "SEARC...'.
+  Type '(prev: never) => any' is not assignable to type 'ParamsReducerFn<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, { queryClient: QueryClient; }, AnyContext, ({ location }: BeforeLoadContextOptions<Register, ... 6 more ..., undefined>) => Promise<...>, ... 6 more ..., undefined>, "never", false, RouterHistory, Record<...>>, "SEARCH", nev...'.
+    Type 'any' is not assignable to type 'never'.
+src/features/apps/index.tsx(63,9): error TS2698: Spread types may only be created from object types.
+src/features/apps/index.tsx(72,7): error TS2322: Type '(prev: never) => any' is not assignable to type 'true | ParamsReducerFn<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, { queryClient: QueryClient; }, AnyContext, ({ location }: BeforeLoadContextOptions<Register, ... 6 more ..., undefined>) => Promise<...>, ... 6 more ..., undefined>, "never", false, RouterHistory, Record<...>>, "SEARC...'.
+  Type '(prev: never) => any' is not assignable to type 'ParamsReducerFn<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, { queryClient: QueryClient; }, AnyContext, ({ location }: BeforeLoadContextOptions<Register, ... 6 more ..., undefined>) => Promise<...>, ... 6 more ..., undefined>, "never", false, RouterHistory, Record<...>>, "SEARCH", nev...'.
+    Type 'any' is not assignable to type 'never'.
+src/features/apps/index.tsx(73,9): error TS2698: Spread types may only be created from object types.
+src/features/apps/index.tsx(81,16): error TS2322: Type '(prev: never) => any' is not assignable to type 'true | ParamsReducerFn<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, { queryClient: QueryClient; }, AnyContext, ({ location }: BeforeLoadContextOptions<Register, ... 6 more ..., undefined>) => Promise<...>, ... 6 more ..., undefined>, "never", false, RouterHistory, Record<...>>, "SEARC...'.
+  Type '(prev: never) => any' is not assignable to type 'ParamsReducerFn<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, { queryClient: QueryClient; }, AnyContext, ({ location }: BeforeLoadContextOptions<Register, ... 6 more ..., undefined>) => Promise<...>, ... 6 more ..., undefined>, "never", false, RouterHistory, Record<...>>, "SEARCH", nev...'.
+    Type 'any' is not assignable to type 'never'.
+src/features/apps/index.tsx(81,37): error TS2698: Spread types may only be created from object types.
+src/features/apps/index.tsx(116,43): error TS2345: Argument of type 'string' is not assignable to parameter of type 'AppType'.
+src/features/payouts/components/columns.tsx(13,10): error TS6133: 'RefreshCw' is declared but its value is never read.
+src/features/platforms/components/platform-form.tsx(28,5): error TS2322: Type 'Resolver<{ name: string; defaultSplit: unknown; corporateName?: string | undefined; }, any, { name: string; defaultSplit: number; corporateName?: string | undefined; }>' is not assignable to type 'Resolver<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, { name: string; defaultSplit: number; corporateName?: string | undefined; }>'.
+  Types of parameters 'options' and 'options' are incompatible.
+    Type 'ResolverOptions<{ name: string; defaultSplit: number; corporateName?: string | undefined; }>' is not assignable to type 'ResolverOptions<{ name: string; defaultSplit: unknown; corporateName?: string | undefined; }>'.
+      Type 'unknown' is not assignable to type 'number'.
+src/features/platforms/components/platform-form.tsx(41,37): error TS2345: Argument of type '(data: { name: string; defaultSplit: number; corporateName?: string | undefined; }) => void' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Type 'TFieldValues' is not assignable to type '{ name: string; defaultSplit: number; corporateName?: string | undefined; }'.
+      Type 'FieldValues' is missing the following properties from type '{ name: string; defaultSplit: number; corporateName?: string | undefined; }': name, defaultSplit
+src/features/platforms/components/platform-form.tsx(46,13): error TS2322: Type 'Control<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, { name: string; defaultSplit: number; corporateName?: string | undefined; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, { name: string; defaultSplit: number; corporateName?: string | undefined; }> | undefined'.
+      Type 'Resolver<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, { name: string; defaultSplit: number; corporateName?: string | undefined; }>'.
+        Type 'ResolverResult<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, TFieldValues> | Promise<ResolverResult<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, TFieldValues>>' is not assignable to type 'ResolverResult<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, { name: string; defaultSplit: number; corporateName?: string | undefined; }> | Promise<...>'.
+          Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverResult<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, { name: string; defaultSplit: number; corporateName?: string | undefined; }> | Promise<...>'.
+            Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverSuccess<{ name: string; defaultSplit: number; corporateName?: string | undefined; }>'.
+              Type 'TFieldValues' is not assignable to type '{ name: string; defaultSplit: number; corporateName?: string | undefined; }'.
+                Type 'FieldValues' is missing the following properties from type '{ name: string; defaultSplit: number; corporateName?: string | undefined; }': name, defaultSplit
+src/features/platforms/components/platform-form.tsx(59,13): error TS2322: Type 'Control<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, { name: string; defaultSplit: number; corporateName?: string | undefined; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, { name: string; defaultSplit: number; corporateName?: string | undefined; }> | undefined'.
+      Type 'Resolver<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, { name: string; defaultSplit: number; corporateName?: string | undefined; }>'.
+        Type 'ResolverResult<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, TFieldValues> | Promise<ResolverResult<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, TFieldValues>>' is not assignable to type 'ResolverResult<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, { name: string; defaultSplit: number; corporateName?: string | undefined; }> | Promise<...>'.
+          Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverResult<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, { name: string; defaultSplit: number; corporateName?: string | undefined; }> | Promise<...>'.
+            Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverSuccess<{ name: string; defaultSplit: number; corporateName?: string | undefined; }>'.
+              Type 'TFieldValues' is not assignable to type '{ name: string; defaultSplit: number; corporateName?: string | undefined; }'.
+                Type 'FieldValues' is missing the following properties from type '{ name: string; defaultSplit: number; corporateName?: string | undefined; }': name, defaultSplit
+src/features/platforms/components/platform-form.tsx(72,13): error TS2322: Type 'Control<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, { name: string; defaultSplit: number; corporateName?: string | undefined; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, { name: string; defaultSplit: number; corporateName?: string | undefined; }> | undefined'.
+      Type 'Resolver<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, any, { name: string; defaultSplit: number; corporateName?: string | undefined; }>'.
+        Type 'ResolverResult<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, TFieldValues> | Promise<ResolverResult<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, TFieldValues>>' is not assignable to type 'ResolverResult<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, { name: string; defaultSplit: number; corporateName?: string | undefined; }> | Promise<...>'.
+          Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverResult<{ name: string; defaultSplit: number; corporateName?: string | undefined; }, { name: string; defaultSplit: number; corporateName?: string | undefined; }> | Promise<...>'.
+            Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverSuccess<{ name: string; defaultSplit: number; corporateName?: string | undefined; }>'.
+              Type 'TFieldValues' is not assignable to type '{ name: string; defaultSplit: number; corporateName?: string | undefined; }'.
+                Type 'FieldValues' is missing the following properties from type '{ name: string; defaultSplit: number; corporateName?: string | undefined; }': name, defaultSplit
+src/features/platforms/components/platforms-mutate-dialog.tsx(1,1): error TS6133: 'useFormContext' is declared but its value is never read.
+src/features/revenue/components/revenue-upload-step-3.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+src/features/revenue/components/revenue-upload-step-3.tsx(3,19): error TS6133: 'CheckCircle' is declared but its value is never read.
+src/features/revenue/components/revenue-upload-wizard.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+src/features/vendor-dashboard/components/payouts-columns.tsx(129,15): error TS2820: Type '"/vendor/payouts/$payoutId"' is not assignable to type '"/" | "/forgot-password" | "/otp" | "/sign-in" | "/sign-in-2" | "/sign-up" | "/401" | "/403" | "/404" | "/500" | "/503" | "/settings" | "/errors/$error" | "/payouts/$payoutId" | ... 20 more ... | ".."'. Did you mean '"/vendor/payouts/$payoutid"'?
+src/features/vendor-dashboard/components/payouts-columns.tsx(130,25): error TS2353: Object literal may only specify known properties, and 'payoutId' does not exist in type 'ParamsReducerFn<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, { queryClient: QueryClient; }, AnyContext, ({ location }: BeforeLoadContextOptions<Register, ... 6 more ..., undefined>) => Promise<...>, ... 6 more ..., undefined>, "never", false, RouterHistory, Record<...>>, "PATH", strin...'.
+src/features/vendors/components/qbo-global-sync-modal.tsx(7,3): error TS6133: 'ArrowRight' is declared but its value is never read.
+src/features/vendors/components/qbo-global-sync-modal.tsx(8,3): error TS6133: 'ArrowLeft' is declared but its value is never read.
+src/features/vendors/components/qbo-global-sync-modal.tsx(23,1): error TS6133: 'Label' is declared but its value is never read.
+src/features/vendors/components/qbo-global-sync-modal.tsx(24,1): error TS6192: All imports in import declaration are unused.
+src/features/vendors/components/qbo-global-sync-modal.tsx(35,11): error TS6196: 'ConflictResolution' is declared but never used.
+src/features/vendors/components/qbo-link-card.tsx(7,3): error TS6133: 'Check' is declared but its value is never read.
+src/features/vendors/components/qbo-link-card.tsx(19,3): error TS6133: 'CardFooter' is declared but its value is never read.
+src/features/vendors/components/qbo-sync-modal.tsx(72,5): error TS6133: 'label' is declared but its value is never read.
+src/features/vendors/components/requests-table.tsx(1,31): error TS6133: 'useMemo' is declared but its value is never read.
+src/features/vendors/components/reset-password-dialog.tsx(1,1): error TS6133: 'useState' is declared but its value is never read.
+src/features/vendors/components/reset-password-dialog.tsx(25,1): error TS6133: 'useUpdateVendor' is declared but its value is never read.
+src/features/vendors/components/split-dialogs.tsx(67,5): error TS2322: Type 'Resolver<{ platformId: string; commissionRate: unknown; }, any, { platformId: string; commissionRate: number; }>' is not assignable to type 'Resolver<{ platformId: string; commissionRate: number; }, any, { platformId: string; commissionRate: number; }>'.
+  Types of parameters 'options' and 'options' are incompatible.
+    Type 'ResolverOptions<{ platformId: string; commissionRate: number; }>' is not assignable to type 'ResolverOptions<{ platformId: string; commissionRate: unknown; }>'.
+      Type 'unknown' is not assignable to type 'number'.
+src/features/vendors/components/split-dialogs.tsx(100,41): error TS2345: Argument of type '(data: z.infer<typeof addSplitSchema>) => Promise<void>' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Type 'TFieldValues' is not assignable to type '{ platformId: string; commissionRate: number; }'.
+      Type 'FieldValues' is missing the following properties from type '{ platformId: string; commissionRate: number; }': platformId, commissionRate
+src/features/vendors/components/split-dialogs.tsx(104,15): error TS2322: Type 'Control<{ platformId: string; commissionRate: number; }, any, TFieldValues>' is not assignable to type 'Control<{ platformId: string; commissionRate: number; }, any, { platformId: string; commissionRate: number; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ platformId: string; commissionRate: number; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ platformId: string; commissionRate: number; }, any, { platformId: string; commissionRate: number; }> | undefined'.
+      Type 'Resolver<{ platformId: string; commissionRate: number; }, any, TFieldValues>' is not assignable to type 'Resolver<{ platformId: string; commissionRate: number; }, any, { platformId: string; commissionRate: number; }>'.
+        Type 'ResolverResult<{ platformId: string; commissionRate: number; }, TFieldValues> | Promise<ResolverResult<{ platformId: string; commissionRate: number; }, TFieldValues>>' is not assignable to type 'ResolverResult<{ platformId: string; commissionRate: number; }, { platformId: string; commissionRate: number; }> | Promise<ResolverResult<{ platformId: string; commissionRate: number; }, { ...; }>>'.
+          Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverResult<{ platformId: string; commissionRate: number; }, { platformId: string; commissionRate: number; }> | Promise<ResolverResult<{ platformId: string; commissionRate: number; }, { ...; }>>'.
+            Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverSuccess<{ platformId: string; commissionRate: number; }>'.
+              Type 'TFieldValues' is not assignable to type '{ platformId: string; commissionRate: number; }'.
+                Type 'FieldValues' is missing the following properties from type '{ platformId: string; commissionRate: number; }': platformId, commissionRate
+src/features/vendors/components/split-dialogs.tsx(142,15): error TS2322: Type 'Control<{ platformId: string; commissionRate: number; }, any, TFieldValues>' is not assignable to type 'Control<{ platformId: string; commissionRate: number; }, any, { platformId: string; commissionRate: number; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ platformId: string; commissionRate: number; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ platformId: string; commissionRate: number; }, any, { platformId: string; commissionRate: number; }> | undefined'.
+      Type 'Resolver<{ platformId: string; commissionRate: number; }, any, TFieldValues>' is not assignable to type 'Resolver<{ platformId: string; commissionRate: number; }, any, { platformId: string; commissionRate: number; }>'.
+        Type 'ResolverResult<{ platformId: string; commissionRate: number; }, TFieldValues> | Promise<ResolverResult<{ platformId: string; commissionRate: number; }, TFieldValues>>' is not assignable to type 'ResolverResult<{ platformId: string; commissionRate: number; }, { platformId: string; commissionRate: number; }> | Promise<ResolverResult<{ platformId: string; commissionRate: number; }, { ...; }>>'.
+          Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverResult<{ platformId: string; commissionRate: number; }, { platformId: string; commissionRate: number; }> | Promise<ResolverResult<{ platformId: string; commissionRate: number; }, { ...; }>>'.
+            Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverSuccess<{ platformId: string; commissionRate: number; }>'.
+              Type 'TFieldValues' is not assignable to type '{ platformId: string; commissionRate: number; }'.
+                Type 'FieldValues' is missing the following properties from type '{ platformId: string; commissionRate: number; }': platformId, commissionRate
+src/features/vendors/components/split-dialogs.tsx(186,5): error TS2322: Type 'Resolver<{ commissionRate: unknown; }, any, { commissionRate: number; }>' is not assignable to type 'Resolver<{ commissionRate: number; }, any, { commissionRate: number; }>'.
+  Types of parameters 'options' and 'options' are incompatible.
+    Type 'ResolverOptions<{ commissionRate: number; }>' is not assignable to type 'ResolverOptions<{ commissionRate: unknown; }>'.
+      Type 'unknown' is not assignable to type 'number'.
+src/features/vendors/components/split-dialogs.tsx(228,41): error TS2345: Argument of type '(data: z.infer<typeof editSplitSchema>) => Promise<void>' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Type 'TFieldValues' is not assignable to type '{ commissionRate: number; }'.
+      Property 'commissionRate' is missing in type 'FieldValues' but required in type '{ commissionRate: number; }'.
+src/features/vendors/components/split-dialogs.tsx(232,15): error TS2322: Type 'Control<{ commissionRate: number; }, any, TFieldValues>' is not assignable to type 'Control<{ commissionRate: number; }, any, { commissionRate: number; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ commissionRate: number; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ commissionRate: number; }, any, { commissionRate: number; }> | undefined'.
+      Type 'Resolver<{ commissionRate: number; }, any, TFieldValues>' is not assignable to type 'Resolver<{ commissionRate: number; }, any, { commissionRate: number; }>'.
+        Type 'ResolverResult<{ commissionRate: number; }, TFieldValues> | Promise<ResolverResult<{ commissionRate: number; }, TFieldValues>>' is not assignable to type 'ResolverResult<{ commissionRate: number; }, { commissionRate: number; }> | Promise<ResolverResult<{ commissionRate: number; }, { commissionRate: number; }>>'.
+          Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverResult<{ commissionRate: number; }, { commissionRate: number; }> | Promise<ResolverResult<{ commissionRate: number; }, { commissionRate: number; }>>'.
+            Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverSuccess<{ commissionRate: number; }>'.
+              Type 'TFieldValues' is not assignable to type '{ commissionRate: number; }'.
+                Property 'commissionRate' is missing in type 'FieldValues' but required in type '{ commissionRate: number; }'.
+src/features/vendors/components/vendors-columns.tsx(3,1): error TS6133: 'Badge' is declared but its value is never read.
+src/features/vendors/components/vendors-row-actions.tsx(4,15): error TS6133: 'Settings2' is declared but its value is never read.
+src/routes/_authenticated/vendor/payouts/index.tsx(48,37): error TS2322: Type 'VendorPayout[]' is not assignable to type 'Payout[]'.
+  Type 'VendorPayout' is missing the following properties from type 'Payout': vendorId, updatedAt, vendor

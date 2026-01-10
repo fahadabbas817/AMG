@@ -6,6 +6,7 @@ const ACCESS_TOKEN = 'thisisjustarandomstring'
 interface AuthUser {
   accountNo?: string // Optional as per user example
   email: string
+  name?: string // Added for dashboard greeting
   role: string | string[] // Support both 'admin' or ['admin']
   exp?: number
   userId?: number | string

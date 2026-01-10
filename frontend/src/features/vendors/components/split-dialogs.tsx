@@ -64,7 +64,7 @@ export function AddSplitDialog({
   const { data: platforms = [] } = useGetPlatforms()
 
   const form = useForm<z.infer<typeof addSplitSchema>>({
-    resolver: zodResolver(addSplitSchema),
+    resolver: zodResolver(addSplitSchema) as any,
     defaultValues: {
       platformId: '',
       commissionRate: 0,
@@ -183,7 +183,7 @@ export function EditSplitDialog({
   const { mutateAsync: updateSplit, isPending } = useUpdateSplit(vendorId)
 
   const form = useForm<z.infer<typeof editSplitSchema>>({
-    resolver: zodResolver(editSplitSchema),
+    resolver: zodResolver(editSplitSchema) as any,
     defaultValues: {
       commissionRate: 0,
     },

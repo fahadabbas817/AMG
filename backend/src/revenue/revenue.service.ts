@@ -11,6 +11,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import * as fs from 'fs';
 import * as path from 'path';
 import { CreateManualReportDto } from './dto/create-manual-report.dto';
+import { PayoutService } from '../payout/payout.service';
+import { QuickbooksSyncService } from '../quickbooks/quickbooks.sync.service';
 import { PLATFORM_STRATEGIES } from './config/platform-strategies.config';
 
 @Injectable()
@@ -19,6 +21,8 @@ export class RevenueService {
     private readonly normalizationService: RevenueNormalizationService,
     private readonly matcherService: VendorMatcherService,
     private readonly prisma: PrismaService,
+    private readonly payoutService: PayoutService,
+    private readonly qbSyncService: QuickbooksSyncService,
   ) {}
 
   async previewRevenueReport(file: Express.Multer.File, platformId: string) {
@@ -198,7 +202,7 @@ export class RevenueService {
 
     // 2. Database Transaction
     try {
-      return await this.prisma.$transaction(async (tx) => {
+      const result = await this.prisma.$transaction(async (tx) => {
         // Create Report Header
         const report = await tx.revenueReport.create({
           data: {
@@ -236,6 +240,17 @@ export class RevenueService {
           totalRecords: matchedData.length,
         };
       });
+
+      // AUTOMATED SYNC: Immediately try to sync the report (Best Effort)
+      this.syncReport(result.reportId).catch((err) => {
+        console.error(
+          `[AutomatedSync] Failed to sync report ${result.reportId}`,
+          err,
+        );
+        // We do not throw here, as the report is already saved.
+      });
+
+      return result;
     } catch (error) {
       console.error('CRITICAL ERROR in saveRevenueReport:', error);
       throw new InternalServerErrorException(
@@ -244,8 +259,254 @@ export class RevenueService {
     }
   }
 
+  async getReportSummary(reportId: string) {
+    // 1. Fetch Report & Records
+    const report = await this.prisma.revenueReport.findUnique({
+      where: { id: reportId },
+      include: {
+        records: {
+          include: {
+            vendor: true,
+            platform: true,
+          },
+        },
+      },
+    });
+
+    if (!report) {
+      throw new NotFoundException('Report not found');
+    }
+
+    // 2. Aggregate by Vendor
+    const vendorMap = new Map<
+      string,
+      {
+        vendorId: string;
+        vendorName: string;
+        gross: number;
+        commission: number;
+        net: number;
+        qbVendorId: string | null;
+      }
+    >();
+
+    report.records.forEach((record) => {
+      // Skip Unmatched for Payouts, but maybe show them?
+      // Requirement says "showing all the vendors that were found..."
+      // We focus on matched ones for payouts.
+      if (!record.vendorId) return;
+
+      if (!vendorMap.has(record.vendorId)) {
+        vendorMap.set(record.vendorId, {
+          vendorId: record.vendorId,
+          vendorName:
+            record.vendor?.companyName || record.rawVendorName || 'Unknown',
+          gross: 0,
+          commission: 0,
+          net: 0,
+          qbVendorId: record.vendor?.qbVendorId || null,
+        });
+      }
+
+      const entry = vendorMap.get(record.vendorId)!;
+      entry.gross += Number(record.grossRevenue);
+      // We need to calculate commission if it's not already persisted?
+      // In saveRevenueReport, we didn't calculate commission/net!
+      // Wait, saveRevenueReport inserts records with `amgCommission: 0` (default).
+      // We must calculate it NOW or used a stored procedure.
+      // The current save logic DOES NOT calculate commission/net. It sets defaults.
+      // The PayoutService.createPayout calculates it.
+      // WE SHOULD CALCULATE IT HERE FOR PREVIEW.
+
+      // We need to fetch splits to calculate accurately.
+      // However, for the summary view, maybe we should just estimate or fetch stored?
+      // Since it's 0 in DB, we must calculate.
+    });
+
+    // To calculate correctly, we need the logic from PayoutService.
+    // Ideally, we should unify this.
+    // For now, let's replicate the basic logic or depend on PayoutService if possible.
+    // PayoutService.getUnpaidSummaries logic is complex.
+
+    // Let's iterate and calculate properly.
+    const platformId = report.platformId!;
+    const platform = await this.prisma.platform.findUnique({
+      where: { id: platformId },
+    });
+    const splits = await this.prisma.platformSplit.findMany({
+      where: { platformId: platformId },
+    });
+    const splitMap = new Map(splits.map((s) => [s.vendorId, s.commissionRate]));
+
+    const defaultRate = platform?.defaultSplit || 0;
+
+    const summary = Array.from(vendorMap.values()).map((v) => {
+      // Re-loop records for this vendor to be precise?
+      // Or just apply to the aggregate gross?
+      // Split is per Vendor/Platform. Since Report is single Platform, rate is constant for the Vendor.
+      const rate = splitMap.has(v.vendorId)
+        ? splitMap.get(v.vendorId)!
+        : defaultRate;
+
+      // Recalculate based on records
+      const vendorRecords = report.records.filter(
+        (r) => r.vendorId === v.vendorId,
+      );
+      const totalGross = vendorRecords.reduce(
+        (sum, r) => sum + Number(r.grossRevenue),
+        0,
+      );
+
+      const commission = totalGross * rate;
+      const net = totalGross - commission;
+
+      return {
+        ...v,
+        gross: totalGross,
+        commission,
+        net,
+        rate,
+      };
+    });
+
+    return {
+      reportId: report.id,
+      invoiceRef: report.invoiceRef,
+      totalAmount: report.totalAmount,
+      vendors: summary,
+    };
+  }
+
+  // ... (existing methods remain, just need to ensure constructor is updated everywhere?
+  // No, just the constructor and valid method usage.
+  // Wait, I strictly cannot rely on `...` in replace_file_content when targeting a specific block like constructor!
+  // I will replace constructor separately to be safe from file modification issues?)
+
+  // Actually, I am replacing the constructor earlier in the file, so I need to target line 18-22.
+  // I will make two calls. One for constructor, one for syncReport.
+  // But cannot make parallel calls to same file.
+  // I should use multi_replace for same file!
+  // But wait, the previous tool call already used REPLACE.
+  // I'll make this tools sequential in my thought process but effectively one turn?
+  // No, I must queue them. But I can assume I can do it in one MultiReplace.
+  // Wait, I will use Replace for the constructor first?
+  // Let's look at file again.
+  // Line 18 is constructor.
+  // Line 365 is syncReport.
+
+  // I will use MultiReplaceFileContent.
+
+  // Wait, I am currently running inside a thought block before tool calls.
+  // I already queued `replace_file_content` for QuickbooksSyncService (Step 1).
+  // Then `replace_file_content` for imports (Step 2).
+  // I should queue `multi_replace_file_content` for RevenueService constructor + syncReport (Step 3).
+
+  // Wait, I should verify exact lines for constructor.
+  // Lines 18-22
+  // constructor(
+  //   private readonly normalizationService: RevenueNormalizationService,
+  //   private readonly matcherService: VendorMatcherService,
+  //   private readonly prisma: PrismaService,
+  // ) {}
+
+  // Implementation of syncReport:
+
+  async syncReport(reportId: string, invoiceRef?: string) {
+    const report = await this.prisma.revenueReport.findUnique({
+      where: { id: reportId },
+      include: { records: true },
+    });
+
+    if (!report) {
+      throw new NotFoundException('Report not found');
+    }
+
+    // 1. Update Invoice Ref if provided
+    // Also, if invoiceRef is empty, try to ensure we have one?
+    const finalInvoiceRef = invoiceRef || report.invoiceRef;
+    if (invoiceRef) {
+      await this.prisma.revenueReport.update({
+        where: { id: reportId },
+        data: { invoiceRef },
+      });
+    }
+
+    // 2. Identify Vendors & Records to Pay
+    // We only pay records that are "UNPROCESSED" (just uploaded) or "MATCHED"
+    // And NOT yet paid (payoutId is null).
+
+    // Group records by Vendor
+    const vendorRecordsMap = new Map<string, string[]>();
+    report.records.forEach((r) => {
+      if (
+        r.vendorId &&
+        !r.payoutId &&
+        (r.status === 'MATCHED' || r.status === 'UNPROCESSED')
+      ) {
+        if (!vendorRecordsMap.has(r.vendorId)) {
+          vendorRecordsMap.set(r.vendorId, []);
+        }
+        vendorRecordsMap.get(r.vendorId)!.push(r.id);
+      }
+    });
+
+    const results: any[] = [];
+    const errors: any[] = [];
+
+    // 3. Loop Vendors
+    for (const [vendorId, recordIds] of vendorRecordsMap.entries()) {
+      try {
+        // a. Create Payout (Local)
+        const payout = await this.payoutService.createPayout({
+          vendorId,
+          recordIds,
+        });
+
+        // b. Create QBO Bill (Sync)
+        // We catch errors here so one failure doesn't stop others?
+        // Admin likely wants "All or Nothing" or "Best Effort"?
+        // Usually Best Effort with Error Report is better for Bulk.
+        let bill: any = null;
+        let syncError = null;
+        try {
+          bill = await this.qbSyncService.createBillFromPayout(
+            payout.payoutId,
+            finalInvoiceRef || undefined,
+          );
+        } catch (e) {
+          console.error(`Failed to sync payout ${payout.payoutId} to QBO`, e);
+          syncError = e.message;
+          // If sync fails, should we rollback payout?
+          // Probably not, they can retry sync later?
+          // The payout exists. Status is "NOT_SYNCED" (default).
+        }
+
+        results.push({
+          vendorId,
+          payoutId: payout.payoutId,
+          amount: payout.totalAmount,
+          qbBillId: bill?.Id || null,
+          syncStatus: bill ? 'SUCCESS' : 'FAILED',
+          syncError,
+        });
+      } catch (e) {
+        console.error(`Failed to process vendor ${vendorId}`, e);
+        errors.push({ vendorId, error: e.message });
+      }
+    }
+
+    return {
+      message: 'Sync process completed',
+      reportId,
+      processed: results.length,
+      failures: errors.length,
+      details: results,
+      errors,
+    };
+  }
+
   async saveManualReport(dto: CreateManualReportDto) {
-    const { platformId, month, totalAmount, rows } = dto;
+    const { platformId, month, totalAmount, rows, invoiceNumber } = dto;
 
     // 1. Validate Platform
     const platform = await this.prisma.platform.findUnique({
@@ -302,7 +563,7 @@ export class RevenueService {
 
     // 4. Transactional Save
     try {
-      return await this.prisma.$transaction(async (tx) => {
+      const result = await this.prisma.$transaction(async (tx) => {
         const report = await tx.revenueReport.create({
           data: {
             filename: 'MANUAL_ENTRY',
@@ -311,6 +572,7 @@ export class RevenueService {
             platformId: platform.id,
             totalAmount: totalAmount,
             month: new Date(month),
+            invoiceRef: invoiceNumber || null,
           },
         });
 
@@ -335,6 +597,16 @@ export class RevenueService {
           totalRecords: processedRows.length,
         };
       });
+
+      // AUTOMATED SYNC: Immediately try to sync the report (Best Effort)
+      this.syncReport(result.reportId).catch((err) => {
+        console.error(
+          `[AutomatedSync] Failed to sync manual report ${result.reportId}`,
+          err,
+        );
+      });
+
+      return result;
     } catch (error) {
       throw new InternalServerErrorException(
         `Failed to save manual report: ${error.message}`,

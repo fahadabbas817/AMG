@@ -2,14 +2,20 @@ import { queryOptions, useQuery } from '@tanstack/react-query'
 import api from '@/services/api'
 import { VendorsApiResponse } from '../types'
 
-export const getVendorsQueryOptions = queryOptions({
-  queryKey: ['vendors'],
-  queryFn: async () => {
-    const response = await api.get<VendorsApiResponse>('/vendors')
-    return response.data.data
-  },
-})
+interface GetVendorsParams {
+  page?: number
+  limit?: number
+}
 
-export const useGetVendors = () => {
-  return useQuery(getVendorsQueryOptions)
+export const getVendorsQueryOptions = (params?: GetVendorsParams) =>
+  queryOptions({
+    queryKey: ['vendors', params],
+    queryFn: async () => {
+      const response = await api.get<VendorsApiResponse>('/vendors', { params })
+      return response.data
+    },
+  })
+
+export const useGetVendors = (params?: GetVendorsParams) => {
+  return useQuery(getVendorsQueryOptions(params))
 }

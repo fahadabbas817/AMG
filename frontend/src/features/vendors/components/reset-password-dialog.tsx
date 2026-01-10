@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -22,7 +21,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useUpdateVendor } from '../api/useUpdateVendor'
+import { useResetPassword } from '../api/useUpdateVendor'
 
 const resetPasswordSchema = z
   .object({
@@ -47,7 +46,7 @@ export function ResetPasswordDialog({
   vendorId,
   vendorName,
 }: ResetPasswordDialogProps) {
-  const { mutateAsync: updateVendor, isPending } = useUpdateVendor()
+  const { mutateAsync: resetPassword, isPending } = useResetPassword()
 
   const form = useForm<z.infer<typeof resetPasswordSchema>>({
     resolver: zodResolver(resetPasswordSchema),
@@ -59,9 +58,9 @@ export function ResetPasswordDialog({
 
   const onSubmit = async (data: z.infer<typeof resetPasswordSchema>) => {
     try {
-      await updateVendor({
+      await resetPassword({
         id: vendorId,
-        data: { password: data.password },
+        password: data.password,
       })
       toast.success('Password updated successfully')
       onOpenChange(false)

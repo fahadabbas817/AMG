@@ -91,7 +91,7 @@ export const parseSheet = (buffer: Buffer, options?: ParseOptions): any[] => {
     if (options?.raw) {
       return XLSX.utils.sheet_to_json(worksheet, {
         header: 1,
-        blankrows: false,
+        blankrows: true,
       });
     }
 

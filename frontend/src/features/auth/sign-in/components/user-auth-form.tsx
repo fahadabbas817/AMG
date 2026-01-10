@@ -68,13 +68,6 @@ export function UserAuthForm({
     try {
       let response: any
 
-      console.log('🔐 Attempting login with:', {
-        userType,
-        email: data.email,
-        hasPassword: !!data.password,
-        vendorId: data.vendorId || 'N/A',
-      })
-
       // Call appropriate API based on user type
       if (userType === 'admin') {
         response = await AuthService.loginAdmin({
@@ -89,8 +82,6 @@ export function UserAuthForm({
         })
       }
 
-      console.log('✅ Login response:', response)
-
       // Backend now returns: { message, user: { id, role, email } }
       const userData = response.user
 
@@ -98,11 +89,10 @@ export function UserAuthForm({
       const user = {
         userId: userData.id,
         email: userData.email,
+        name: userData.name,
         role: userData.role.toLowerCase(), // Convert 'ADMIN' to 'admin', 'VENDOR' to 'vendor'
         exp: Date.now() + 2 * 60 * 60 * 1000, // 2 hours (matching cookie expiry)
       }
-
-      console.log('💾 Storing user:', user)
 
       auth.setUser(user)
       auth.setAccessToken('token-stored-in-cookie') // Token is in httpOnly cookie
@@ -112,7 +102,6 @@ export function UserAuthForm({
 
       // Redirect based on role
       const targetPath = user.role === 'vendor' ? '/vendor' : '/'
-      console.log('🚀 Redirecting to:', targetPath)
 
       navigate({ to: targetPath, replace: true })
     } catch (error: any) {

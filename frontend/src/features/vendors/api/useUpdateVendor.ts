@@ -16,3 +16,16 @@ export const useUpdateVendor = () => {
     },
   })
 }
+
+export const useResetPassword = () => {
+  return useMutation({
+    mutationFn: async ({ id, password }: { id: string; password: string }) => {
+      // The backend expects key 'password' in body
+      const response = await api.patch<{ message: string }>(
+        `/vendors/${id}/reset-password`,
+        { password }
+      )
+      return response.data
+    },
+  })
+}

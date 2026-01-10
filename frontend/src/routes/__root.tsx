@@ -52,6 +52,7 @@ export const Route = createRootRouteWithContext<{
       const user = {
         userId: profileData.userId,
         email: profileData.email,
+        name: profileData.name,
         role: profileData.role.toLowerCase(),
         exp: Date.now() + 2 * 60 * 60 * 1000,
       }

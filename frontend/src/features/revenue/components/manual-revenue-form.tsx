@@ -29,13 +29,14 @@ import { useSaveManualReport, ManualRow } from '../api/useSaveManualReport'
 type FormValues = {
   platformId: string
   month: string
+  invoiceNumber?: string
   rows: ManualRow[]
 }
 
 export const ManualRevenueForm = () => {
   const navigate = useNavigate()
   const { data: platforms } = useGetPlatforms()
-  const { data: vendors } = useGetVendors()
+  const { data: vendors } = useGetVendors({ limit: 1000 })
   const saveMutation = useSaveManualReport()
 
   const {
@@ -155,7 +156,19 @@ export const ManualRevenueForm = () => {
               <Input type='date' {...register('month', { required: true })} />
             </div>
 
-            {/* Total Check Amount */}
+            {/* Invoice Number */}
+            <div className='space-y-2'>
+              <Label>
+                Invoice Number{' '}
+                <span className='text-muted-foreground text-xs'>
+                  (Optional for QBO)
+                </span>
+              </Label>
+              <Input
+                placeholder='e.g. INV-2024-001'
+                {...register('invoiceNumber')}
+              />
+            </div>
           </CardContent>
         </Card>
 
@@ -199,7 +212,7 @@ export const ManualRevenueForm = () => {
                               <SelectValue placeholder='Select Vendor' />
                             </SelectTrigger>
                             <SelectContent className='max-h-[300px]'>
-                              {vendors?.map((v: any) => (
+                              {vendors?.data?.map((v: any) => (
                                 <SelectItem key={v.id} value={v.id}>
                                   {v.vendorNumber}: {v.companyName}{' '}
                                   {v.subLabels?.length > 0

@@ -62,3 +62,13 @@ export type RevenueRecord = Prisma.RevenueRecordModel
  * 
  */
 export type Payout = Prisma.PayoutModel
+/**
+ * Model ProfileChangeRequest
+ * 
+ */
+export type ProfileChangeRequest = Prisma.ProfileChangeRequestModel
+/**
+ * Model QuickBooksConfig
+ * 
+ */
+export type QuickBooksConfig = Prisma.QuickBooksConfigModel

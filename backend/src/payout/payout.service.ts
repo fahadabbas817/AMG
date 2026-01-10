@@ -1,9 +1,22 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  Inject,
+  forwardRef,
+  Logger,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { QuickbooksSyncService } from '../quickbooks/quickbooks.sync.service';
 
 @Injectable()
 export class PayoutService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(PayoutService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject(forwardRef(() => QuickbooksSyncService))
+    private readonly quickbooksSyncService: QuickbooksSyncService,
+  ) {}
 
   async getUnpaidSummaries(vendorId: string) {
     // 1. Validate Vendor
@@ -261,6 +274,7 @@ export class PayoutService {
             id: true,
             companyName: true,
             vendorNumber: true,
+            qbVendorId: true,
           },
         },
         items: {
@@ -303,7 +317,7 @@ export class PayoutService {
   }
 
   async settlePayout(id: string, paymentDate: Date) {
-    return await this.prisma.$transaction(
+    const payout = await this.prisma.$transaction(
       async (tx) => {
         // 1. Update Payout
         const payout = await tx.payout.update({
@@ -329,6 +343,30 @@ export class PayoutService {
         timeout: 10000,
       },
     );
+
+    // 3. Sync to QBO (Create Bill Payment)
+    if (payout.qbBillId) {
+      try {
+        await this.quickbooksSyncService.createBillPayment(
+          payout.id,
+          payout.qbBillId,
+          Number(payout.totalAmount),
+          paymentDate,
+        );
+        this.logger.log(
+          `[SettlePayout] Automatically created Bill Payment for Payout ${id}`,
+        );
+      } catch (e: any) {
+        this.logger.error(
+          `[SettlePayout] Failed to create QBO Bill Payment for Payout ${id}`,
+          e.message,
+        );
+        // We do NOT rollback the local payment status, as Admin action should prevail.
+        // Just log the error. Admin can manually retry or check logs.
+      }
+    }
+
+    return payout;
   }
 
   async exportPayout(id: string, format: 'pdf' | 'xlsx') {

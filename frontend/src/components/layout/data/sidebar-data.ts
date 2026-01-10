@@ -12,6 +12,7 @@ import {
   Command,
   DollarSign,
   Upload,
+  Inbox,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -82,6 +83,11 @@ export const sidebarData: SidebarData = {
           title: 'Payouts',
           url: '/payouts',
           icon: DollarSign,
+        },
+        {
+          title: 'Requests',
+          url: '/requests',
+          icon: Inbox,
         },
         // {
         //   title: 'Secured by Clerk',

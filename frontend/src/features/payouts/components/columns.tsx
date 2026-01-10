@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { format } from 'date-fns'
 import { Link } from '@tanstack/react-router'
 import { ColumnDef } from '@tanstack/react-table'
@@ -9,6 +10,7 @@ import {
   FileText,
   Save,
 } from 'lucide-react'
+import { CheckCircle2, AlertCircle, UploadCloud } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -21,10 +23,18 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { DataTableColumnHeader } from '@/components/data-table/column-header'
 import { useExportPayout } from '../api/useExportPayout'
 import { useSettlePayout } from '../api/useSettlePayout'
+import { useSyncPayout } from '../api/useSyncPayout'
 import { Payout } from '../types'
+import { LinkVendorDialog } from './link-vendor-dialog'
 
 // Define the shape of our table meta to include the dates state
 interface PayoutsTableMeta {
@@ -174,6 +184,14 @@ export const columns: ColumnDef<Payout>[] = [
       )
     },
   },
+
+  {
+    id: 'sync',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='QBO Sync' />
+    ),
+    cell: ({ row }) => <SyncStatusCell payout={row.original} />,
+  },
   {
     id: 'actions',
     enableHiding: false,
@@ -183,7 +201,76 @@ export const columns: ColumnDef<Payout>[] = [
   },
 ]
 
+function SyncStatusCell({ payout }: { payout: Payout }) {
+  const syncMutation = useSyncPayout()
+  const [showLinkDialog, setShowLinkDialog] = useState(false)
+
+  const isSynced = payout.syncStatus === 'SYNCED' || !!payout.qbBillId
+  const isFailed = payout.syncStatus === 'FAILED'
+  const isPending =
+    payout.syncStatus === 'PENDING_SYNC' || syncMutation.isPending
+
+  const handleSync = () => {
+    if (!payout.vendor.qbVendorId) {
+      setShowLinkDialog(true)
+      return
+    }
+    syncMutation.mutate(payout.id)
+  }
+
+  if (isSynced) {
+    return (
+      <div className='flex items-center gap-2 text-green-600'>
+        <CheckCircle2 className='h-4 w-4' />
+        <span className='text-xs font-medium'>Synced</span>
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <div className='flex items-center gap-2'>
+        {isFailed && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <AlertCircle className='h-4 w-4 text-red-500' />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Sync Failed. Click to retry.</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+
+        <Button
+          size='sm'
+          variant={isFailed ? 'destructive' : 'outline'}
+          className='h-7 gap-1 text-xs'
+          onClick={handleSync}
+          disabled={isPending}
+        >
+          {isPending ? (
+            <Loader2 className='h-3 w-3 animate-spin' />
+          ) : (
+            <UploadCloud className='h-3 w-3' />
+          )}
+          {isFailed ? 'Retry' : 'Sync'}
+        </Button>
+      </div>
+
+      <LinkVendorDialog
+        isOpen={showLinkDialog}
+        onClose={() => setShowLinkDialog(false)}
+        vendorId={payout.vendor.id}
+        vendorName={payout.vendor.companyName}
+      />
+    </>
+  )
+}
+
 function PayoutActionsCell({ row, table }: { row: any; table: any }) {
+  // ... existing ActionsCell logic
   const payout = row.original
   const meta = table.options.meta as PayoutsTableMeta
   const dateValue = meta?.dates[payout.id]

@@ -16,6 +16,13 @@ import { TeamSwitcher } from './team-switcher'
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
   const { auth } = useAuthStore()
+
+  const sidebarUser = {
+    name: auth.user?.name || 'Admin',
+    email: auth.user?.email || '',
+    avatar: '',
+    profileUrl: '/help-center',
+  }
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader>
@@ -27,6 +34,9 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         {sidebarData.navGroups.map((props) => {
+          // Skip 'Other' group (Settings, Help Center) as requested to be removed like vendor sidebar
+          if (props.title === 'Other') return null
+
           // RBAC Filtering logic
           if (
             auth.user?.role === 'vendor' ||
@@ -34,8 +44,6 @@ export function AppSidebar() {
               auth.user?.role.includes('vendor'))
           ) {
             // Vendor specific filtering
-            if (props.title === 'Other')
-              return <NavGroup key={props.title} {...props} />
             if (props.title === 'General') {
               // Return modified items for Vendor
               return (
@@ -62,7 +70,7 @@ export function AppSidebar() {
         })}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={sidebarData.user} />
+        <NavUser user={sidebarUser} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

@@ -14,10 +14,13 @@ import {
 import { VendorsService } from './vendors.service';
 import { CreateVendorDto } from './dto/create-vendor.dto';
 import { UpdateVendorDto } from './dto/update-vendor.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // Adjust path
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard, Roles } from '../auth/roles.guard';
+import { Role } from 'prisma/generated/client';
 
 @Controller('vendors')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.ADMIN)
 export class VendorsController {
   constructor(private readonly vendorsService: VendorsService) {}
 
@@ -37,6 +40,11 @@ export class VendorsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.vendorsService.findOne(id);
+  }
+
+  @Patch(':id/reset-password')
+  resetPassword(@Param('id') id: string, @Body('password') password: string) {
+    return this.vendorsService.resetPassword(id, password);
   }
 
   @Patch(':id')

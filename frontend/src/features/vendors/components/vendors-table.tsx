@@ -29,9 +29,15 @@ type VendorsTableProps = {
   data: Vendor[]
   search: Record<string, unknown>
   navigate: NavigateFn
+  rowCount: number
 }
 
-export function VendorsTable({ data, search, navigate }: VendorsTableProps) {
+export function VendorsTable({
+  data,
+  search,
+  navigate,
+  rowCount,
+}: VendorsTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
@@ -57,6 +63,8 @@ export function VendorsTable({ data, search, navigate }: VendorsTableProps) {
   const table = useReactTable({
     data,
     columns,
+    rowCount,
+    manualPagination: true,
     state: {
       sorting,
       pagination,

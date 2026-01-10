@@ -1,8 +1,5 @@
 import { useState } from 'react'
-import { z } from 'zod'
 import { format } from 'date-fns'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import {
@@ -10,24 +7,22 @@ import {
   Building2,
   Calculator,
   CreditCard,
-  Download,
-  FileText,
+  Wallet,
+  User,
+  RefreshCw,
+  Pencil,
+  Tag,
   Hash,
+  Phone,
+  MapPin,
+  UserPen,
   Landmark,
   Layers,
-  MapPin,
-  MoreHorizontal,
-  Pencil,
-  Phone,
   Plus,
-  RefreshCw,
-  Tag,
+  MoreHorizontal,
   Trash2,
-  User,
-  UserPen,
-  Wallet,
+  FileText,
 } from 'lucide-react'
-import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -45,13 +40,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import {
   Table,
@@ -62,7 +50,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog'
-import { DatePicker } from '@/components/date-picker'
 import { Header } from '@/components/layout/header'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
@@ -70,6 +57,7 @@ import { useCreatePayout } from '@/features/payouts/api/useCreatePayout'
 import { useGetUnpaidSummaries } from '@/features/payouts/api/useGetUnpaidSummaries'
 import { PlatformSplit, useRemoveSplit } from '@/features/vendors/api/splits'
 import { getVendorQueryOptions } from '@/features/vendors/api/useGetVendor'
+import { QboLinkCard } from '@/features/vendors/components/qbo-link-card'
 import { ResetPasswordDialog } from '@/features/vendors/components/reset-password-dialog'
 import {
   AddSplitDialog,
@@ -102,15 +90,9 @@ function VendorDetails() {
     useRemoveSplit(vendorId)
 
   // Payout Management
-  console.log('UseGetUnpaidSummaries Hook Call - VendorID:', vendorId)
-  const {
-    data: unpaidSummaries,
-    error,
-    isLoading,
-  } = useGetUnpaidSummaries(vendorId)
+  const { data: unpaidSummaries, error } = useGetUnpaidSummaries(vendorId)
 
   if (error) console.error('Unpaid Summaries Error:', error)
-  if (isLoading) console.log('Loading summaries...')
 
   const { mutate: createPayout, isPending: isCreatingPayout } =
     useCreatePayout()
@@ -227,52 +209,56 @@ function VendorDetails() {
 
         <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
           {/* Section 1: Corporate Info */}
-          <Card className='overflow-hidden'>
-            <CardHeader className='border-b pb-4'>
-              <div className='flex items-center justify-between'>
-                <div className='flex items-center gap-2'>
-                  <Building2 className='text-primary h-5 w-5' />
-                  <CardTitle>Corporate Information</CardTitle>
+          <div className='space-y-6'>
+            <Card className='overflow-hidden'>
+              <CardHeader className='border-b pb-4'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex items-center gap-2'>
+                    <Building2 className='text-primary h-5 w-5' />
+                    <CardTitle>Corporate Information</CardTitle>
+                  </div>
+                  <Button
+                    variant='ghost'
+                    size='icon'
+                    onClick={() => setIsEditOpen(true)}
+                    className='h-8 w-8'
+                  >
+                    <Pencil className='text-muted-foreground h-3.5 w-3.5' />
+                  </Button>
                 </div>
-                <Button
-                  variant='ghost'
-                  size='icon'
-                  onClick={() => setIsEditOpen(true)}
-                  className='h-8 w-8'
-                >
-                  <Pencil className='text-muted-foreground h-3.5 w-3.5' />
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className='p-6'>
-              <dl className='grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2'>
-                <div className='space-y-1.5'>
-                  <dt className='text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase'>
-                    <Hash className='h-3.5 w-3.5' /> Vendor Number
-                  </dt>
-                  <dd className='font-medium'>{vendor.vendorNumber}</dd>
-                </div>
-                <div className='space-y-1.5'>
-                  <dt className='text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase'>
-                    <Phone className='h-3.5 w-3.5' /> Phone
-                  </dt>
-                  <dd className='font-medium'>{vendor.phone}</dd>
-                </div>
-                <div className='col-span-full space-y-1.5'>
-                  <dt className='text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase'>
-                    <MapPin className='h-3.5 w-3.5' /> Address
-                  </dt>
-                  <dd className='font-medium'>{vendor.address}</dd>
-                </div>
-                <div className='col-span-full space-y-1.5'>
-                  <dt className='text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase'>
-                    <UserPen className='h-3.5 w-3.5' /> Contract Signatory
-                  </dt>
-                  <dd className='font-medium'>{vendor.contractSignatory}</dd>
-                </div>
-              </dl>
-            </CardContent>
-          </Card>
+              </CardHeader>
+              <CardContent className='p-6'>
+                <dl className='grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2'>
+                  <div className='space-y-1.5'>
+                    <dt className='text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase'>
+                      <Hash className='h-3.5 w-3.5' /> Vendor Number
+                    </dt>
+                    <dd className='font-medium'>{vendor.vendorNumber}</dd>
+                  </div>
+                  <div className='space-y-1.5'>
+                    <dt className='text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase'>
+                      <Phone className='h-3.5 w-3.5' /> Phone
+                    </dt>
+                    <dd className='font-medium'>{vendor.phone}</dd>
+                  </div>
+                  <div className='col-span-full space-y-1.5'>
+                    <dt className='text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase'>
+                      <MapPin className='h-3.5 w-3.5' /> Address
+                    </dt>
+                    <dd className='font-medium'>{vendor.address}</dd>
+                  </div>
+                  <div className='col-span-full space-y-1.5'>
+                    <dt className='text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase'>
+                      <UserPen className='h-3.5 w-3.5' /> Contract Signatory
+                    </dt>
+                    <dd className='font-medium'>{vendor.contractSignatory}</dd>
+                  </div>
+                </dl>
+              </CardContent>
+            </Card>
+
+            <QboLinkCard vendorId={vendor.id} qbVendorId={vendor.qbVendorId} />
+          </div>
 
           {/* Section 2: Bank Details */}
           <Card className='overflow-hidden'>
@@ -464,7 +450,7 @@ function VendorDetails() {
           </CardHeader>
           <CardContent className='space-y-6 p-6'>
             {/* Export Controls */}
-            <div className='bg-muted/30 flex flex-wrap items-end gap-4 rounded-lg border p-4'>
+            {/* <div className='bg-muted/30 flex flex-wrap items-end gap-4 rounded-lg border p-4'>
               <div className='flex flex-col space-y-2'>
                 <label className='text-xs font-medium uppercase'>From</label>
                 <DatePicker />
@@ -502,7 +488,7 @@ function VendorDetails() {
                 <Download className='mr-2 h-4 w-4' />
                 Export Stats
               </Button>
-            </div>
+            </div> */}
 
             <Separator />
 

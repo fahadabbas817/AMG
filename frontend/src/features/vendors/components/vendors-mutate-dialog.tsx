@@ -176,7 +176,6 @@ export function VendorsMutateDialog({
           paypalEmail: data.bankDetails.paypalEmail ?? '',
         },
       }
-      console.log(formattedData)
 
       if (isUpdate) {
         await updateVendor({ id: currentRow.id, data: formattedData })

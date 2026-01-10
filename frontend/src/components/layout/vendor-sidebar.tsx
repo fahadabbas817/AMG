@@ -1,4 +1,5 @@
-import { LayoutDashboard, Settings, HelpCircle, Command } from 'lucide-react'
+import { LayoutDashboard, Command, BarChart3, CreditCard } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import { useLayout } from '@/context/layout-provider'
 import {
   Sidebar,
@@ -13,11 +14,6 @@ import { TeamSwitcher } from './team-switcher'
 
 // Simplified sidebar data for vendors
 const vendorSidebarData = {
-  user: {
-    name: 'Vendor',
-    email: 'vendor@amg.com',
-    avatar: '/avatars/shadcn.jpg',
-  },
   teams: [
     {
       name: 'AMG',
@@ -34,20 +30,16 @@ const vendorSidebarData = {
           url: '/vendor',
           icon: LayoutDashboard,
         },
-      ],
-    },
-    {
-      title: 'Support',
-      items: [
+
         {
-          title: 'Settings',
-          url: '/settings',
-          icon: Settings,
+          title: 'Stats',
+          url: '/vendor/stats',
+          icon: BarChart3,
         },
         {
-          title: 'Help Center',
-          url: '/help-center',
-          icon: HelpCircle,
+          title: 'Payouts',
+          url: '/vendor/payouts',
+          icon: CreditCard,
         },
       ],
     },
@@ -56,6 +48,14 @@ const vendorSidebarData = {
 
 export function VendorSidebar() {
   const { collapsible, variant } = useLayout()
+  const { user } = useAuthStore((state) => state.auth)
+
+  const sidebarUser = {
+    name: user?.name || 'Vendor',
+    email: user?.email || '',
+    avatar: '', // You might want to generate this from name
+    profileUrl: '/vendor/profile',
+  }
 
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
@@ -68,7 +68,7 @@ export function VendorSidebar() {
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={vendorSidebarData.user} />
+        <NavUser user={sidebarUser} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

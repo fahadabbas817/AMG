@@ -38,6 +38,7 @@ export interface Vendor {
   platformSplits?: PlatformSplit[]
   // For frontend display/edit primarily
   password?: string
+  qbVendorId?: string
   bankDetails: VendorBankDetails
 }
 

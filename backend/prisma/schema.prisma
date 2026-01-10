@@ -37,8 +37,9 @@ model Vendor {
   revenueRecords RevenueRecord[]
   payouts        Payout[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  profileChangeRequests ProfileChangeRequest[]
 }
 
 model Platform {
@@ -168,6 +169,7 @@ model Payout {
   paymentDate  DateTime?
   referenceRef String? // Check # or Transaction ID
   qbBillId     String? // QuickBooks Bill ID
+  syncStatus   String    @default("NOT_SYNCED") // "NOT_SYNCED", "PENDING_SYNC", "SYNCED", "FAILED"
 
   createdAt DateTime @default(now())
 }
@@ -186,4 +188,39 @@ enum PayoutMethod {
   ACH
   PAYPAL
   WIRE
+}
+
+model ProfileChangeRequest {
+  id       String @id @default(uuid())
+  vendorId String
+  vendor   Vendor @relation(fields: [vendorId], references: [id])
+
+  // Snapshot of relevant fields at time of request
+  oldData Json
+  // Proposed changes
+  newData Json
+
+  status RequestStatus @default(PENDING)
+
+  adminId String?
+  // admin     Admin?   @relation(fields: [adminId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model QuickBooksConfig {
+  id                     String   @id @default(uuid())
+  realmId                String   @unique
+  accessToken            String
+  refreshToken           String
+  expiresIn              Int      @default(3600)
+  xRefreshTokenExpiresIn Int?
+  updatedAt              DateTime @updatedAt
 }

@@ -14,12 +14,6 @@ export function sleep(ms: number = 1000) {
  * @param currentPage - Current page number (1-based)
  * @param totalPages - Total number of pages
  * @returns Array of page numbers and ellipsis strings
- *
- * Examples:
- * - Small dataset (≤5 pages): [1, 2, 3, 4, 5]
- * - Near beginning: [1, 2, 3, 4, '...', 10]
- * - In middle: [1, '...', 4, 5, 6, '...', 10]
- * - Near end: [1, '...', 7, 8, 9, 10]
  */
 export function getPageNumbers(currentPage: number, totalPages: number) {
   const maxVisiblePages = 5 // Maximum number of page buttons to show
@@ -57,4 +51,56 @@ export function getPageNumbers(currentPage: number, totalPages: number) {
   }
 
   return rangeWithDots
+}
+
+/**
+ * Normalizes vendor/profile request data structure
+ */
+export function normalizeRequestData(data: any): Record<string, any> {
+  if (!data) return {}
+
+  // If wrapped in 'data' prop (common pattern)
+  const content =
+    data.data && typeof data.data === 'object' && !Array.isArray(data.data)
+      ? data.data
+      : data
+
+  // Flatten bankDetails if present
+  if (content.bankDetails && typeof content.bankDetails === 'object') {
+    const { bankDetails, ...rest } = content
+    return { ...rest, ...bankDetails }
+  }
+
+  return content
+}
+
+/**
+ * Normalizes a value for comparison (treats null/undefined/empty string as same)
+ */
+export function normalizeValue(val: any): string {
+  if (val === null || val === undefined) return ''
+  return String(val).trim()
+}
+
+/**
+ * Returns an object containing only the keys where values differ between the two objects.
+ * Uses normalizeValue for comparison.
+ */
+export function getChangedFields(oldData: any, newData: any) {
+  const normalizedOld = normalizeRequestData(oldData)
+  const normalizedNew = normalizeRequestData(newData)
+
+  // Only check keys that exist in the new data (partial update support)
+  const changes: Record<string, { old: any; new: any }> = {}
+
+  Object.keys(normalizedNew).forEach((key) => {
+    const oldVal = normalizedOld[key]
+    const newVal = normalizedNew[key]
+
+    if (normalizeValue(oldVal) !== normalizeValue(newVal)) {
+      changes[key] = { old: oldVal, new: newVal }
+    }
+  })
+
+  return changes
 }

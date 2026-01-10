@@ -59,7 +59,9 @@ export const ModelName = {
   BankDetails: 'BankDetails',
   RevenueReport: 'RevenueReport',
   RevenueRecord: 'RevenueRecord',
-  Payout: 'Payout'
+  Payout: 'Payout',
+  ProfileChangeRequest: 'ProfileChangeRequest',
+  QuickBooksConfig: 'QuickBooksConfig'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -202,10 +204,38 @@ export const PayoutScalarFieldEnum = {
   paymentDate: 'paymentDate',
   referenceRef: 'referenceRef',
   qbBillId: 'qbBillId',
+  syncStatus: 'syncStatus',
   createdAt: 'createdAt'
 } as const
 
 export type PayoutScalarFieldEnum = (typeof PayoutScalarFieldEnum)[keyof typeof PayoutScalarFieldEnum]
+
+
+export const ProfileChangeRequestScalarFieldEnum = {
+  id: 'id',
+  vendorId: 'vendorId',
+  oldData: 'oldData',
+  newData: 'newData',
+  status: 'status',
+  adminId: 'adminId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProfileChangeRequestScalarFieldEnum = (typeof ProfileChangeRequestScalarFieldEnum)[keyof typeof ProfileChangeRequestScalarFieldEnum]
+
+
+export const QuickBooksConfigScalarFieldEnum = {
+  id: 'id',
+  realmId: 'realmId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  expiresIn: 'expiresIn',
+  xRefreshTokenExpiresIn: 'xRefreshTokenExpiresIn',
+  updatedAt: 'updatedAt'
+} as const
+
+export type QuickBooksConfigScalarFieldEnum = (typeof QuickBooksConfigScalarFieldEnum)[keyof typeof QuickBooksConfigScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -61,7 +61,7 @@ export class AuthController {
     return {
       message: 'Login successful',
       access_token: result.access_token, // 👈 Return token for Swagger/Postman
-      user: { id: user.id, role: user.role, email: user.email },
+      user: { id: user.id, role: user.role, email: user.email, name: 'Admin' },
     };
   }
 
@@ -93,7 +93,12 @@ export class AuthController {
     return {
       message: 'Login successful',
       access_token: result.access_token, // 👈 Return token for Swagger/Postman
-      user: { id: user.id, role: user.role, email: user.email },
+      user: {
+        id: user.id,
+        role: user.role,
+        email: user.email,
+        name: user.companyName,
+      },
     };
   }
 
@@ -107,9 +112,10 @@ export class AuthController {
   })
   getProfile(@Request() req) {
     return {
-      userId: req.user.id,
+      userId: req.user.userId,
       email: req.user.email,
       role: req.user.role, // 👈 This is what you need
+      name: req.user.name,
     };
   }
 }
