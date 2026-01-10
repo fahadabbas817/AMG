@@ -11,6 +11,7 @@ import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { ConnectQboButton } from '@/features/quickbooks/components/connect-qbo-button'
 
 export function Dashboard() {
   const navigate = useNavigate()
@@ -35,6 +36,7 @@ export function Dashboard() {
               Welcome back, manage your platform efficiently.
             </p>
           </div>
+          <ConnectQboButton />
         </div>
 
         <div className='mb-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
@@ -122,48 +124,6 @@ export function Dashboard() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Recent Activity / Overview Placeholder */}
-        {/* <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
-          <Card className='col-span-1 shadow-sm'>
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>
-                Latest actions performed in the system
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className='space-y-4'>
-                {[1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className='flex items-center gap-4 border-b pb-4 last:border-0 last:pb-0'
-                  >
-                    <div className='h-2 w-2 rounded-full bg-blue-500' />
-                    <div className='flex-1 space-y-1'>
-                      <p className='text-sm leading-none font-medium'>
-                        New Vendor Added
-                      </p>
-                      <p className='text-muted-foreground text-xs'>Just now</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className='col-span-1 shadow-sm'>
-            <CardHeader>
-              <CardTitle>Quick Stats</CardTitle>
-              <CardDescription>Overview of system performance</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className='text-muted-foreground text-sm'>
-                Stats visualization will go here.
-              </div>
-            </CardContent>
-          </Card>
-        </div> */}
       </Main>
     </>
   )

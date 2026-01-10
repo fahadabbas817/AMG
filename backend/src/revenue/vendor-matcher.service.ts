@@ -14,41 +14,44 @@ export class VendorMatcherService {
       },
     });
 
-    // 2. Build a lookup map: normalized sublabel -> vendorId
-    // NORMALIZATION RULE: trim().toLowerCase()
-    const subLabelMap = new Map<string, string>();
+    // Step 1: Update the Data Retrieval Logic & Step 4: Handle Many-to-One Relationships
+    const aliasToVendorMap = new Map<string, string>();
+
+    // Step 2: Implement Robust Matching (Case-Insensitive + Ignore Spaces)
+    // We strip all spaces to ensure "Porn Mega Load" matches "PornMegaLoad"
+    const normalize = (str: string) => str.toLowerCase().replace(/\s+/g, '');
 
     for (const vendor of vendors) {
       if (vendor.subLabels && Array.isArray(vendor.subLabels)) {
         for (const label of vendor.subLabels) {
-          const normalizedLabel = label.trim().toLowerCase();
+          const normalizedLabel = normalize(label);
           if (normalizedLabel) {
-            subLabelMap.set(normalizedLabel, vendor.id);
+            aliasToVendorMap.set(normalizedLabel, vendor.id);
           }
         }
       }
     }
 
-    // 3. Iterate and match
+    // Step 3: Refactor the Parsing Loop
     return normalizedRows.map((row) => {
       if (!row.rawVendorName) {
         return { ...row, vendorId: null, status: 'UNMATCHED' };
       }
 
-      // Pre-process the raw vendor string
       const rawString = String(row.rawVendorName);
 
-      // Strategy: Split by comma, then try to match EACH part.
-      // Rule: "map the record to the first one that we found"
-      const parts = rawString.split(',');
-
+      // We still split by common separators to handle cases where multiple studios might be listed
+      // or if the field contains noise like dates or IDs separated by pipes/slashes.
+      // However, we check each part against our normalized map.
+      const parts = rawString.split(/[,|/;-]+/);
       let matchedVendorId: string | undefined;
 
       for (const part of parts) {
-        const normalizedPart = part.trim().toLowerCase();
-        if (subLabelMap.has(normalizedPart)) {
-          matchedVendorId = subLabelMap.get(normalizedPart);
-          break; // Stop at the first match found
+        const key = normalize(part);
+
+        if (aliasToVendorMap.has(key)) {
+          matchedVendorId = aliasToVendorMap.get(key);
+          break; // Stop at first valid match
         }
       }
 

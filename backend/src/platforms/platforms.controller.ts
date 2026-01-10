@@ -18,18 +18,17 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard, Roles } from '../auth/roles.guard';
-import { UniversalAuthGuard } from '../auth/universal-auth.guard';
+import { Role } from 'prisma/generated/client';
 
 @ApiTags('Platforms')
 @ApiBearerAuth()
-@UseGuards(UniversalAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('admin/platforms')
 export class PlatformsController {
   constructor(private readonly platformsService: PlatformsService) {}
 
   @Post()
-  @UseGuards(UniversalAuthGuard, RolesGuard)
-  @Roles('ADMIN')
+  @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Create a new platform' })
   @ApiResponse({
     status: 201,
@@ -42,8 +41,7 @@ export class PlatformsController {
   }
 
   @Get()
-  @UseGuards(UniversalAuthGuard, RolesGuard)
-  @Roles('ADMIN')
+  @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'List all platforms' })
   @ApiResponse({ status: 200, description: 'Return all platforms.' })
   findAll() {
@@ -51,8 +49,7 @@ export class PlatformsController {
   }
 
   @Patch(':id')
-  @UseGuards(UniversalAuthGuard, RolesGuard)
-  @Roles('ADMIN')
+  @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Update a platform' })
   @ApiResponse({
     status: 200,

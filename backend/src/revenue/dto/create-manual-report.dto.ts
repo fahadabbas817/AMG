@@ -49,6 +49,14 @@ export class CreateManualReportDto {
   @IsNumber()
   totalAmount: number;
 
+  @ApiProperty({
+    description: 'Invoice Number (Optional, used for QBO Sync)',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  invoiceNumber?: string;
+
   @ApiProperty({ type: [ManualRowDto] })
   @IsArray()
   @ValidateNested({ each: true })

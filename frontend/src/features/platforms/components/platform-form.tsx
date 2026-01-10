@@ -25,7 +25,7 @@ export function PlatformForm({
   id,
 }: PlatformFormProps) {
   const form = useForm<PlatformFormSchema>({
-    resolver: zodResolver(platformSchema),
+    resolver: zodResolver(platformSchema) as any,
     defaultValues: {
       name: '',
       corporateName: '',

@@ -15,7 +15,15 @@ const route = getRouteApi('/_authenticated/vendors/')
 export function Vendors() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
-  const { data: vendors = [], isLoading } = useGetVendors()
+  // @ts-expect-error search is unknown
+  const page = Number(search?.page) || 1
+  // @ts-expect-error search is unknown
+  const limit = Number(search?.pageSize) || 10
+
+  const { data: vendorsResponse, isLoading } = useGetVendors({ page, limit })
+
+  const vendors = vendorsResponse?.data || []
+  const totalVendors = vendorsResponse?.meta?.total || 0
 
   return (
     <VendorsProvider>
@@ -39,7 +47,12 @@ export function Vendors() {
         {isLoading ? (
           <VendorsTableSkeleton />
         ) : (
-          <VendorsTable data={vendors} search={search} navigate={navigate} />
+          <VendorsTable
+            data={vendors}
+            search={search}
+            navigate={navigate}
+            rowCount={totalVendors}
+          />
         )}
       </Main>
 

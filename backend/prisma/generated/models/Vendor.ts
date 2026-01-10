@@ -246,6 +246,7 @@ export type VendorWhereInput = {
   platformSplits?: Prisma.PlatformSplitListRelationFilter
   revenueRecords?: Prisma.RevenueRecordListRelationFilter
   payouts?: Prisma.PayoutListRelationFilter
+  profileChangeRequests?: Prisma.ProfileChangeRequestListRelationFilter
 }
 
 export type VendorOrderByWithRelationInput = {
@@ -266,6 +267,7 @@ export type VendorOrderByWithRelationInput = {
   platformSplits?: Prisma.PlatformSplitOrderByRelationAggregateInput
   revenueRecords?: Prisma.RevenueRecordOrderByRelationAggregateInput
   payouts?: Prisma.PayoutOrderByRelationAggregateInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestOrderByRelationAggregateInput
 }
 
 export type VendorWhereUniqueInput = Prisma.AtLeast<{
@@ -289,6 +291,7 @@ export type VendorWhereUniqueInput = Prisma.AtLeast<{
   platformSplits?: Prisma.PlatformSplitListRelationFilter
   revenueRecords?: Prisma.RevenueRecordListRelationFilter
   payouts?: Prisma.PayoutListRelationFilter
+  profileChangeRequests?: Prisma.ProfileChangeRequestListRelationFilter
 }, "id" | "vendorNumber" | "email">
 
 export type VendorOrderByWithAggregationInput = {
@@ -347,6 +350,7 @@ export type VendorCreateInput = {
   platformSplits?: Prisma.PlatformSplitCreateNestedManyWithoutVendorInput
   revenueRecords?: Prisma.RevenueRecordCreateNestedManyWithoutVendorInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutVendorInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestCreateNestedManyWithoutVendorInput
 }
 
 export type VendorUncheckedCreateInput = {
@@ -367,6 +371,7 @@ export type VendorUncheckedCreateInput = {
   platformSplits?: Prisma.PlatformSplitUncheckedCreateNestedManyWithoutVendorInput
   revenueRecords?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutVendorInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutVendorInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUncheckedCreateNestedManyWithoutVendorInput
 }
 
 export type VendorUpdateInput = {
@@ -387,6 +392,7 @@ export type VendorUpdateInput = {
   platformSplits?: Prisma.PlatformSplitUpdateManyWithoutVendorNestedInput
   revenueRecords?: Prisma.RevenueRecordUpdateManyWithoutVendorNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutVendorNestedInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUpdateManyWithoutVendorNestedInput
 }
 
 export type VendorUncheckedUpdateInput = {
@@ -407,6 +413,7 @@ export type VendorUncheckedUpdateInput = {
   platformSplits?: Prisma.PlatformSplitUncheckedUpdateManyWithoutVendorNestedInput
   revenueRecords?: Prisma.RevenueRecordUncheckedUpdateManyWithoutVendorNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutVendorNestedInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUncheckedUpdateManyWithoutVendorNestedInput
 }
 
 export type VendorCreateManyInput = {
@@ -592,6 +599,20 @@ export type VendorUpdateOneRequiredWithoutPayoutsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.VendorUpdateToOneWithWhereWithoutPayoutsInput, Prisma.VendorUpdateWithoutPayoutsInput>, Prisma.VendorUncheckedUpdateWithoutPayoutsInput>
 }
 
+export type VendorCreateNestedOneWithoutProfileChangeRequestsInput = {
+  create?: Prisma.XOR<Prisma.VendorCreateWithoutProfileChangeRequestsInput, Prisma.VendorUncheckedCreateWithoutProfileChangeRequestsInput>
+  connectOrCreate?: Prisma.VendorCreateOrConnectWithoutProfileChangeRequestsInput
+  connect?: Prisma.VendorWhereUniqueInput
+}
+
+export type VendorUpdateOneRequiredWithoutProfileChangeRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.VendorCreateWithoutProfileChangeRequestsInput, Prisma.VendorUncheckedCreateWithoutProfileChangeRequestsInput>
+  connectOrCreate?: Prisma.VendorCreateOrConnectWithoutProfileChangeRequestsInput
+  upsert?: Prisma.VendorUpsertWithoutProfileChangeRequestsInput
+  connect?: Prisma.VendorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.VendorUpdateToOneWithWhereWithoutProfileChangeRequestsInput, Prisma.VendorUpdateWithoutProfileChangeRequestsInput>, Prisma.VendorUncheckedUpdateWithoutProfileChangeRequestsInput>
+}
+
 export type VendorCreateWithoutPlatformSplitsInput = {
   id?: string
   vendorNumber: string
@@ -609,6 +630,7 @@ export type VendorCreateWithoutPlatformSplitsInput = {
   bankDetails?: Prisma.BankDetailsCreateNestedOneWithoutVendorInput
   revenueRecords?: Prisma.RevenueRecordCreateNestedManyWithoutVendorInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutVendorInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestCreateNestedManyWithoutVendorInput
 }
 
 export type VendorUncheckedCreateWithoutPlatformSplitsInput = {
@@ -628,6 +650,7 @@ export type VendorUncheckedCreateWithoutPlatformSplitsInput = {
   bankDetails?: Prisma.BankDetailsUncheckedCreateNestedOneWithoutVendorInput
   revenueRecords?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutVendorInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutVendorInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUncheckedCreateNestedManyWithoutVendorInput
 }
 
 export type VendorCreateOrConnectWithoutPlatformSplitsInput = {
@@ -663,6 +686,7 @@ export type VendorUpdateWithoutPlatformSplitsInput = {
   bankDetails?: Prisma.BankDetailsUpdateOneWithoutVendorNestedInput
   revenueRecords?: Prisma.RevenueRecordUpdateManyWithoutVendorNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutVendorNestedInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUpdateManyWithoutVendorNestedInput
 }
 
 export type VendorUncheckedUpdateWithoutPlatformSplitsInput = {
@@ -682,6 +706,7 @@ export type VendorUncheckedUpdateWithoutPlatformSplitsInput = {
   bankDetails?: Prisma.BankDetailsUncheckedUpdateOneWithoutVendorNestedInput
   revenueRecords?: Prisma.RevenueRecordUncheckedUpdateManyWithoutVendorNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutVendorNestedInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUncheckedUpdateManyWithoutVendorNestedInput
 }
 
 export type VendorCreateWithoutBankDetailsInput = {
@@ -701,6 +726,7 @@ export type VendorCreateWithoutBankDetailsInput = {
   platformSplits?: Prisma.PlatformSplitCreateNestedManyWithoutVendorInput
   revenueRecords?: Prisma.RevenueRecordCreateNestedManyWithoutVendorInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutVendorInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestCreateNestedManyWithoutVendorInput
 }
 
 export type VendorUncheckedCreateWithoutBankDetailsInput = {
@@ -720,6 +746,7 @@ export type VendorUncheckedCreateWithoutBankDetailsInput = {
   platformSplits?: Prisma.PlatformSplitUncheckedCreateNestedManyWithoutVendorInput
   revenueRecords?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutVendorInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutVendorInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUncheckedCreateNestedManyWithoutVendorInput
 }
 
 export type VendorCreateOrConnectWithoutBankDetailsInput = {
@@ -755,6 +782,7 @@ export type VendorUpdateWithoutBankDetailsInput = {
   platformSplits?: Prisma.PlatformSplitUpdateManyWithoutVendorNestedInput
   revenueRecords?: Prisma.RevenueRecordUpdateManyWithoutVendorNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutVendorNestedInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUpdateManyWithoutVendorNestedInput
 }
 
 export type VendorUncheckedUpdateWithoutBankDetailsInput = {
@@ -774,6 +802,7 @@ export type VendorUncheckedUpdateWithoutBankDetailsInput = {
   platformSplits?: Prisma.PlatformSplitUncheckedUpdateManyWithoutVendorNestedInput
   revenueRecords?: Prisma.RevenueRecordUncheckedUpdateManyWithoutVendorNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutVendorNestedInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUncheckedUpdateManyWithoutVendorNestedInput
 }
 
 export type VendorCreateWithoutRevenueRecordsInput = {
@@ -793,6 +822,7 @@ export type VendorCreateWithoutRevenueRecordsInput = {
   bankDetails?: Prisma.BankDetailsCreateNestedOneWithoutVendorInput
   platformSplits?: Prisma.PlatformSplitCreateNestedManyWithoutVendorInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutVendorInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestCreateNestedManyWithoutVendorInput
 }
 
 export type VendorUncheckedCreateWithoutRevenueRecordsInput = {
@@ -812,6 +842,7 @@ export type VendorUncheckedCreateWithoutRevenueRecordsInput = {
   bankDetails?: Prisma.BankDetailsUncheckedCreateNestedOneWithoutVendorInput
   platformSplits?: Prisma.PlatformSplitUncheckedCreateNestedManyWithoutVendorInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutVendorInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUncheckedCreateNestedManyWithoutVendorInput
 }
 
 export type VendorCreateOrConnectWithoutRevenueRecordsInput = {
@@ -847,6 +878,7 @@ export type VendorUpdateWithoutRevenueRecordsInput = {
   bankDetails?: Prisma.BankDetailsUpdateOneWithoutVendorNestedInput
   platformSplits?: Prisma.PlatformSplitUpdateManyWithoutVendorNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutVendorNestedInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUpdateManyWithoutVendorNestedInput
 }
 
 export type VendorUncheckedUpdateWithoutRevenueRecordsInput = {
@@ -866,6 +898,7 @@ export type VendorUncheckedUpdateWithoutRevenueRecordsInput = {
   bankDetails?: Prisma.BankDetailsUncheckedUpdateOneWithoutVendorNestedInput
   platformSplits?: Prisma.PlatformSplitUncheckedUpdateManyWithoutVendorNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutVendorNestedInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUncheckedUpdateManyWithoutVendorNestedInput
 }
 
 export type VendorCreateWithoutPayoutsInput = {
@@ -885,6 +918,7 @@ export type VendorCreateWithoutPayoutsInput = {
   bankDetails?: Prisma.BankDetailsCreateNestedOneWithoutVendorInput
   platformSplits?: Prisma.PlatformSplitCreateNestedManyWithoutVendorInput
   revenueRecords?: Prisma.RevenueRecordCreateNestedManyWithoutVendorInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestCreateNestedManyWithoutVendorInput
 }
 
 export type VendorUncheckedCreateWithoutPayoutsInput = {
@@ -904,6 +938,7 @@ export type VendorUncheckedCreateWithoutPayoutsInput = {
   bankDetails?: Prisma.BankDetailsUncheckedCreateNestedOneWithoutVendorInput
   platformSplits?: Prisma.PlatformSplitUncheckedCreateNestedManyWithoutVendorInput
   revenueRecords?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutVendorInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUncheckedCreateNestedManyWithoutVendorInput
 }
 
 export type VendorCreateOrConnectWithoutPayoutsInput = {
@@ -939,6 +974,7 @@ export type VendorUpdateWithoutPayoutsInput = {
   bankDetails?: Prisma.BankDetailsUpdateOneWithoutVendorNestedInput
   platformSplits?: Prisma.PlatformSplitUpdateManyWithoutVendorNestedInput
   revenueRecords?: Prisma.RevenueRecordUpdateManyWithoutVendorNestedInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUpdateManyWithoutVendorNestedInput
 }
 
 export type VendorUncheckedUpdateWithoutPayoutsInput = {
@@ -958,6 +994,103 @@ export type VendorUncheckedUpdateWithoutPayoutsInput = {
   bankDetails?: Prisma.BankDetailsUncheckedUpdateOneWithoutVendorNestedInput
   platformSplits?: Prisma.PlatformSplitUncheckedUpdateManyWithoutVendorNestedInput
   revenueRecords?: Prisma.RevenueRecordUncheckedUpdateManyWithoutVendorNestedInput
+  profileChangeRequests?: Prisma.ProfileChangeRequestUncheckedUpdateManyWithoutVendorNestedInput
+}
+
+export type VendorCreateWithoutProfileChangeRequestsInput = {
+  id?: string
+  vendorNumber: string
+  companyName: string
+  contactName: string
+  email: string
+  password: string
+  phone?: string | null
+  address?: string | null
+  contractSignatory?: string | null
+  subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
+  qbVendorId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bankDetails?: Prisma.BankDetailsCreateNestedOneWithoutVendorInput
+  platformSplits?: Prisma.PlatformSplitCreateNestedManyWithoutVendorInput
+  revenueRecords?: Prisma.RevenueRecordCreateNestedManyWithoutVendorInput
+  payouts?: Prisma.PayoutCreateNestedManyWithoutVendorInput
+}
+
+export type VendorUncheckedCreateWithoutProfileChangeRequestsInput = {
+  id?: string
+  vendorNumber: string
+  companyName: string
+  contactName: string
+  email: string
+  password: string
+  phone?: string | null
+  address?: string | null
+  contractSignatory?: string | null
+  subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
+  qbVendorId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bankDetails?: Prisma.BankDetailsUncheckedCreateNestedOneWithoutVendorInput
+  platformSplits?: Prisma.PlatformSplitUncheckedCreateNestedManyWithoutVendorInput
+  revenueRecords?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutVendorInput
+  payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutVendorInput
+}
+
+export type VendorCreateOrConnectWithoutProfileChangeRequestsInput = {
+  where: Prisma.VendorWhereUniqueInput
+  create: Prisma.XOR<Prisma.VendorCreateWithoutProfileChangeRequestsInput, Prisma.VendorUncheckedCreateWithoutProfileChangeRequestsInput>
+}
+
+export type VendorUpsertWithoutProfileChangeRequestsInput = {
+  update: Prisma.XOR<Prisma.VendorUpdateWithoutProfileChangeRequestsInput, Prisma.VendorUncheckedUpdateWithoutProfileChangeRequestsInput>
+  create: Prisma.XOR<Prisma.VendorCreateWithoutProfileChangeRequestsInput, Prisma.VendorUncheckedCreateWithoutProfileChangeRequestsInput>
+  where?: Prisma.VendorWhereInput
+}
+
+export type VendorUpdateToOneWithWhereWithoutProfileChangeRequestsInput = {
+  where?: Prisma.VendorWhereInput
+  data: Prisma.XOR<Prisma.VendorUpdateWithoutProfileChangeRequestsInput, Prisma.VendorUncheckedUpdateWithoutProfileChangeRequestsInput>
+}
+
+export type VendorUpdateWithoutProfileChangeRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  vendorNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
+  qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankDetails?: Prisma.BankDetailsUpdateOneWithoutVendorNestedInput
+  platformSplits?: Prisma.PlatformSplitUpdateManyWithoutVendorNestedInput
+  revenueRecords?: Prisma.RevenueRecordUpdateManyWithoutVendorNestedInput
+  payouts?: Prisma.PayoutUpdateManyWithoutVendorNestedInput
+}
+
+export type VendorUncheckedUpdateWithoutProfileChangeRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  vendorNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
+  qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankDetails?: Prisma.BankDetailsUncheckedUpdateOneWithoutVendorNestedInput
+  platformSplits?: Prisma.PlatformSplitUncheckedUpdateManyWithoutVendorNestedInput
+  revenueRecords?: Prisma.RevenueRecordUncheckedUpdateManyWithoutVendorNestedInput
+  payouts?: Prisma.PayoutUncheckedUpdateManyWithoutVendorNestedInput
 }
 
 
@@ -969,12 +1102,14 @@ export type VendorCountOutputType = {
   platformSplits: number
   revenueRecords: number
   payouts: number
+  profileChangeRequests: number
 }
 
 export type VendorCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   platformSplits?: boolean | VendorCountOutputTypeCountPlatformSplitsArgs
   revenueRecords?: boolean | VendorCountOutputTypeCountRevenueRecordsArgs
   payouts?: boolean | VendorCountOutputTypeCountPayoutsArgs
+  profileChangeRequests?: boolean | VendorCountOutputTypeCountProfileChangeRequestsArgs
 }
 
 /**
@@ -1008,6 +1143,13 @@ export type VendorCountOutputTypeCountPayoutsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.PayoutWhereInput
 }
 
+/**
+ * VendorCountOutputType without action
+ */
+export type VendorCountOutputTypeCountProfileChangeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProfileChangeRequestWhereInput
+}
+
 
 export type VendorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1027,6 +1169,7 @@ export type VendorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   platformSplits?: boolean | Prisma.Vendor$platformSplitsArgs<ExtArgs>
   revenueRecords?: boolean | Prisma.Vendor$revenueRecordsArgs<ExtArgs>
   payouts?: boolean | Prisma.Vendor$payoutsArgs<ExtArgs>
+  profileChangeRequests?: boolean | Prisma.Vendor$profileChangeRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.VendorCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["vendor"]>
 
@@ -1084,6 +1227,7 @@ export type VendorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   platformSplits?: boolean | Prisma.Vendor$platformSplitsArgs<ExtArgs>
   revenueRecords?: boolean | Prisma.Vendor$revenueRecordsArgs<ExtArgs>
   payouts?: boolean | Prisma.Vendor$payoutsArgs<ExtArgs>
+  profileChangeRequests?: boolean | Prisma.Vendor$profileChangeRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.VendorCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type VendorIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1096,6 +1240,7 @@ export type $VendorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     platformSplits: Prisma.$PlatformSplitPayload<ExtArgs>[]
     revenueRecords: Prisma.$RevenueRecordPayload<ExtArgs>[]
     payouts: Prisma.$PayoutPayload<ExtArgs>[]
+    profileChangeRequests: Prisma.$ProfileChangeRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1509,6 +1654,7 @@ export interface Prisma__VendorClient<T, Null = never, ExtArgs extends runtime.T
   platformSplits<T extends Prisma.Vendor$platformSplitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vendor$platformSplitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformSplitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   revenueRecords<T extends Prisma.Vendor$revenueRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vendor$revenueRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RevenueRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payouts<T extends Prisma.Vendor$payoutsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vendor$payoutsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  profileChangeRequests<T extends Prisma.Vendor$profileChangeRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vendor$profileChangeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2027,6 +2173,30 @@ export type Vendor$payoutsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.PayoutScalarFieldEnum | Prisma.PayoutScalarFieldEnum[]
+}
+
+/**
+ * Vendor.profileChangeRequests
+ */
+export type Vendor$profileChangeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProfileChangeRequest
+   */
+  select?: Prisma.ProfileChangeRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProfileChangeRequest
+   */
+  omit?: Prisma.ProfileChangeRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProfileChangeRequestInclude<ExtArgs> | null
+  where?: Prisma.ProfileChangeRequestWhereInput
+  orderBy?: Prisma.ProfileChangeRequestOrderByWithRelationInput | Prisma.ProfileChangeRequestOrderByWithRelationInput[]
+  cursor?: Prisma.ProfileChangeRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProfileChangeRequestScalarFieldEnum | Prisma.ProfileChangeRequestScalarFieldEnum[]
 }
 
 /**

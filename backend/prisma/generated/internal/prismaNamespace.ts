@@ -392,7 +392,9 @@ export const ModelName = {
   BankDetails: 'BankDetails',
   RevenueReport: 'RevenueReport',
   RevenueRecord: 'RevenueRecord',
-  Payout: 'Payout'
+  Payout: 'Payout',
+  ProfileChangeRequest: 'ProfileChangeRequest',
+  QuickBooksConfig: 'QuickBooksConfig'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -408,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "admin" | "vendor" | "platform" | "platformMappingTemplate" | "platformSplit" | "bankDetails" | "revenueReport" | "revenueRecord" | "payout"
+    modelProps: "admin" | "vendor" | "platform" | "platformMappingTemplate" | "platformSplit" | "bankDetails" | "revenueReport" | "revenueRecord" | "payout" | "profileChangeRequest" | "quickBooksConfig"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1078,6 +1080,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ProfileChangeRequest: {
+      payload: Prisma.$ProfileChangeRequestPayload<ExtArgs>
+      fields: Prisma.ProfileChangeRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProfileChangeRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileChangeRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProfileChangeRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileChangeRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.ProfileChangeRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileChangeRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProfileChangeRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileChangeRequestPayload>
+        }
+        findMany: {
+          args: Prisma.ProfileChangeRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileChangeRequestPayload>[]
+        }
+        create: {
+          args: Prisma.ProfileChangeRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileChangeRequestPayload>
+        }
+        createMany: {
+          args: Prisma.ProfileChangeRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProfileChangeRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileChangeRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.ProfileChangeRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileChangeRequestPayload>
+        }
+        update: {
+          args: Prisma.ProfileChangeRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileChangeRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProfileChangeRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProfileChangeRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProfileChangeRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileChangeRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProfileChangeRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileChangeRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.ProfileChangeRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProfileChangeRequest>
+        }
+        groupBy: {
+          args: Prisma.ProfileChangeRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProfileChangeRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProfileChangeRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProfileChangeRequestCountAggregateOutputType> | number
+        }
+      }
+    }
+    QuickBooksConfig: {
+      payload: Prisma.$QuickBooksConfigPayload<ExtArgs>
+      fields: Prisma.QuickBooksConfigFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.QuickBooksConfigFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuickBooksConfigPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.QuickBooksConfigFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuickBooksConfigPayload>
+        }
+        findFirst: {
+          args: Prisma.QuickBooksConfigFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuickBooksConfigPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.QuickBooksConfigFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuickBooksConfigPayload>
+        }
+        findMany: {
+          args: Prisma.QuickBooksConfigFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuickBooksConfigPayload>[]
+        }
+        create: {
+          args: Prisma.QuickBooksConfigCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuickBooksConfigPayload>
+        }
+        createMany: {
+          args: Prisma.QuickBooksConfigCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.QuickBooksConfigCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuickBooksConfigPayload>[]
+        }
+        delete: {
+          args: Prisma.QuickBooksConfigDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuickBooksConfigPayload>
+        }
+        update: {
+          args: Prisma.QuickBooksConfigUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuickBooksConfigPayload>
+        }
+        deleteMany: {
+          args: Prisma.QuickBooksConfigDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.QuickBooksConfigUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.QuickBooksConfigUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuickBooksConfigPayload>[]
+        }
+        upsert: {
+          args: Prisma.QuickBooksConfigUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuickBooksConfigPayload>
+        }
+        aggregate: {
+          args: Prisma.QuickBooksConfigAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQuickBooksConfig>
+        }
+        groupBy: {
+          args: Prisma.QuickBooksConfigGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuickBooksConfigGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.QuickBooksConfigCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuickBooksConfigCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1241,10 +1391,38 @@ export const PayoutScalarFieldEnum = {
   paymentDate: 'paymentDate',
   referenceRef: 'referenceRef',
   qbBillId: 'qbBillId',
+  syncStatus: 'syncStatus',
   createdAt: 'createdAt'
 } as const
 
 export type PayoutScalarFieldEnum = (typeof PayoutScalarFieldEnum)[keyof typeof PayoutScalarFieldEnum]
+
+
+export const ProfileChangeRequestScalarFieldEnum = {
+  id: 'id',
+  vendorId: 'vendorId',
+  oldData: 'oldData',
+  newData: 'newData',
+  status: 'status',
+  adminId: 'adminId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProfileChangeRequestScalarFieldEnum = (typeof ProfileChangeRequestScalarFieldEnum)[keyof typeof ProfileChangeRequestScalarFieldEnum]
+
+
+export const QuickBooksConfigScalarFieldEnum = {
+  id: 'id',
+  realmId: 'realmId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  expiresIn: 'expiresIn',
+  xRefreshTokenExpiresIn: 'xRefreshTokenExpiresIn',
+  updatedAt: 'updatedAt'
+} as const
+
+export type QuickBooksConfigScalarFieldEnum = (typeof QuickBooksConfigScalarFieldEnum)[keyof typeof QuickBooksConfigScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1412,6 +1590,20 @@ export type EnumRevenuePaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputT
 export type ListEnumRevenuePaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RevenuePaymentStatus[]'>
     
 
+
+/**
+ * Reference to a field of type 'RequestStatus'
+ */
+export type EnumRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RequestStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'RequestStatus[]'
+ */
+export type ListEnumRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RequestStatus[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -1516,6 +1708,8 @@ export type GlobalOmitConfig = {
   revenueReport?: Prisma.RevenueReportOmit
   revenueRecord?: Prisma.RevenueRecordOmit
   payout?: Prisma.PayoutOmit
+  profileChangeRequest?: Prisma.ProfileChangeRequestOmit
+  quickBooksConfig?: Prisma.QuickBooksConfigOmit
 }
 
 /* Types for Logging */

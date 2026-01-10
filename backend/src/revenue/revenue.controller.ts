@@ -6,6 +6,9 @@ import {
   ParseFilePipeBuilder,
   HttpStatus,
   Body,
+  Get,
+  Param,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -14,12 +17,19 @@ import {
   ApiOperation,
   ApiResponse,
   ApiTags,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { RevenueService } from './revenue.service';
 import { memoryStorage } from 'multer';
 import { CreateManualReportDto } from './dto/create-manual-report.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard, Roles } from '../auth/roles.guard';
+import { Role } from 'prisma/generated/client';
 
 @ApiTags('Revenue')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.ADMIN)
 @Controller('revenue')
 export class RevenueController {
   constructor(private readonly revenueService: RevenueService) {}
@@ -154,6 +164,37 @@ export class RevenueController {
   })
   @ApiResponse({ status: 400, description: 'Sum validation failed.' })
   saveManualReport(@Body() dto: CreateManualReportDto) {
+    if (dto.invoiceNumber) {
+      console.log(
+        `[RevenueController] Manual Report with Invoice #${dto.invoiceNumber}`,
+      );
+    }
     return this.revenueService.saveManualReport(dto);
+  }
+
+  @Get(':id/summary')
+  @ApiOperation({ summary: 'Get summary of processed revenue report by ID' })
+  @ApiResponse({ status: 200, description: 'Summary returned.' })
+  @ApiResponse({ status: 404, description: 'Report not found.' })
+  getReportSummary(@Param('id') id: string) {
+    return this.revenueService.getReportSummary(id);
+  }
+
+  @Post(':id/sync')
+  @ApiOperation({ summary: 'Confirm and Sync Report to Quickbooks' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        invoiceRef: {
+          type: 'string',
+          description: 'Updated invoice reference (optional)',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 201, description: 'Sync initiated.' })
+  syncReport(@Param('id') id: string, @Body('invoiceRef') invoiceRef?: string) {
+    return this.revenueService.syncReport(id, invoiceRef);
   }
 }

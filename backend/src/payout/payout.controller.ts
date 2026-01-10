@@ -7,13 +7,25 @@ import {
   Patch,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import express from 'express';
-import { ApiOperation, ApiTags, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiTags,
+  ApiQuery,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { CreatePayoutDto } from './dto/create-payout.dto';
 import { PayoutService } from './payout.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard, Roles } from '../auth/roles.guard';
+import { Role } from 'prisma/generated/client';
 
 @ApiTags('Payouts')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.ADMIN)
 @Controller('payout')
 export class PayoutController {
   constructor(private readonly payoutService: PayoutService) {}
