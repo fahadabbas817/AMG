@@ -1,6 +1,0 @@
-
-> shadcn-admin@2.2.1 build
-> tsc -b && vite build
-
-src/features/platforms/components/platforms-mutate-dialog.tsx(1,1): error TS6133: 'useFormContext' is declared but its value is never read.
-src/features/vendor-dashboard/components/payouts-columns.tsx(132,25): error TS2353: Object literal may only specify known properties, and 'payoutid' does not exist in type 'ParamsReducerFn<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, { queryClient: QueryClient; }, AnyContext, ({ location }: BeforeLoadContextOptions<Register, ... 6 more ..., undefined>) => Promise<...>, ... 6 more ..., undefined>, "never", false, RouterHistory, Record<...>>, "PATH", strin...'.
