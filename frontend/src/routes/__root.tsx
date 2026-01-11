@@ -28,6 +28,11 @@ export const Route = createRootRouteWithContext<{
       location.pathname.includes('/forgot-password') ||
       location.pathname.includes('/otp')
 
+    const isPublicRoute =
+      location.pathname.includes('/privacy-policy') ||
+      location.pathname.includes('/eula') ||
+      isAuthRoute
+
     // If user is already in auth store, they're authenticated
     if (auth.user && auth.accessToken) {
       // If authenticated user tries to access auth routes, redirect to dashboard
@@ -70,7 +75,7 @@ export const Route = createRootRouteWithContext<{
     } catch (error) {
       console.log('❌ No valid session found')
       // No valid session, user needs to login
-      if (!isAuthRoute) {
+      if (!isPublicRoute) {
         throw redirect({ to: '/sign-in' })
       }
     }

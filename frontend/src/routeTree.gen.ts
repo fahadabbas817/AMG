@@ -11,6 +11,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as EulaRouteImport } from './routes/eula'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
@@ -54,6 +56,16 @@ const AuthenticatedRevenueManualLazyRouteImport = createFileRoute(
   '/_authenticated/revenue/manual',
 )()
 
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EulaRoute = EulaRouteImport.update({
+  id: '/eula',
+  path: '/eula',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -259,6 +271,8 @@ const AuthenticatedVendorPayoutsPayoutidRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/eula': typeof EulaRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
   '/otp': typeof authOtpRoute
@@ -295,6 +309,8 @@ export interface FileRoutesByFullPath {
   '/vendor/stats': typeof AuthenticatedVendorStatsIndexRoute
 }
 export interface FileRoutesByTo {
+  '/eula': typeof EulaRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/otp': typeof authOtpRoute
   '/sign-in': typeof authSignInRoute
@@ -332,6 +348,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/eula': typeof EulaRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/otp': typeof authOtpRoute
@@ -370,6 +388,8 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/eula'
+    | '/privacy-policy'
     | '/settings'
     | '/forgot-password'
     | '/otp'
@@ -406,6 +426,8 @@ export interface FileRouteTypes {
     | '/vendor/stats'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/eula'
+    | '/privacy-policy'
     | '/forgot-password'
     | '/otp'
     | '/sign-in'
@@ -442,6 +464,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_authenticated'
+    | '/eula'
+    | '/privacy-policy'
     | '/_authenticated/settings'
     | '/(auth)/forgot-password'
     | '/(auth)/otp'
@@ -480,6 +504,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  EulaRoute: typeof EulaRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   authForgotPasswordRoute: typeof authForgotPasswordRoute
   authOtpRoute: typeof authOtpRoute
   authSignInRoute: typeof authSignInRoute
@@ -494,6 +520,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/eula': {
+      id: '/eula'
+      path: '/eula'
+      fullPath: '/eula'
+      preLoaderRoute: typeof EulaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -815,6 +855,8 @@ const AuthenticatedRouteRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  EulaRoute: EulaRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
   authForgotPasswordRoute: authForgotPasswordRoute,
   authOtpRoute: authOtpRoute,
   authSignInRoute: authSignInRoute,
