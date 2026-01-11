@@ -13,7 +13,7 @@ export function ConnectQboButton() {
 
     const popup = window.open(
       url,
-      'Connect QuickBooks',
+      'Connect QuickBooks Account',
       `width=${width},height=${height},top=${top},left=${left}`
     )
 
