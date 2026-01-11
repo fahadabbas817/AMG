@@ -51,10 +51,12 @@ export class AuthController {
 
     const result = await this.authService.login(user);
 
+    const isProduction = process.env.NODE_ENV === 'production';
+
     response.cookie('access_token', result.access_token, {
       httpOnly: true,
-      secure: false, // 👈 Use 'true' in Production (HTTPS), 'false' for localhost
-      sameSite: 'lax',
+      secure: isProduction, // true in production
+      sameSite: isProduction ? 'none' : 'lax', // 'none' for cross-site in production
       maxAge: 7200000, // 2 hours
     });
 
@@ -83,10 +85,12 @@ export class AuthController {
     }
     const result = await this.authService.login(user);
 
+    const isProduction = process.env.NODE_ENV === 'production';
+
     response.cookie('access_token', result.access_token, {
       httpOnly: true,
-      secure: false, // 👈 Use 'true' in Production (HTTPS), 'false' for localhost
-      sameSite: 'lax',
+      secure: isProduction, // true in production
+      sameSite: isProduction ? 'none' : 'lax', // 'none' for cross-site in production
       maxAge: 7200000, // 2 hours
     });
 
