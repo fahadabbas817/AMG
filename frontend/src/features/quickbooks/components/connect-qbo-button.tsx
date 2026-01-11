@@ -9,7 +9,7 @@ export function ConnectQboButton() {
     const left = window.screen.width / 2 - width / 2
     const top = window.screen.height / 2 - height / 2
 
-    const url = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/quickbooks/auth/connect`
+    const url = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/quickbooks/auth/connect`
 
     const popup = window.open(
       url,
