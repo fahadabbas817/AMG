@@ -55,6 +55,7 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { useCreatePayout } from '@/features/payouts/api/useCreatePayout'
 import { useGetUnpaidSummaries } from '@/features/payouts/api/useGetUnpaidSummaries'
+import { useDeleteUnpaid } from '@/features/revenue/api/useDeleteUnpaid'
 import { PlatformSplit, useRemoveSplit } from '@/features/vendors/api/splits'
 import { getVendorQueryOptions } from '@/features/vendors/api/useGetVendor'
 import { QboLinkCard } from '@/features/vendors/components/qbo-link-card'
@@ -96,6 +97,10 @@ function VendorDetails() {
 
   const { mutate: createPayout, isPending: isCreatingPayout } =
     useCreatePayout()
+
+  const [isDeleteUnpaidOpen, setIsDeleteUnpaidOpen] = useState(false)
+  const { mutate: deleteUnpaid, isPending: isDeletingUnpaid } =
+    useDeleteUnpaid(vendorId)
   // Logic: We select "summary rows", but API needs "recordIds".
   // So when I select a row, I add all its `recordIds` to the selection set?
   // Or I just track "selected indices" and derive the ID list at submission.
@@ -249,6 +254,26 @@ function VendorDetails() {
                   </div>
                   <div className='col-span-full space-y-1.5'>
                     <dt className='text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase'>
+                      <Building2 className='h-3.5 w-3.5' /> Corporate Name
+                    </dt>
+                    <dd className='font-medium'>
+                      {vendor.corporateName || '-'}
+                    </dd>
+                  </div>
+                  <div className='space-y-1.5'>
+                    <dt className='text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase'>
+                      <Tag className='h-3.5 w-3.5' /> DBA Name
+                    </dt>
+                    <dd className='font-medium'>{vendor.dbaName || '-'}</dd>
+                  </div>
+                  <div className='space-y-1.5'>
+                    <dt className='text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase'>
+                      <Hash className='h-3.5 w-3.5' /> Tax ID
+                    </dt>
+                    <dd className='font-medium'>{vendor.taxId || '-'}</dd>
+                  </div>
+                  <div className='col-span-full space-y-1.5'>
+                    <dt className='text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase'>
                       <UserPen className='h-3.5 w-3.5' /> Contract Signatory
                     </dt>
                     <dd className='font-medium'>{vendor.contractSignatory}</dd>
@@ -306,10 +331,18 @@ function VendorDetails() {
                 </div>
                 <div className='space-y-1.5'>
                   <dt className='text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase'>
-                    <Building2 className='h-3.5 w-3.5' /> SWIFT / BIC
+                    <Building2 className='h-3.5 w-3.5' /> Account Type
                   </dt>
                   <dd className='font-mono font-medium'>
-                    {vendor.bankDetails?.swiftCode || '-'}
+                    {vendor.bankDetails?.accountType || '-'}
+                  </dd>
+                </div>
+                <div className='col-span-full space-y-1.5'>
+                  <dt className='text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase'>
+                    <MapPin className='h-3.5 w-3.5' /> Vendor Address (Bank)
+                  </dt>
+                  <dd className='font-medium'>
+                    {vendor.bankDetails?.vendorAddress || '-'}
                   </dd>
                 </div>
                 <div className='col-span-full space-y-1.5'>
@@ -494,9 +527,21 @@ function VendorDetails() {
 
             {/* Unpaid Items Table */}
             <div className='space-y-4'>
-              <h3 className='flex items-center gap-2 text-lg font-medium'>
-                <Banknote className='h-4 w-4' /> Unpaid Items
-              </h3>
+              <div className='flex items-center justify-between'>
+                <h3 className='flex items-center gap-2 text-lg font-medium'>
+                  <Banknote className='h-4 w-4' /> Unpaid Items
+                </h3>
+                {unpaidSummaries && unpaidSummaries.length > 0 && (
+                  <Button
+                    variant='destructive'
+                    size='sm'
+                    onClick={() => setIsDeleteUnpaidOpen(true)}
+                  >
+                    <Trash2 className='mr-2 h-4 w-4' />
+                    Delete All Unpaid
+                  </Button>
+                )}
+              </div>
               <div className='rounded-md border'>
                 <Table>
                   <TableHeader>
@@ -605,6 +650,14 @@ function VendorDetails() {
         </Card>
 
         {/* Dialogs */}
+        <ConfirmDeleteDialog
+          open={isDeleteUnpaidOpen}
+          onOpenChange={setIsDeleteUnpaidOpen}
+          onConfirm={() => deleteUnpaid()}
+          title='Delete All Unpaid Records?'
+          description='This action will permanently remove ALL unpaid revenue records for this vendor. This cannot be undone.'
+          isPending={isDeletingUnpaid}
+        />
         <ResetPasswordDialog
           open={isResetPasswordOpen}
           onOpenChange={setIsResetPasswordOpen}

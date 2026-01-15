@@ -4,6 +4,7 @@ import {
   Inject,
   forwardRef,
   Logger,
+  BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { QuickbooksSyncService } from '../quickbooks/quickbooks.sync.service';
@@ -367,6 +368,55 @@ export class PayoutService {
     }
 
     return payout;
+  }
+
+  async deletePayout(id: string) {
+    const payout = await this.prisma.payout.findUnique({
+      where: { id },
+      include: { items: true },
+    });
+
+    if (!payout) {
+      throw new NotFoundException('Payout not found');
+    }
+
+    if (payout.status === 'PAID') {
+      // Optional constraint: Do not allow deleting PAID payouts
+      // throw new BadRequestException('Cannot delete a payout that is already marked as PAID.');
+    }
+
+    // 0. Delete from QuickBooks if synced
+    if (payout.qbBillId) {
+      try {
+        await this.quickbooksSyncService.deleteBill(payout.qbBillId);
+      } catch (e: any) {
+        this.logger.error(
+          `[deletePayout] Failed to delete QBO Bill ${payout.qbBillId}`,
+          e,
+        );
+        // We throw here to prevent data inconsistency. User must resolve QBO issue or we need a force flag.
+        // For now, straightforward strict consistency.
+        throw new BadRequestException(
+          `Failed to delete associated QuickBooks Bill. Please delete it in QuickBooks manually first or ensure connection is active. Error: ${e.message}`,
+        );
+      }
+    }
+
+    return await this.prisma.$transaction(async (tx) => {
+      // 1. Revert Revenue Records
+      await tx.revenueRecord.updateMany({
+        where: { payoutId: id },
+        data: {
+          payoutId: null,
+          status: 'MATCHED', // Revert to MATCHED so they show up in "Unpaid" list again
+        },
+      });
+
+      // 2. Delete Payout
+      return await tx.payout.delete({
+        where: { id },
+      });
+    });
   }
 
   async exportPayout(id: string, format: 'pdf' | 'xlsx') {

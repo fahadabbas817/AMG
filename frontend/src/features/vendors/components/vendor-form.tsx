@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { type ZodType } from 'zod'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus, Trash2 } from 'lucide-react'
@@ -29,6 +30,7 @@ interface VendorFormProps {
   defaultValues?: Partial<VendorFormSchema>
   isPending?: boolean // for loading state if needed internally, though usually buttons are external
   children?: React.ReactNode // For sticking buttons or extra sections at the bottom
+  schema?: ZodType<any>
 }
 
 export function VendorForm({
@@ -36,9 +38,10 @@ export function VendorForm({
   onSubmit,
   defaultValues,
   children,
+  schema,
 }: VendorFormProps) {
   const form = useForm<VendorFormSchema>({
-    resolver: zodResolver(vendorSchema),
+    resolver: zodResolver(schema || vendorSchema),
     defaultValues: {
       companyName: '',
       contactName: '',
@@ -47,6 +50,9 @@ export function VendorForm({
       phone: '',
       address: '',
       contractSignatory: '',
+      corporateName: '',
+      dbaName: '',
+      taxId: '',
 
       subLabels: [],
       platformIds: [],
@@ -60,6 +66,7 @@ export function VendorForm({
         payoutMethod: 'WIRE',
         paypalEmail: '',
         accountType: 'Checking',
+        vendorAddress: '',
       },
       ...defaultValues,
     },
@@ -82,6 +89,9 @@ export function VendorForm({
         phone: '',
         address: '',
         contractSignatory: '',
+        corporateName: '',
+        dbaName: '',
+        taxId: '',
         subLabels: [],
         platformIds: [],
         bankDetails: {
@@ -94,6 +104,7 @@ export function VendorForm({
           payoutMethod: 'WIRE',
           paypalEmail: '',
           accountType: 'Checking',
+          vendorAddress: '',
         },
         ...defaultValues,
       })
@@ -135,6 +146,45 @@ export function VendorForm({
                   <FormLabel>Vendor Number</FormLabel>
                   <FormControl>
                     <Input placeholder='V-1001' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='corporateName'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Corporate Name (Optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder='Legal Corporate Name' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='dbaName'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>DBA Name (Optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder='Doing Business As' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='taxId'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tax ID</FormLabel>
+                  <FormControl>
+                    <Input placeholder='EIN or SSN' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -193,7 +243,7 @@ export function VendorForm({
               name='phone'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone</FormLabel>
+                  <FormLabel>Phone (Optional)</FormLabel>
                   <FormControl>
                     <Input placeholder='+1 (555) 000-0000' {...field} />
                   </FormControl>
@@ -264,25 +314,15 @@ export function VendorForm({
             />
             <FormField
               control={form.control}
-              name='bankDetails.ibanRouting'
+              name='bankDetails.vendorAddress'
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>IBAN / Routing</FormLabel>
+                <FormItem className='col-span-1 md:col-span-2'>
+                  <FormLabel>Vendor Address (On Bank Account)</FormLabel>
                   <FormControl>
-                    <Input placeholder='ACH or Wire Routing' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='bankDetails.swiftCode'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>SWIFT Code</FormLabel>
-                  <FormControl>
-                    <Input placeholder='CHASEUS33' {...field} />
+                    <Input
+                      placeholder='Address associated with bank account'
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -309,6 +349,34 @@ export function VendorForm({
                   <FormLabel>SWIFT Code</FormLabel>
                   <FormControl>
                     <Input placeholder='CHASEUS33' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='bankDetails.accountType'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Account Type</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder='Select account type' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value='Checking'>Checking</SelectItem>
+                        <SelectItem value='Savings'>Savings</SelectItem>
+                        <SelectItem value='Business'>Business</SelectItem>
+                        <SelectItem value='Personal'>Personal</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -361,6 +429,8 @@ export function VendorForm({
                         <SelectItem value='WIRE'>WIRE</SelectItem>
                         <SelectItem value='ACH'>ACH</SelectItem>
                         <SelectItem value='PAYPAL'>PAYPAL</SelectItem>
+                        <SelectItem value='WISE'>WISE</SelectItem>
+                        <SelectItem value='ZELLE'>ZELLE</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -373,7 +443,7 @@ export function VendorForm({
               name='bankDetails.paypalEmail'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>PayPal Email (Optional)</FormLabel>
+                  <FormLabel>Paypal Email / Wise Tag / Zelle</FormLabel>
                   <FormControl>
                     <Input placeholder='pay@example.com' {...field} />
                   </FormControl>

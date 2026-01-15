@@ -26,6 +26,11 @@ model Vendor {
   address           String? // "5001 SW 74th Ct..."
   contractSignatory String? // "Tushna Pirrongelli"
 
+  // New Fields
+  corporateName String? // For Vendors
+  dbaName       String? // Doing Business As
+  taxId         String? // US Only
+
   // Critical for matching CSV rows to this vendor
   subLabels String[] // e.g. ["PornMegaLoad", "Score", "PornMegaWorld"]
 
@@ -89,8 +94,9 @@ model BankDetails {
   // Fields strictly from your CSV (Rows 13-21)
   bankName      String? // "Bank Name XYZ"
   bankAddress   String? // "Bank Address"
+  vendorAddress String? // "Vendor Address on Bank Account"
   accountNumber String? // "Acct Number"
-  ibanRouting   String? // "IBAN / Routing"
+  ibanRouting   String? // "IBAN / Routing" (Now Optional)
   swiftCode     String? // "SWIFT Code"
   currency      String? // "Currency" (e.g. USD, EUR)
 
@@ -188,6 +194,8 @@ enum PayoutMethod {
   ACH
   PAYPAL
   WIRE
+  WISE
+  ZELLE
 }
 
 model ProfileChangeRequest {

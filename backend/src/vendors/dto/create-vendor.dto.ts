@@ -32,6 +32,14 @@ export class BankDetailsDto {
   bankAddress?: string;
 
   @ApiPropertyOptional({
+    example: '789 Vendor St, Los Angeles, CA',
+    description: 'Address of the vendor on the bank account',
+  })
+  @IsString()
+  @IsOptional()
+  vendorAddress?: string;
+
+  @ApiPropertyOptional({
     example: 'US123456789',
     description: 'IBAN or Routing number',
   })
@@ -135,6 +143,30 @@ export class CreateVendorDto {
   @IsString()
   @IsOptional()
   contractSignatory?: string;
+
+  @ApiPropertyOptional({
+    example: 'Tech Solutions Inc',
+    description: 'Corporate Name (if different)',
+  })
+  @IsString()
+  @IsOptional()
+  corporateName?: string;
+
+  @ApiPropertyOptional({
+    example: 'Tech Sol',
+    description: 'Doing Business As (DBA)',
+  })
+  @IsString()
+  @IsOptional()
+  dbaName?: string;
+
+  @ApiPropertyOptional({
+    example: '12-3456789',
+    description: 'Tax ID (EIN/SSN)',
+  })
+  @IsString()
+  @IsOptional()
+  taxId?: string;
 
   @ApiPropertyOptional({
     example: ['VIP', 'Urgent'],

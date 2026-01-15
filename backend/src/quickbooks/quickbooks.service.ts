@@ -21,6 +21,11 @@ export class QuickbooksService {
     });
   }
 
+  async isConnected(): Promise<boolean> {
+    const config = await this.prisma.quickBooksConfig.findFirst();
+    return !!config;
+  }
+
   getAuthUri(): string {
     return this.oauthClient.authorizeUri({
       scope: [OAuthClient.scopes.Accounting, OAuthClient.scopes.OpenId],
@@ -213,15 +218,42 @@ export class QuickbooksService {
   }
 
   async fetchVendors() {
-    // 1. Fetch all vendors (simplified, might need pagination for large sets)
-    // QBO 'SELECT *' defaults to 100. We might need to iterate if > 100.
-    // For now, let's grab up to 1000.
-    const qboQuery = `SELECT * FROM Vendor MAXRESULTS 100`;
-    const result = await this.makeApiCall(
-      'GET',
-      `/query?query=${encodeURIComponent(qboQuery)}`,
+    // 1. Fetch all vendors using pagination
+    // QBO API limits to 1000 per query. We will loop until fewer than requested are returned.
+    let allVendors: any[] = [];
+    let startPosition = 1;
+    let hasMore = true;
+    const maxResults = 1000;
+
+    while (hasMore) {
+      this.logger.debug(
+        `[fetchVendors] Fetching from startPosition: ${startPosition}`,
+      );
+      const qboQuery = `SELECT * FROM Vendor STARTPOSITION ${startPosition} MAXRESULTS ${maxResults}`;
+      try {
+        const result = await this.makeApiCall(
+          'GET',
+          `/query?query=${encodeURIComponent(qboQuery)}`,
+        );
+
+        const vendors = result.QueryResponse?.Vendor || [];
+        allVendors = allVendors.concat(vendors);
+
+        if (vendors.length < maxResults) {
+          hasMore = false;
+        } else {
+          startPosition += vendors.length;
+        }
+      } catch (e: any) {
+        this.logger.error('[fetchVendors] Failed to fetch batch', e);
+        hasMore = false; // Stop on error to return what we have
+      }
+    }
+
+    this.logger.log(
+      `[fetchVendors] Total QBO Vendors fetched: ${allVendors.length}`,
     );
-    return result.QueryResponse?.Vendor || [];
+    return allVendors;
   }
 
   async syncPayout(payoutId: string) {
@@ -317,6 +349,39 @@ export class QuickbooksService {
       throw new BadRequestException(
         `QuickBooks Sync Failed: ${error.response?.data?.Fault?.Error?.[0]?.Message || error.message}`,
       );
+    }
+  }
+  async deleteBill(qbBillId: string) {
+    // 1. Fetch Bill to get SyncToken
+    const bill = await this.makeApiCall('GET', `/bill/${qbBillId}`);
+    if (!bill || !bill.Bill) {
+      throw new NotFoundException(`Bill ${qbBillId} not found in QuickBooks`);
+    }
+
+    const syncToken = bill.Bill.SyncToken;
+
+    // 2. Perform Delete
+    // Operation: Delete
+    // Payload needs Id and SyncToken
+    const payload = {
+      Id: qbBillId,
+      SyncToken: syncToken,
+    };
+
+    try {
+      const result = await this.makeApiCall(
+        'POST',
+        '/bill?operation=delete',
+        payload,
+      );
+      this.logger.log(`[deleteBill] Successfully deleted Bill ${qbBillId}`);
+      return result;
+    } catch (error: any) {
+      this.logger.error(
+        `[deleteBill] Failed to delete Bill ${qbBillId}`,
+        error.message,
+      );
+      throw error;
     }
   }
 }

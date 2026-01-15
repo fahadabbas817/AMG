@@ -3,8 +3,11 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service'; // Adjust path if needed
+import { QuickbooksSyncService } from '../quickbooks/quickbooks.sync.service';
 import { CreateVendorDto } from './dto/create-vendor.dto';
 import { UpdateVendorDto } from './dto/update-vendor.dto';
 import { AddSplitDto } from './dto/add-split.dto';
@@ -14,7 +17,11 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class VendorsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(forwardRef(() => QuickbooksSyncService))
+    private readonly qboSync: QuickbooksSyncService,
+  ) {}
 
   async create(createVendorDto: CreateVendorDto) {
     const { bankDetails, platformIds, ...vendorData } = createVendorDto;
@@ -147,7 +154,7 @@ export class VendorsService {
       throw new NotFoundException(`Vendor with ID ${id} not found`);
     }
 
-    return this.prisma.$transaction(async (prisma) => {
+    const result = await this.prisma.$transaction(async (prisma) => {
       // Update vendor details
       const updatedVendor = await prisma.vendor.update({
         where: { id },
@@ -217,6 +224,8 @@ export class VendorsService {
 
       return updatedVendor;
     });
+
+    return result;
   }
 
   async remove(id: string) {

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { Loader2, AlertTriangle } from 'lucide-react'
-import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -20,8 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useGetRevenueReportSummary } from '../api/useGetRevenueReportSummary'
-import { useSyncRevenueReport } from '../api/useSyncRevenueReport'
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -31,19 +28,19 @@ const formatCurrency = (amount: number) => {
 }
 
 interface Props {
-  reportId: string
+  summary: any // In-memory summary from Dry Run
+  onConfirm: () => void
+  isSaving: boolean
   invoiceNumber?: string
 }
 
-export const RevenueUploadStep3 = ({ reportId, invoiceNumber }: Props) => {
+export const RevenueUploadStep3 = ({
+  summary,
+  onConfirm,
+  isSaving,
+  invoiceNumber,
+}: Props) => {
   const navigate = useNavigate()
-  const {
-    data: summary,
-    isLoading,
-    error,
-  } = useGetRevenueReportSummary(reportId)
-  const syncMutation = useSyncRevenueReport()
-
   const [currentInvoiceRef, setCurrentInvoiceRef] = useState(
     invoiceNumber || ''
   )
@@ -56,49 +53,6 @@ export const RevenueUploadStep3 = ({ reportId, invoiceNumber }: Props) => {
     }
   }, [summary, invoiceNumber])
 
-  const handleSync = async () => {
-    try {
-      const result = await syncMutation.mutateAsync({
-        reportId,
-        invoiceRef: currentInvoiceRef,
-      })
-
-      const failures = result.failures?.length || 0
-      const processed = result.processed || 0
-
-      if (failures > 0) {
-        toast.warning(
-          `Sync completed with ${failures} errors. ${processed} processed.`
-        )
-      } else {
-        toast.success('Sync completed successfully!')
-      }
-
-      // Navigate to dashboard or payouts
-      navigate({ to: '/' })
-    } catch (err: any) {
-      toast.error('Failed to sync: ' + err.message)
-    }
-  }
-
-  if (isLoading) {
-    return (
-      <div className='flex items-center justify-center py-20'>
-        <Loader2 className='text-primary h-8 w-8 animate-spin' />
-        <span className='text-muted-foreground ml-3'>Loading summary...</span>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className='text-destructive py-10 text-center'>
-        <AlertTriangle className='mx-auto mb-2 h-10 w-10' />
-        <p>Failed to load report summary.</p>
-      </div>
-    )
-  }
-
   if (!summary) return null
 
   const totalNet = summary.vendors.reduce(
@@ -110,10 +64,10 @@ export const RevenueUploadStep3 = ({ reportId, invoiceNumber }: Props) => {
     <div className='space-y-6'>
       <Card>
         <CardHeader>
-          <CardTitle>Pre-Sync Review</CardTitle>
+          <CardTitle>Pre-Save Review</CardTitle>
           <CardDescription>
-            Review the calculated payouts for each vendor before syncing to
-            QuickBooks.
+            Review the calculated payouts. These records have NOT been saved
+            yet. Click "Confirm & Sync" to save to database and create bills.
           </CardDescription>
         </CardHeader>
         <CardContent className='space-y-4'>
@@ -127,6 +81,7 @@ export const RevenueUploadStep3 = ({ reportId, invoiceNumber }: Props) => {
                 value={currentInvoiceRef}
                 onChange={(e) => setCurrentInvoiceRef(e.target.value)}
                 placeholder='e.g. AEBN-2025-05'
+                disabled={isSaving}
               />
               <p className='text-muted-foreground text-xs'>
                 This reference will be assigned to the QuickBooks Bills.
@@ -199,17 +154,15 @@ export const RevenueUploadStep3 = ({ reportId, invoiceNumber }: Props) => {
       </Card>
 
       <div className='flex justify-end gap-3'>
-        <Button variant='outline' onClick={() => navigate({ to: '/' })}>
+        <Button
+          variant='outline'
+          onClick={() => navigate({ to: '/' })}
+          disabled={isSaving}
+        >
           Cancel
         </Button>
-        <Button
-          onClick={handleSync}
-          disabled={syncMutation.isPending}
-          className='w-40'
-        >
-          {syncMutation.isPending && (
-            <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-          )}
+        <Button onClick={onConfirm} disabled={isSaving} className='w-40'>
+          {isSaving && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
           Confirm & Sync
         </Button>
       </div>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { format } from 'date-fns'
 import { Link } from '@tanstack/react-router'
 import { ColumnDef } from '@tanstack/react-table'
+import api from '@/services/api'
 import {
   Loader2,
   MoreHorizontal,
@@ -9,8 +10,11 @@ import {
   FileSpreadsheet,
   FileText,
   Save,
+  ArrowUpDown,
+  Trash2,
 } from 'lucide-react'
 import { CheckCircle2, AlertCircle, UploadCloud } from 'lucide-react'
+import { Trash } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -29,7 +33,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog'
 import { DataTableColumnHeader } from '@/components/data-table/column-header'
+import { useDeletePayout } from '../api/useDeletePayout'
 import { useExportPayout } from '../api/useExportPayout'
 import { useSettlePayout } from '../api/useSettlePayout'
 import { useSyncPayout } from '../api/useSyncPayout'
@@ -270,100 +276,130 @@ function SyncStatusCell({ payout }: { payout: Payout }) {
 }
 
 function PayoutActionsCell({ row, table }: { row: any; table: any }) {
-  // ... existing ActionsCell logic
   const payout = row.original
   const meta = table.options.meta as PayoutsTableMeta
   const dateValue = meta?.dates[payout.id]
 
   const settleMutation = useSettlePayout()
   const exportMutation = useExportPayout()
+  const deleteMutation = useDeletePayout()
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const handleSettle = () => {
     if (!dateValue) return
     settleMutation.mutate({ id: payout.id, paymentDate: dateValue })
   }
 
-  return (
-    <div className='flex items-center justify-end gap-2'>
-      {payout.status !== 'PAID' && (
-        <Button
-          size='sm'
-          variant='outline'
-          onClick={handleSettle}
-          disabled={!dateValue || settleMutation.isPending}
-          className='h-8'
-        >
-          {settleMutation.isPending &&
-          settleMutation.variables?.id === payout.id ? (
-            <Loader2 className='h-4 w-4 animate-spin' />
-          ) : (
-            <>
-              <Save className='mr-2 h-4 w-4' /> Settle
-            </>
-          )}
-        </Button>
-      )}
+  const handleDelete = () => {
+    // Delete logic is now handled by the Dialog's onConfirm
+    // We just open the dialog here if needed, but the hook `useDeletePayout` is what we use.
+    // Wait, the previous code used `deleteMutation` from `useDeletePayout()` at line 285.
+    // I added ANOTHER `useDeletePayout` at line 308 in the bad paste.
+    // I should unify them.
+    setShowDeleteDialog(true)
+  }
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant='ghost' className='h-8 w-8 p-0'>
-            <span className='sr-only'>Open menu</span>
-            <MoreHorizontal className='h-4 w-4' />
+  const handleExport = (format: 'pdf' | 'xlsx') => {
+    window.open(
+      `${api.defaults.baseURL}/payout/${payout.id}/export?format=${format}`,
+      '_blank'
+    )
+  }
+
+  return (
+    <>
+      <div className='flex items-center justify-end gap-2'>
+        {payout.status !== 'PAID' && (
+          <Button
+            size='sm'
+            variant='outline'
+            onClick={handleSettle}
+            disabled={!dateValue || settleMutation.isPending}
+            className='h-8'
+          >
+            {settleMutation.isPending &&
+            settleMutation.variables?.id === payout.id ? (
+              <Loader2 className='h-4 w-4 animate-spin' />
+            ) : (
+              <>
+                <Save className='mr-2 h-4 w-4' /> Settle
+              </>
+            )}
           </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align='end'>
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem asChild>
-            <Link
-              to='/payouts/$payoutId'
-              params={{ payoutId: payout.id }}
-              className='flex items-center'
+        )}
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant='ghost' className='h-8 w-8 p-0'>
+              <span className='sr-only'>Open menu</span>
+              <MoreHorizontal className='h-4 w-4' />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end'>
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(payout.id)}
             >
-              <Eye className='mr-2 h-4 w-4' />
-              View Details
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            disabled={exportMutation.isPending}
-            onSelect={(e) => e.preventDefault()}
-            onClick={() =>
-              exportMutation.mutate({
-                id: payout.id,
-                format: 'xlsx',
-              })
-            }
-          >
-            {exportMutation.isPending &&
-            exportMutation.variables?.id === payout.id &&
-            exportMutation.variables?.format === 'xlsx' ? (
-              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-            ) : (
+              Copy ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link
+                to='/_authenticated/payouts/$payoutId'
+                params={{ payoutId: payout.id }}
+              >
+                <Eye className='mr-2 h-4 w-4' />
+                View Details
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleExport('xlsx')}>
               <FileSpreadsheet className='mr-2 h-4 w-4' />
+              Export Excel
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              disabled={exportMutation.isPending}
+              onSelect={(e) => e.preventDefault()}
+              onClick={() =>
+                exportMutation.mutate({
+                  id: payout.id,
+                  format: 'pdf',
+                })
+              }
+            >
+              {exportMutation.isPending &&
+              exportMutation.variables?.id === payout.id &&
+              exportMutation.variables?.format === 'pdf' ? (
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              ) : (
+                <FileText className='mr-2 h-4 w-4' />
+              )}
+              Export PDF
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+            {/* DELETE ACTION */}
+            {payout.status !== 'PAID' && (
+              <DropdownMenuItem
+                className='text-red-600 focus:text-red-600'
+                onSelect={(e) => e.preventDefault()}
+                onClick={() => setShowDeleteDialog(true)}
+              >
+                <Trash2 className='mr-2 h-4 w-4' />
+                Delete Report
+              </DropdownMenuItem>
             )}
-            Export Excel
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            disabled={exportMutation.isPending}
-            onSelect={(e) => e.preventDefault()}
-            onClick={() =>
-              exportMutation.mutate({
-                id: payout.id,
-                format: 'pdf',
-              })
-            }
-          >
-            {exportMutation.isPending &&
-            exportMutation.variables?.id === payout.id &&
-            exportMutation.variables?.format === 'pdf' ? (
-              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-            ) : (
-              <FileText className='mr-2 h-4 w-4' />
-            )}
-            Export PDF
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <ConfirmDeleteDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        title='Delete Payout Report?'
+        description='Are you sure you want to delete this payout report? This will revert the revenue records to "Unpaid" status. If synced to QuickBooks, the Bill will also be deleted.'
+        onConfirm={() => deleteMutation.mutate(payout.id)}
+        isPending={deleteMutation.isPending}
+      />
+    </>
   )
 }

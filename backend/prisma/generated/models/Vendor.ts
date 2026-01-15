@@ -34,6 +34,9 @@ export type VendorMinAggregateOutputType = {
   phone: string | null
   address: string | null
   contractSignatory: string | null
+  corporateName: string | null
+  dbaName: string | null
+  taxId: string | null
   qbVendorId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -49,6 +52,9 @@ export type VendorMaxAggregateOutputType = {
   phone: string | null
   address: string | null
   contractSignatory: string | null
+  corporateName: string | null
+  dbaName: string | null
+  taxId: string | null
   qbVendorId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -64,6 +70,9 @@ export type VendorCountAggregateOutputType = {
   phone: number
   address: number
   contractSignatory: number
+  corporateName: number
+  dbaName: number
+  taxId: number
   subLabels: number
   qbVendorId: number
   createdAt: number
@@ -82,6 +91,9 @@ export type VendorMinAggregateInputType = {
   phone?: true
   address?: true
   contractSignatory?: true
+  corporateName?: true
+  dbaName?: true
+  taxId?: true
   qbVendorId?: true
   createdAt?: true
   updatedAt?: true
@@ -97,6 +109,9 @@ export type VendorMaxAggregateInputType = {
   phone?: true
   address?: true
   contractSignatory?: true
+  corporateName?: true
+  dbaName?: true
+  taxId?: true
   qbVendorId?: true
   createdAt?: true
   updatedAt?: true
@@ -112,6 +127,9 @@ export type VendorCountAggregateInputType = {
   phone?: true
   address?: true
   contractSignatory?: true
+  corporateName?: true
+  dbaName?: true
+  taxId?: true
   subLabels?: true
   qbVendorId?: true
   createdAt?: true
@@ -201,6 +219,9 @@ export type VendorGroupByOutputType = {
   phone: string | null
   address: string | null
   contractSignatory: string | null
+  corporateName: string | null
+  dbaName: string | null
+  taxId: string | null
   subLabels: string[]
   qbVendorId: string | null
   createdAt: Date
@@ -238,6 +259,9 @@ export type VendorWhereInput = {
   phone?: Prisma.StringNullableFilter<"Vendor"> | string | null
   address?: Prisma.StringNullableFilter<"Vendor"> | string | null
   contractSignatory?: Prisma.StringNullableFilter<"Vendor"> | string | null
+  corporateName?: Prisma.StringNullableFilter<"Vendor"> | string | null
+  dbaName?: Prisma.StringNullableFilter<"Vendor"> | string | null
+  taxId?: Prisma.StringNullableFilter<"Vendor"> | string | null
   subLabels?: Prisma.StringNullableListFilter<"Vendor">
   qbVendorId?: Prisma.StringNullableFilter<"Vendor"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Vendor"> | Date | string
@@ -259,6 +283,9 @@ export type VendorOrderByWithRelationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   contractSignatory?: Prisma.SortOrderInput | Prisma.SortOrder
+  corporateName?: Prisma.SortOrderInput | Prisma.SortOrder
+  dbaName?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxId?: Prisma.SortOrderInput | Prisma.SortOrder
   subLabels?: Prisma.SortOrder
   qbVendorId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -283,6 +310,9 @@ export type VendorWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringNullableFilter<"Vendor"> | string | null
   address?: Prisma.StringNullableFilter<"Vendor"> | string | null
   contractSignatory?: Prisma.StringNullableFilter<"Vendor"> | string | null
+  corporateName?: Prisma.StringNullableFilter<"Vendor"> | string | null
+  dbaName?: Prisma.StringNullableFilter<"Vendor"> | string | null
+  taxId?: Prisma.StringNullableFilter<"Vendor"> | string | null
   subLabels?: Prisma.StringNullableListFilter<"Vendor">
   qbVendorId?: Prisma.StringNullableFilter<"Vendor"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Vendor"> | Date | string
@@ -304,6 +334,9 @@ export type VendorOrderByWithAggregationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   contractSignatory?: Prisma.SortOrderInput | Prisma.SortOrder
+  corporateName?: Prisma.SortOrderInput | Prisma.SortOrder
+  dbaName?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxId?: Prisma.SortOrderInput | Prisma.SortOrder
   subLabels?: Prisma.SortOrder
   qbVendorId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -326,6 +359,9 @@ export type VendorScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
   address?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
   contractSignatory?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
+  corporateName?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
+  dbaName?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
+  taxId?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
   subLabels?: Prisma.StringNullableListFilter<"Vendor">
   qbVendorId?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Vendor"> | Date | string
@@ -342,6 +378,9 @@ export type VendorCreateInput = {
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  corporateName?: string | null
+  dbaName?: string | null
+  taxId?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
   qbVendorId?: string | null
   createdAt?: Date | string
@@ -363,6 +402,9 @@ export type VendorUncheckedCreateInput = {
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  corporateName?: string | null
+  dbaName?: string | null
+  taxId?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
   qbVendorId?: string | null
   createdAt?: Date | string
@@ -384,6 +426,9 @@ export type VendorUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -405,6 +450,9 @@ export type VendorUncheckedUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -426,6 +474,9 @@ export type VendorCreateManyInput = {
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  corporateName?: string | null
+  dbaName?: string | null
+  taxId?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
   qbVendorId?: string | null
   createdAt?: Date | string
@@ -442,6 +493,9 @@ export type VendorUpdateManyMutationInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -458,6 +512,9 @@ export type VendorUncheckedUpdateManyInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -482,6 +539,9 @@ export type VendorCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   contractSignatory?: Prisma.SortOrder
+  corporateName?: Prisma.SortOrder
+  dbaName?: Prisma.SortOrder
+  taxId?: Prisma.SortOrder
   subLabels?: Prisma.SortOrder
   qbVendorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -498,6 +558,9 @@ export type VendorMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   contractSignatory?: Prisma.SortOrder
+  corporateName?: Prisma.SortOrder
+  dbaName?: Prisma.SortOrder
+  taxId?: Prisma.SortOrder
   qbVendorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -513,6 +576,9 @@ export type VendorMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   contractSignatory?: Prisma.SortOrder
+  corporateName?: Prisma.SortOrder
+  dbaName?: Prisma.SortOrder
+  taxId?: Prisma.SortOrder
   qbVendorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -623,6 +689,9 @@ export type VendorCreateWithoutPlatformSplitsInput = {
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  corporateName?: string | null
+  dbaName?: string | null
+  taxId?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
   qbVendorId?: string | null
   createdAt?: Date | string
@@ -643,6 +712,9 @@ export type VendorUncheckedCreateWithoutPlatformSplitsInput = {
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  corporateName?: string | null
+  dbaName?: string | null
+  taxId?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
   qbVendorId?: string | null
   createdAt?: Date | string
@@ -679,6 +751,9 @@ export type VendorUpdateWithoutPlatformSplitsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -699,6 +774,9 @@ export type VendorUncheckedUpdateWithoutPlatformSplitsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -719,6 +797,9 @@ export type VendorCreateWithoutBankDetailsInput = {
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  corporateName?: string | null
+  dbaName?: string | null
+  taxId?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
   qbVendorId?: string | null
   createdAt?: Date | string
@@ -739,6 +820,9 @@ export type VendorUncheckedCreateWithoutBankDetailsInput = {
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  corporateName?: string | null
+  dbaName?: string | null
+  taxId?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
   qbVendorId?: string | null
   createdAt?: Date | string
@@ -775,6 +859,9 @@ export type VendorUpdateWithoutBankDetailsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -795,6 +882,9 @@ export type VendorUncheckedUpdateWithoutBankDetailsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -815,6 +905,9 @@ export type VendorCreateWithoutRevenueRecordsInput = {
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  corporateName?: string | null
+  dbaName?: string | null
+  taxId?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
   qbVendorId?: string | null
   createdAt?: Date | string
@@ -835,6 +928,9 @@ export type VendorUncheckedCreateWithoutRevenueRecordsInput = {
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  corporateName?: string | null
+  dbaName?: string | null
+  taxId?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
   qbVendorId?: string | null
   createdAt?: Date | string
@@ -871,6 +967,9 @@ export type VendorUpdateWithoutRevenueRecordsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -891,6 +990,9 @@ export type VendorUncheckedUpdateWithoutRevenueRecordsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -911,6 +1013,9 @@ export type VendorCreateWithoutPayoutsInput = {
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  corporateName?: string | null
+  dbaName?: string | null
+  taxId?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
   qbVendorId?: string | null
   createdAt?: Date | string
@@ -931,6 +1036,9 @@ export type VendorUncheckedCreateWithoutPayoutsInput = {
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  corporateName?: string | null
+  dbaName?: string | null
+  taxId?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
   qbVendorId?: string | null
   createdAt?: Date | string
@@ -967,6 +1075,9 @@ export type VendorUpdateWithoutPayoutsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -987,6 +1098,9 @@ export type VendorUncheckedUpdateWithoutPayoutsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1007,6 +1121,9 @@ export type VendorCreateWithoutProfileChangeRequestsInput = {
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  corporateName?: string | null
+  dbaName?: string | null
+  taxId?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
   qbVendorId?: string | null
   createdAt?: Date | string
@@ -1027,6 +1144,9 @@ export type VendorUncheckedCreateWithoutProfileChangeRequestsInput = {
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  corporateName?: string | null
+  dbaName?: string | null
+  taxId?: string | null
   subLabels?: Prisma.VendorCreatesubLabelsInput | string[]
   qbVendorId?: string | null
   createdAt?: Date | string
@@ -1063,6 +1183,9 @@ export type VendorUpdateWithoutProfileChangeRequestsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1083,6 +1206,9 @@ export type VendorUncheckedUpdateWithoutProfileChangeRequestsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subLabels?: Prisma.VendorUpdatesubLabelsInput | string[]
   qbVendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1161,6 +1287,9 @@ export type VendorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   phone?: boolean
   address?: boolean
   contractSignatory?: boolean
+  corporateName?: boolean
+  dbaName?: boolean
+  taxId?: boolean
   subLabels?: boolean
   qbVendorId?: boolean
   createdAt?: boolean
@@ -1183,6 +1312,9 @@ export type VendorSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   phone?: boolean
   address?: boolean
   contractSignatory?: boolean
+  corporateName?: boolean
+  dbaName?: boolean
+  taxId?: boolean
   subLabels?: boolean
   qbVendorId?: boolean
   createdAt?: boolean
@@ -1199,6 +1331,9 @@ export type VendorSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   phone?: boolean
   address?: boolean
   contractSignatory?: boolean
+  corporateName?: boolean
+  dbaName?: boolean
+  taxId?: boolean
   subLabels?: boolean
   qbVendorId?: boolean
   createdAt?: boolean
@@ -1215,13 +1350,16 @@ export type VendorSelectScalar = {
   phone?: boolean
   address?: boolean
   contractSignatory?: boolean
+  corporateName?: boolean
+  dbaName?: boolean
+  taxId?: boolean
   subLabels?: boolean
   qbVendorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type VendorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "vendorNumber" | "companyName" | "contactName" | "email" | "password" | "phone" | "address" | "contractSignatory" | "subLabels" | "qbVendorId" | "createdAt" | "updatedAt", ExtArgs["result"]["vendor"]>
+export type VendorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "vendorNumber" | "companyName" | "contactName" | "email" | "password" | "phone" | "address" | "contractSignatory" | "corporateName" | "dbaName" | "taxId" | "subLabels" | "qbVendorId" | "createdAt" | "updatedAt", ExtArgs["result"]["vendor"]>
 export type VendorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bankDetails?: boolean | Prisma.Vendor$bankDetailsArgs<ExtArgs>
   platformSplits?: boolean | Prisma.Vendor$platformSplitsArgs<ExtArgs>
@@ -1252,6 +1390,9 @@ export type $VendorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     phone: string | null
     address: string | null
     contractSignatory: string | null
+    corporateName: string | null
+    dbaName: string | null
+    taxId: string | null
     subLabels: string[]
     qbVendorId: string | null
     createdAt: Date
@@ -1693,6 +1834,9 @@ export interface VendorFieldRefs {
   readonly phone: Prisma.FieldRef<"Vendor", 'String'>
   readonly address: Prisma.FieldRef<"Vendor", 'String'>
   readonly contractSignatory: Prisma.FieldRef<"Vendor", 'String'>
+  readonly corporateName: Prisma.FieldRef<"Vendor", 'String'>
+  readonly dbaName: Prisma.FieldRef<"Vendor", 'String'>
+  readonly taxId: Prisma.FieldRef<"Vendor", 'String'>
   readonly subLabels: Prisma.FieldRef<"Vendor", 'String[]'>
   readonly qbVendorId: Prisma.FieldRef<"Vendor", 'String'>
   readonly createdAt: Prisma.FieldRef<"Vendor", 'DateTime'>

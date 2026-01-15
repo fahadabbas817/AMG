@@ -24,7 +24,11 @@ import { useGetPlatforms } from '@/features/platforms/api/useGetPlatforms'
 import { useCreateVendor } from '../api/useCreateVendor'
 import { useGetVendor } from '../api/useGetVendor'
 import { useUpdateVendor } from '../api/useUpdateVendor'
-import { type VendorFormSchema } from '../data/schema'
+import {
+  vendorSchema,
+  vendorUpdateFormSchema,
+  type VendorFormSchema,
+} from '../data/schema'
 import { Vendor } from '../types'
 import { VendorForm } from './vendor-form'
 
@@ -146,18 +150,30 @@ export function VendorsMutateDialog({
   const defaultValues: Partial<VendorFormSchema> = vendorData
     ? {
         ...vendorData,
+        corporateName: vendorData.corporateName ?? '',
+        dbaName: vendorData.dbaName ?? '',
+        taxId: vendorData.taxId ?? '',
         subLabels: vendorData.subLabels?.map((l) => ({ value: l })) ?? [],
-        bankDetails: vendorData.bankDetails ?? {
-          bankName: '',
-          accountNumber: '',
-          bankAddress: '',
-          ibanRouting: '',
-          swiftCode: '',
-          currency: 'USD',
-          payoutMethod: 'WIRE',
-          paypalEmail: '',
-          accountType: 'Checking',
-        },
+        bankDetails: vendorData.bankDetails
+          ? {
+              ...vendorData.bankDetails,
+              ibanRouting: vendorData.bankDetails.ibanRouting ?? '',
+              swiftCode: vendorData.bankDetails.swiftCode ?? '',
+              vendorAddress: vendorData.bankDetails.vendorAddress ?? '',
+              accountType: vendorData.bankDetails.accountType ?? 'Checking',
+            }
+          : {
+              bankName: '',
+              accountNumber: '',
+              bankAddress: '',
+              ibanRouting: '',
+              swiftCode: '',
+              currency: 'USD',
+              payoutMethod: 'WIRE',
+              paypalEmail: '',
+              accountType: 'Checking',
+              vendorAddress: '',
+            },
         platformIds:
           fetchedVendor?.platformSplits?.map((split) => split.platformId) ?? [],
       }
@@ -215,6 +231,7 @@ export function VendorsMutateDialog({
               id='vendor-mutate-form'
               onSubmit={onSubmit}
               defaultValues={defaultValues}
+              schema={isUpdate ? vendorUpdateFormSchema : vendorSchema}
             >
               <PlatformSection />
             </VendorForm>

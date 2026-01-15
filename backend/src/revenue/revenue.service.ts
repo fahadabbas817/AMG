@@ -81,14 +81,12 @@ export class RevenueService {
     };
   }
 
-  async saveRevenueReport(
+  // Helper to centralize parsing, normalization, and matching
+  private async processReportData(
     file: Express.Multer.File,
     platformId: string,
     month: Date,
-    totalAmount: number | null,
-    mapping?: Record<string, string>, // Optional new mapping
-    invoiceNumber?: string,
-    paymentStatus?: 'PAID' | 'PENDING',
+    mapping?: Record<string, string>,
   ) {
     const platform = await this.prisma.platform.findUnique({
       where: { id: platformId },
@@ -99,53 +97,29 @@ export class RevenueService {
       throw new NotFoundException('Platform not found');
     }
 
-    // 0. If new mapping is provided, Upsert the Template
     let usageMapping: Record<string, string> =
       (platform.mappingTemplate?.mappingRules as Record<string, string>) || {};
 
     let headerRowIndex = 0;
 
     if (mapping) {
-      // We assume if mapping is provided, we should update the template
       usageMapping = mapping;
-
-      // Detect header row index again to be safe, or use the one implicitly used for mapping
-      // For now, let's auto-detect to store the correct index
       const rawRows = parseSheet(file.buffer, { raw: true });
       headerRowIndex = scanForHeader(rawRows);
-
-      // Save to DB
-      await this.prisma.platformMappingTemplate.upsert({
-        where: { platformId: platform.id },
-        create: {
-          platformId: platform.id,
-          mappingRules: mapping,
-          headerRowIndex: headerRowIndex,
-        },
-        update: {
-          mappingRules: mapping,
-          headerRowIndex: headerRowIndex,
-        },
-      });
+      // Note: We do NOT save the template here. Separation of concerns.
     } else if (platform.mappingTemplate) {
-      // Use existing
       headerRowIndex = platform.mappingTemplate.headerRowIndex;
     } else {
-      // Auto-detect if no mapping and no template
       const rawRows = parseSheet(file.buffer, { raw: true });
       headerRowIndex = scanForHeader(rawRows);
     }
 
-    // Now parse properly using the header row
     const rawData = parseSheet(file.buffer, { headerRow: headerRowIndex });
-
-    // Normalize Data (Greedy Extraction) using the determined usageMapping
-    // const usageMapping = ... (already defined above)
     const hasMapping = Object.keys(usageMapping).length > 0;
 
     const normalizedData = rawData
       .map((row) => {
-        // Fallback for legacy strategy ONLY if no mapping template exists AND no dynamic mapping
+        // Fallback or legacy logic
         if (!hasMapping && !platform.mappingTemplate) {
           const result = this.normalizationService.normalize(
             [row],
@@ -159,9 +133,7 @@ export class RevenueService {
         let lineItemName = '';
         let rawVendorName = '';
 
-        // Iterate all keys in the row
         Object.keys(row).forEach((key) => {
-          // usageMapping is { field: column }, so we find which field maps to this key (column)
           const mappedFieldEntry = Object.entries(usageMapping).find(
             ([_, col]) => col === key,
           );
@@ -174,12 +146,10 @@ export class RevenueService {
           } else if (mappedField === 'rawVendorName') {
             rawVendorName = row[key];
           } else {
-            // Greedy Capture
             metadata[key] = row[key];
           }
         });
 
-        // Basic validation: If no revenue and no vendor, likely a trash row
         if (!rawVendorName && grossRevenue === 0) {
           return null;
         }
@@ -195,20 +165,131 @@ export class RevenueService {
           originalRow: row,
         };
       })
-      .filter((row) => row !== null); // Remove garbage rows
+      .filter((row) => row !== null);
 
-    // Match Vendors
     const matchedData = await this.matcherService.matchVendors(normalizedData);
 
-    // 2. Database Transaction
+    return { params: { platform, headerRowIndex }, matchedData };
+  }
+
+  async dryRunRevenueReport(
+    file: Express.Multer.File,
+    platformId: string,
+    month: Date,
+    totalAmount: number | null,
+    mapping?: Record<string, string>,
+    invoiceNumber?: string,
+  ) {
+    // 1. Process Data (In-Memory)
+    const {
+      params: { platform },
+      matchedData,
+    } = await this.processReportData(file, platformId, month, mapping);
+
+    // 2. Calculate Summary (In-Memory)
+    // Need to fetch splits and vendor details for matched records
+    const vendorIds = [
+      ...new Set(matchedData.map((r) => r.vendorId).filter(Boolean)),
+    ];
+    const vendors = await this.prisma.vendor.findMany({
+      where: { id: { in: vendorIds as string[] } },
+    });
+    const vendorMap = new Map(vendors.map((v) => [v.id, v]));
+
+    const splits = await this.prisma.platformSplit.findMany({
+      where: {
+        platformId: platform.id,
+        vendorId: { in: vendorIds as string[] },
+      },
+    });
+    const splitMap = new Map(splits.map((s) => [s.vendorId, s.commissionRate]));
+    const defaultRate = platform.defaultSplit || 0;
+
+    // Aggregate
+    const summaryMap = new Map<string, any>();
+
+    matchedData.forEach((row) => {
+      // Must be matched to be in summary? Yes, likely.
+      // But we should also show unmatched volume potentially?
+      // For Step 3 Payout Review, we only care about who gets PAID (Matched).
+      if (!row.vendorId) return;
+
+      if (!summaryMap.has(row.vendorId)) {
+        const vendor = vendorMap.get(row.vendorId);
+        const rate = splitMap.has(row.vendorId)
+          ? splitMap.get(row.vendorId)!
+          : defaultRate;
+        summaryMap.set(row.vendorId, {
+          vendorId: row.vendorId,
+          vendorName: vendor ? vendor.companyName : row.rawVendorName,
+          gross: 0,
+          commission: 0,
+          net: 0,
+          rate,
+          qbVendorId: vendor?.qbVendorId || null,
+        });
+      }
+
+      const entry = summaryMap.get(row.vendorId);
+      const gross = Number(row.grossRevenue);
+      entry.gross += gross;
+      // Calculate Commission per row or total? Linear, so total is fine.
+    });
+
+    // Finalize Calculations
+    const vendorsSummary = Array.from(summaryMap.values()).map((v) => {
+      const commission = v.gross * v.rate;
+      const net = v.gross - commission;
+      return { ...v, commission, net };
+    });
+
+    return {
+      reportId: null, // Indicates Dry Run
+      invoiceRef: invoiceNumber || null,
+      totalAmount: totalAmount,
+      vendors: vendorsSummary,
+    };
+  }
+
+  async saveRevenueReport(
+    file: Express.Multer.File,
+    platformId: string,
+    month: Date,
+    totalAmount: number | null,
+    mapping?: Record<string, string>,
+    invoiceNumber?: string,
+    paymentStatus?: 'PAID' | 'PENDING',
+  ) {
+    // 1. Process Data
+    const {
+      params: { platform, headerRowIndex },
+      matchedData,
+    } = await this.processReportData(file, platformId, month, mapping);
+
+    // 2. Persist Template (if mapping provided)
+    if (mapping) {
+      await this.prisma.platformMappingTemplate.upsert({
+        where: { platformId: platform.id },
+        create: {
+          platformId: platform.id,
+          mappingRules: mapping,
+          headerRowIndex: headerRowIndex,
+        },
+        update: {
+          mappingRules: mapping,
+          headerRowIndex: headerRowIndex,
+        },
+      });
+    }
+
+    // 3. Database Transaction
     try {
       const result = await this.prisma.$transaction(async (tx) => {
-        // Create Report Header
         const report = await tx.revenueReport.create({
           data: {
             filename: file.originalname,
-            rawFileUrl: '', // No longer saving file to disk
-            status: 'PROCESSED',
+            rawFileUrl: '',
+            status: 'PROCESSED', // DIRECTLY TO PROCESSED (Approved)
             platformId: platform.id,
             totalAmount: totalAmount,
             month: new Date(month),
@@ -217,7 +298,6 @@ export class RevenueService {
           },
         });
 
-        // Create Records
         await tx.revenueRecord.createMany({
           data: matchedData.map((row) => ({
             reportId: report.id,
@@ -241,13 +321,13 @@ export class RevenueService {
         };
       });
 
-      // AUTOMATED SYNC: Immediately try to sync the report (Best Effort)
+      // 4. Trigger Sync (This is now the FINAL Step, so we auto-sync)
+      // The user has already reviewed the dry run summary and clicked "Confirm & Sync"
       this.syncReport(result.reportId).catch((err) => {
         console.error(
           `[AutomatedSync] Failed to sync report ${result.reportId}`,
           err,
         );
-        // We do not throw here, as the report is already saved.
       });
 
       return result;
@@ -566,7 +646,7 @@ export class RevenueService {
       const result = await this.prisma.$transaction(async (tx) => {
         const report = await tx.revenueReport.create({
           data: {
-            filename: 'MANUAL_ENTRY',
+            filename: 'Platform Total',
             rawFileUrl: '', // No physical file
             status: 'PROCESSED',
             platformId: platform.id,
@@ -585,7 +665,7 @@ export class RevenueService {
             periodStart: new Date(month),
             periodEnd: new Date(month),
             grossRevenue: row.grossRevenue,
-            lineItemName: row.lineItemName || 'Manual Entry',
+            lineItemName: row.lineItemName || 'Platform Total',
             status: row.status,
             metadata: {},
           })),
@@ -612,5 +692,18 @@ export class RevenueService {
         `Failed to save manual report: ${error.message}`,
       );
     }
+  }
+  async deleteUnpaidRecords(vendorId: string) {
+    const result = await this.prisma.revenueRecord.deleteMany({
+      where: {
+        vendorId: vendorId,
+        payoutId: null, // Ensure we only delete unpaid records
+      },
+    });
+
+    return {
+      message: 'Unpaid records deleted successfully',
+      count: result.count,
+    };
   }
 }
