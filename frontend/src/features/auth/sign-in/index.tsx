@@ -1,4 +1,4 @@
-import { Link, useSearch } from '@tanstack/react-router'
+import { useSearch } from '@tanstack/react-router'
 import {
   Card,
   CardContent,
@@ -38,12 +38,7 @@ export function SignIn() {
             </TabsContent>
           </Tabs>
         </CardContent>
-        <span className='flex items-center justify-center'>
-          Don't have an account?{' '}
-          <Link to='/sign-up' className='underline underline-offset-4'>
-            Sign Up
-          </Link>
-        </span>
+
         <CardFooter>
           <p className='text-muted-foreground px-8 text-center text-sm'>
             By clicking sign in, you agree to our{' '}

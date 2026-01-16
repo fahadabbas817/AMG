@@ -24,7 +24,6 @@ export const Route = createRootRouteWithContext<{
     const isAuthRoute =
       location.pathname.startsWith('/(auth)') ||
       location.pathname.includes('/sign-in') ||
-      location.pathname.includes('/sign-up') ||
       location.pathname.includes('/forgot-password') ||
       location.pathname.includes('/otp')
 
