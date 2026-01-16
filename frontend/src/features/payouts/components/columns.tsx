@@ -10,11 +10,11 @@ import {
   FileSpreadsheet,
   FileText,
   Save,
-  ArrowUpDown,
   Trash2,
+  AlertCircle,
+  UploadCloud,
+  CheckCircle2,
 } from 'lucide-react'
-import { CheckCircle2, AlertCircle, UploadCloud } from 'lucide-react'
-import { Trash } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -290,15 +290,6 @@ function PayoutActionsCell({ row, table }: { row: any; table: any }) {
     settleMutation.mutate({ id: payout.id, paymentDate: dateValue })
   }
 
-  const handleDelete = () => {
-    // Delete logic is now handled by the Dialog's onConfirm
-    // We just open the dialog here if needed, but the hook `useDeletePayout` is what we use.
-    // Wait, the previous code used `deleteMutation` from `useDeletePayout()` at line 285.
-    // I added ANOTHER `useDeletePayout` at line 308 in the bad paste.
-    // I should unify them.
-    setShowDeleteDialog(true)
-  }
-
   const handleExport = (format: 'pdf' | 'xlsx') => {
     window.open(
       `${api.defaults.baseURL}/payout/${payout.id}/export?format=${format}`,
@@ -345,8 +336,8 @@ function PayoutActionsCell({ row, table }: { row: any; table: any }) {
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link
-                to='/_authenticated/payouts/$payoutId'
-                params={{ payoutId: payout.id }}
+                to={'/_authenticated/payouts/$payoutId' as any}
+                params={{ payoutId: payout.id } as any}
               >
                 <Eye className='mr-2 h-4 w-4' />
                 View Details
