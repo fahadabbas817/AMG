@@ -153,6 +153,57 @@ export const RevenueUploadStep3 = ({
         </CardContent>
       </Card>
 
+      {/* Unmatched Section */}
+      {summary.unmatched && summary.unmatched.length > 0 && (
+        <Card className='border-destructive/50'>
+          <CardHeader>
+            <CardTitle className='text-destructive'>
+              Aggregated Unmatched Items ({summary.unmatched.length})
+            </CardTitle>
+            <CardDescription>
+              The following sub-labels/vendors could not be matched. These
+              totals represent multiple items.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='p-0'>
+            <div className='max-h-96 overflow-auto'>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Raw Vendor Name (Sub-label)</TableHead>
+                    <TableHead className='text-right'>Records Count</TableHead>
+                    <TableHead className='text-right'>
+                      Total Gross Revenue
+                    </TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {summary.unmatched.map((item: any, idx: number) => (
+                    <TableRow key={idx} className='bg-red-50/50'>
+                      <TableCell className='font-mono text-sm font-semibold'>
+                        {item.rawVendorName || '(Empty)'}
+                      </TableCell>
+                      <TableCell className='text-muted-foreground text-right text-sm'>
+                        {item.count} items
+                      </TableCell>
+                      <TableCell className='text-right font-medium'>
+                        {formatCurrency(Number(item.grossRevenue))}
+                      </TableCell>
+                      <TableCell>
+                        <span className='inline-flex items-center rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800'>
+                          Unmatched
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className='flex justify-end gap-3'>
         <Button
           variant='outline'

@@ -353,7 +353,25 @@ export class QuickbooksService {
   }
   async deleteBill(qbBillId: string) {
     // 1. Fetch Bill to get SyncToken
-    const bill = await this.makeApiCall('GET', `/bill/${qbBillId}`);
+    let bill;
+    try {
+      bill = await this.makeApiCall('GET', `/bill/${qbBillId}`);
+    } catch (error: any) {
+      // Check for Object Not Found (610) or 404
+      const isNotFound =
+        error.response?.data?.Fault?.Error?.[0]?.code === '610' ||
+        error.message?.includes('Object Not Found') ||
+        error.response?.status === 404;
+
+      if (isNotFound) {
+        this.logger.warn(
+          `[deleteBill] Bill ${qbBillId} already deleted/inactive in QBO. Skipping.`,
+        );
+        return { Id: qbBillId, status: 'Already Deleted' };
+      }
+      throw error;
+    }
+
     if (!bill || !bill.Bill) {
       throw new NotFoundException(`Bill ${qbBillId} not found in QuickBooks`);
     }

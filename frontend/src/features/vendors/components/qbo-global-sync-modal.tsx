@@ -285,149 +285,166 @@ export function QboGlobalSyncModal({
                           </div>
 
                           <div className='p-0'>
-                            {['companyName', 'email', 'phone', 'address'].map(
-                              (key) => {
-                                const field = conflict.changes[key]
-                                if (field.matches) return null
+                            {[
+                              'companyName',
+                              'email',
+                              'phone',
+                              'address',
+                              'corporateName',
+                              'contactName',
+                              'taxId',
+                              'accountNumber',
+                            ].map((key) => {
+                              const field = conflict.changes[key]
+                              if (field.matches) return null
 
-                                // Debug: Inspect why qbo field might be empty
+                              // Debug: Inspect why qbo field might be empty
 
-                                const resolutionKey = `${conflict.vendorId}:${key}`
-                                const selection = resolutions[resolutionKey]
+                              const resolutionKey = `${conflict.vendorId}:${key}`
+                              const selection = resolutions[resolutionKey]
 
-                                return (
+                              return (
+                                <div
+                                  key={key}
+                                  className={`hover:bg-muted/5 grid grid-cols-[1fr,120px,1fr] items-stretch gap-4 border-b px-4 py-4 transition-colors last:border-0`}
+                                >
+                                  {/* Local Side */}
                                   <div
-                                    key={key}
-                                    className={`hover:bg-muted/5 grid grid-cols-[1fr,120px,1fr] items-stretch gap-4 border-b px-4 py-4 transition-colors last:border-0`}
+                                    className={`relative flex cursor-pointer flex-col justify-center rounded-md border p-3 transition-all ${selection === 'LOCAL' ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500' : 'hover:bg-muted/10 border-transparent'} `}
+                                    onClick={() =>
+                                      handleResolutionChange(
+                                        conflict.vendorId,
+                                        key,
+                                        'LOCAL'
+                                      )
+                                    }
                                   >
-                                    {/* Local Side */}
-                                    <div
-                                      className={`relative flex cursor-pointer flex-col justify-center rounded-md border p-3 transition-all ${selection === 'LOCAL' ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500' : 'hover:bg-muted/10 border-transparent'} `}
-                                      onClick={() =>
-                                        handleResolutionChange(
-                                          conflict.vendorId,
-                                          key,
-                                          'LOCAL'
-                                        )
-                                      }
-                                    >
-                                      <div className='flex items-start gap-3'>
-                                        <div className='mt-1'>
-                                          <div
-                                            className={`border-primary h-4 w-4 rounded-full border ${selection === 'LOCAL' ? 'bg-primary' : 'bg-transparent'} flex items-center justify-center`}
-                                          >
-                                            {selection === 'LOCAL' && (
-                                              <div className='h-2 w-2 rounded-full bg-white' />
-                                            )}
-                                          </div>
-                                        </div>
-                                        <div className='min-w-0 flex-1'>
-                                          <p className='text-muted-foreground mb-1 text-[10px] font-semibold tracking-wider uppercase'>
-                                            Local Database
-                                          </p>
-                                          <div
-                                            className={`text-sm break-words ${selection === 'LOCAL' ? 'text-foreground font-medium' : 'text-muted-foreground'}`}
-                                          >
-                                            {field.local || (
-                                              <span className='italic opacity-70'>
-                                                Empty
-                                              </span>
-                                            )}
-                                          </div>
-                                        </div>
-                                      </div>
-                                      {selection === 'LOCAL' && (
-                                        <div className='absolute top-2 right-2'>
-                                          <Badge
-                                            variant='secondary'
-                                            className='h-5 bg-blue-100 px-1 text-[10px] text-blue-700 hover:bg-blue-100'
-                                          >
-                                            Will Overwrite QBO
-                                          </Badge>
-                                        </div>
-                                      )}
-                                    </div>
-
-                                    {/* Divider / Status */}
-                                    <div className='flex flex-col items-center justify-center gap-2'>
-                                      <Badge
-                                        variant='outline'
-                                        className='text-[10px] tracking-wide uppercase'
-                                      >
-                                        {key === 'companyName' ? 'Name' : key}
-                                      </Badge>
-                                      {selection ? (
-                                        <Button
-                                          variant='ghost'
-                                          size='icon'
-                                          className='text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-8 w-8 rounded-full'
-                                          onClick={(e) => {
-                                            e.stopPropagation()
-                                            clearResolution(
-                                              conflict.vendorId,
-                                              key
-                                            )
-                                          }}
-                                          title='Reset Selection'
+                                    <div className='flex items-start gap-3'>
+                                      <div className='mt-1'>
+                                        <div
+                                          className={`border-primary h-4 w-4 rounded-full border ${selection === 'LOCAL' ? 'bg-primary' : 'bg-transparent'} flex items-center justify-center`}
                                         >
-                                          <RefreshCw className='h-4 w-4' />
-                                        </Button>
-                                      ) : (
-                                        <div className='bg-border h-full w-px' />
-                                      )}
-                                    </div>
-
-                                    {/* QBO Side */}
-                                    <div
-                                      className={`relative flex cursor-pointer flex-col justify-center rounded-md border p-3 transition-all ${selection === 'QBO' ? 'border-orange-500 bg-orange-50 ring-1 ring-orange-500' : 'hover:bg-muted/10 border-transparent'} `}
-                                      onClick={() =>
-                                        handleResolutionChange(
-                                          conflict.vendorId,
-                                          key,
-                                          'QBO'
-                                        )
-                                      }
-                                    >
-                                      <div className='flex items-start gap-3'>
-                                        <div className='mt-1'>
-                                          <div
-                                            className={`border-primary h-4 w-4 rounded-full border ${selection === 'QBO' ? 'bg-primary' : 'bg-transparent'} flex items-center justify-center`}
-                                          >
-                                            {selection === 'QBO' && (
-                                              <div className='h-2 w-2 rounded-full bg-white' />
-                                            )}
-                                          </div>
-                                        </div>
-                                        <div className='min-w-0 flex-1'>
-                                          <p className='text-muted-foreground mb-1 text-[10px] font-semibold tracking-wider uppercase'>
-                                            QuickBooks Online
-                                          </p>
-                                          <div
-                                            className={`text-sm break-words ${selection === 'QBO' ? 'text-foreground font-medium' : 'text-muted-foreground'}`}
-                                          >
-                                            {field.qbo || (
-                                              <span className='italic opacity-70'>
-                                                Empty
-                                              </span>
-                                            )}
-                                          </div>
+                                          {selection === 'LOCAL' && (
+                                            <div className='h-2 w-2 rounded-full bg-white' />
+                                          )}
                                         </div>
                                       </div>
-                                      {selection === 'QBO' && (
-                                        <div className='absolute top-2 right-2'>
-                                          <Badge
-                                            variant='secondary'
-                                            className='h-5 bg-orange-100 px-1 text-[10px] text-orange-700 hover:bg-orange-100'
-                                          >
-                                            Will Overwrite Local
-                                          </Badge>
+                                      <div className='min-w-0 flex-1'>
+                                        <p className='text-muted-foreground mb-1 text-[10px] font-semibold tracking-wider uppercase'>
+                                          Local Database
+                                        </p>
+                                        <div
+                                          className={`text-sm break-words ${selection === 'LOCAL' ? 'text-foreground font-medium' : 'text-muted-foreground'}`}
+                                        >
+                                          {field.local || (
+                                            <span className='italic opacity-70'>
+                                              Empty
+                                            </span>
+                                          )}
                                         </div>
-                                      )}
+                                      </div>
                                     </div>
+                                    {selection === 'LOCAL' && (
+                                      <div className='absolute top-2 right-2'>
+                                        <Badge
+                                          variant='secondary'
+                                          className='h-5 bg-blue-100 px-1 text-[10px] text-blue-700 hover:bg-blue-100'
+                                        >
+                                          Will Overwrite QBO
+                                        </Badge>
+                                      </div>
+                                    )}
                                   </div>
-                                )
-                              }
-                            )}
+
+                                  {/* Divider / Status */}
+                                  <div className='flex flex-col items-center justify-center gap-2'>
+                                    <Badge
+                                      variant='outline'
+                                      className='text-[10px] tracking-wide uppercase'
+                                    >
+                                      {key === 'companyName'
+                                        ? 'Name'
+                                        : key === 'corporateName'
+                                          ? 'Corp Name'
+                                          : key === 'contactName'
+                                            ? 'Contact'
+                                            : key === 'taxId'
+                                              ? 'Tax ID'
+                                              : key === 'accountNumber'
+                                                ? 'Acct #'
+                                                : key}
+                                    </Badge>
+                                    {selection ? (
+                                      <Button
+                                        variant='ghost'
+                                        size='icon'
+                                        className='text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-8 w-8 rounded-full'
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          clearResolution(
+                                            conflict.vendorId,
+                                            key
+                                          )
+                                        }}
+                                        title='Reset Selection'
+                                      >
+                                        <RefreshCw className='h-4 w-4' />
+                                      </Button>
+                                    ) : (
+                                      <div className='bg-border h-full w-px' />
+                                    )}
+                                  </div>
+
+                                  {/* QBO Side */}
+                                  <div
+                                    className={`relative flex cursor-pointer flex-col justify-center rounded-md border p-3 transition-all ${selection === 'QBO' ? 'border-orange-500 bg-orange-50 ring-1 ring-orange-500' : 'hover:bg-muted/10 border-transparent'} `}
+                                    onClick={() =>
+                                      handleResolutionChange(
+                                        conflict.vendorId,
+                                        key,
+                                        'QBO'
+                                      )
+                                    }
+                                  >
+                                    <div className='flex items-start gap-3'>
+                                      <div className='mt-1'>
+                                        <div
+                                          className={`border-primary h-4 w-4 rounded-full border ${selection === 'QBO' ? 'bg-primary' : 'bg-transparent'} flex items-center justify-center`}
+                                        >
+                                          {selection === 'QBO' && (
+                                            <div className='h-2 w-2 rounded-full bg-white' />
+                                          )}
+                                        </div>
+                                      </div>
+                                      <div className='min-w-0 flex-1'>
+                                        <p className='text-muted-foreground mb-1 text-[10px] font-semibold tracking-wider uppercase'>
+                                          QuickBooks Online
+                                        </p>
+                                        <div
+                                          className={`text-sm break-words ${selection === 'QBO' ? 'text-foreground font-medium' : 'text-muted-foreground'}`}
+                                        >
+                                          {field.qbo || (
+                                            <span className='italic opacity-70'>
+                                              Empty
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {selection === 'QBO' && (
+                                      <div className='absolute top-2 right-2'>
+                                        <Badge
+                                          variant='secondary'
+                                          className='h-5 bg-orange-100 px-1 text-[10px] text-orange-700 hover:bg-orange-100'
+                                        >
+                                          Will Overwrite Local
+                                        </Badge>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              )
+                            })}
                           </div>
                         </div>
                       ))}

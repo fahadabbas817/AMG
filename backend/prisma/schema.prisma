@@ -108,13 +108,14 @@ model BankDetails {
 }
 
 model RevenueReport {
-  id         String    @id @default(uuid())
-  filename   String
-  uploadDate DateTime  @default(now())
-  status     String // "PENDING", "PROCESSED", "ERROR"
-  rawFileUrl String
-  platformId String?
-  platform   Platform? @relation(fields: [platformId], references: [id])
+  id          String    @id @default(uuid())
+  filename    String
+  fingerprint String? // Hash of the file content for duplicate detection
+  uploadDate  DateTime  @default(now())
+  status      String // "PENDING", "PROCESSED", "ERROR"
+  rawFileUrl  String
+  platformId  String?
+  platform    Platform? @relation(fields: [platformId], references: [id])
 
   // New: Metadata about the "Big Check" from the Admin UI
   totalAmount   Decimal?              @db.Decimal(10, 2) // "Paid to AMG" amount
@@ -170,12 +171,13 @@ model Payout {
 
   items RevenueRecord[] // The records being paid
 
-  totalAmount  Decimal // Sum of vendorNet of all items
-  status       String // PENDING, PAID
-  paymentDate  DateTime?
-  referenceRef String? // Check # or Transaction ID
-  qbBillId     String? // QuickBooks Bill ID
-  syncStatus   String    @default("NOT_SYNCED") // "NOT_SYNCED", "PENDING_SYNC", "SYNCED", "FAILED"
+  totalAmount     Decimal // Sum of vendorNet of all items
+  status          String // PENDING, PAID
+  paymentDate     DateTime?
+  referenceRef    String? // Check # or Transaction ID
+  qbBillId        String? // QuickBooks Bill ID
+  syncStatus      String    @default("NOT_SYNCED") // "NOT_SYNCED", "PENDING_SYNC", "SYNCED", "FAILED"
+  subLabelSummary String? // Comma-separated list of sub-studios (e.g. "Tyjam, Brazzers")
 
   createdAt DateTime @default(now())
 }

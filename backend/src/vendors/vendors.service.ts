@@ -26,7 +26,22 @@ export class VendorsService {
   async create(createVendorDto: CreateVendorDto) {
     const { bankDetails, platformIds, ...vendorData } = createVendorDto;
 
+    // Implement defaults for optional fields that are required in DB
+    if (!vendorData.vendorNumber) {
+      // Auto-generate vendor number if not provided
+      // Format: V-{TIMESTAMP-LAST6}
+      const timestamp = Date.now().toString();
+      vendorData.vendorNumber = `V-${timestamp.slice(-6)}`;
+    }
+
+    if (!vendorData.contactName) {
+      // Default to Company Name if not provided
+      vendorData.contactName = vendorData.companyName;
+    }
+
     // Check for duplicates
+    // Only check vendorNumber if it was manually provided?
+    // Actually, even auto-generated check is fine, though unlikely to collide.
     const existingVendor = await this.prisma.vendor.findFirst({
       where: {
         OR: [

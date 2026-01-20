@@ -1351,6 +1351,7 @@ export type BankDetailsScalarFieldEnum = (typeof BankDetailsScalarFieldEnum)[key
 export const RevenueReportScalarFieldEnum = {
   id: 'id',
   filename: 'filename',
+  fingerprint: 'fingerprint',
   uploadDate: 'uploadDate',
   status: 'status',
   rawFileUrl: 'rawFileUrl',
@@ -1396,6 +1397,7 @@ export const PayoutScalarFieldEnum = {
   referenceRef: 'referenceRef',
   qbBillId: 'qbBillId',
   syncStatus: 'syncStatus',
+  subLabelSummary: 'subLabelSummary',
   createdAt: 'createdAt'
 } as const
 

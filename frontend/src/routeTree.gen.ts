@@ -36,6 +36,8 @@ import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
+import { Route as AuthenticatedRevenueListRouteImport } from './routes/_authenticated/revenue/list'
+import { Route as AuthenticatedRevenueReportIdRouteImport } from './routes/_authenticated/revenue/$reportId'
 import { Route as AuthenticatedPayoutsPayoutIdRouteImport } from './routes/_authenticated/payouts/$payoutId'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedVendorStatsIndexRouteImport } from './routes/_authenticated/vendor/stats/index'
@@ -215,6 +217,18 @@ const AuthenticatedSettingsAccountRoute =
     path: '/account',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedRevenueListRoute =
+  AuthenticatedRevenueListRouteImport.update({
+    id: '/revenue/list',
+    path: '/revenue/list',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedRevenueReportIdRoute =
+  AuthenticatedRevenueReportIdRouteImport.update({
+    id: '/revenue/$reportId',
+    path: '/revenue/$reportId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedPayoutsPayoutIdRoute =
   AuthenticatedPayoutsPayoutIdRouteImport.update({
     id: '/payouts/$payoutId',
@@ -280,6 +294,8 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/payouts/$payoutId': typeof AuthenticatedPayoutsPayoutIdRoute
+  '/revenue/$reportId': typeof AuthenticatedRevenueReportIdRoute
+  '/revenue/list': typeof AuthenticatedRevenueListRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -316,6 +332,8 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/payouts/$payoutId': typeof AuthenticatedPayoutsPayoutIdRoute
+  '/revenue/$reportId': typeof AuthenticatedRevenueReportIdRoute
+  '/revenue/list': typeof AuthenticatedRevenueListRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -355,6 +373,8 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/payouts/$payoutId': typeof AuthenticatedPayoutsPayoutIdRoute
+  '/_authenticated/revenue/$reportId': typeof AuthenticatedRevenueReportIdRoute
+  '/_authenticated/revenue/list': typeof AuthenticatedRevenueListRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -394,6 +414,8 @@ export interface FileRouteTypes {
     | '/'
     | '/errors/$error'
     | '/payouts/$payoutId'
+    | '/revenue/$reportId'
+    | '/revenue/list'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
@@ -430,6 +452,8 @@ export interface FileRouteTypes {
     | '/'
     | '/errors/$error'
     | '/payouts/$payoutId'
+    | '/revenue/$reportId'
+    | '/revenue/list'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
@@ -468,6 +492,8 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
     | '/_authenticated/payouts/$payoutId'
+    | '/_authenticated/revenue/$reportId'
+    | '/_authenticated/revenue/list'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
@@ -703,6 +729,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/revenue/list': {
+      id: '/_authenticated/revenue/list'
+      path: '/revenue/list'
+      fullPath: '/revenue/list'
+      preLoaderRoute: typeof AuthenticatedRevenueListRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/revenue/$reportId': {
+      id: '/_authenticated/revenue/$reportId'
+      path: '/revenue/$reportId'
+      fullPath: '/revenue/$reportId'
+      preLoaderRoute: typeof AuthenticatedRevenueReportIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/payouts/$payoutId': {
       id: '/_authenticated/payouts/$payoutId'
       path: '/payouts/$payoutId'
@@ -790,6 +830,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedPayoutsPayoutIdRoute: typeof AuthenticatedPayoutsPayoutIdRoute
+  AuthenticatedRevenueReportIdRoute: typeof AuthenticatedRevenueReportIdRoute
+  AuthenticatedRevenueListRoute: typeof AuthenticatedRevenueListRoute
   AuthenticatedVendorsVendorIdRoute: typeof AuthenticatedVendorsVendorIdRoute
   AuthenticatedRevenueManualLazyRoute: typeof AuthenticatedRevenueManualLazyRoute
   AuthenticatedRevenueUploadLazyRoute: typeof AuthenticatedRevenueUploadLazyRoute
@@ -812,6 +854,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedPayoutsPayoutIdRoute: AuthenticatedPayoutsPayoutIdRoute,
+  AuthenticatedRevenueReportIdRoute: AuthenticatedRevenueReportIdRoute,
+  AuthenticatedRevenueListRoute: AuthenticatedRevenueListRoute,
   AuthenticatedVendorsVendorIdRoute: AuthenticatedVendorsVendorIdRoute,
   AuthenticatedRevenueManualLazyRoute: AuthenticatedRevenueManualLazyRoute,
   AuthenticatedRevenueUploadLazyRoute: AuthenticatedRevenueUploadLazyRoute,

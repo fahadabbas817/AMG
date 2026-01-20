@@ -10,6 +10,7 @@ import {
   Param,
   UseGuards,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -19,6 +20,7 @@ import {
   ApiResponse,
   ApiTags,
   ApiBearerAuth,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { RevenueService } from './revenue.service';
 import { memoryStorage } from 'multer';
@@ -250,6 +252,42 @@ export class RevenueController {
   @ApiResponse({ status: 201, description: 'Sync initiated.' })
   syncReport(@Param('id') id: string, @Body('invoiceRef') invoiceRef?: string) {
     return this.revenueService.syncReport(id, invoiceRef);
+  }
+
+  // HUB ENDPOINTS
+  @Get()
+  @ApiOperation({ summary: 'List all revenue reports' })
+  findAllReports(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('search') search?: string,
+  ) {
+    return this.revenueService.findAllReports(
+      Number(page),
+      Number(limit),
+      search,
+    );
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get revenue report details' })
+  findReportById(@Param('id') id: string) {
+    return this.revenueService.findReportById(id);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete revenue report (safely)' })
+  @ApiQuery({ name: 'force', required: false, type: Boolean })
+  @ApiQuery({ name: 'deletePayouts', required: false, type: Boolean })
+  deleteReport(
+    @Param('id') id: string,
+    @Query('force') force = false,
+    @Query('deletePayouts') deletePayouts = false,
+  ) {
+    // Parse booleans from query strings if needed, NestJS @Query with primitive type might need ParseBoolPipe or manual casting
+    const isForce = String(force) === 'true';
+    const isDeletePayouts = String(deletePayouts) === 'true';
+    return this.revenueService.deleteReport(id, isForce, isDeletePayouts);
   }
 
   @Delete('unpaid/:vendorId')

@@ -71,8 +71,19 @@ export const sidebarData: SidebarData = {
         },
         {
           title: 'Revenue',
-          url: '/revenue/upload',
-          icon: Upload, // You might want a different icon like FileText or Upload
+          icon: DollarSign, // Using DollarSign or similar for Revenue group
+          items: [
+            {
+              title: 'Upload Reports',
+              url: '/revenue/upload',
+              icon: Upload,
+            },
+            {
+              title: 'Report Hub',
+              url: '/revenue/list', // New List Page
+              icon: Layers, // Or FileText
+            },
+          ],
         },
         {
           title: 'Platforms',

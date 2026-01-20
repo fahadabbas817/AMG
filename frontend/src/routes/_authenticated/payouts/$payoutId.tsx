@@ -90,14 +90,18 @@ function PayoutDetailsPage() {
   const totalGross = summary.reduce((acc, curr) => acc + curr.gross, 0)
   const totalNet = summary.reduce((acc, curr) => acc + curr.net, 0)
 
-  // Group Details by Platform
-  const detailsByPlatform = new Map<string, any[]>()
+  // Group Details by Sub-label (matching Export logic)
+  const detailsByGroup = new Map<string, any[]>()
   payout.items.forEach((item: any) => {
-    const key = `${item.platform.name}: ${format(new Date(item.periodStart), `MMMM yyyy`)}`
-    if (!detailsByPlatform.has(key)) {
-      detailsByPlatform.set(key, [])
+    // Use rawVendorName as the primary grouping key (Sub-studio)
+    // Fallback to Platform name if rawVendorName is missing
+    const subLabel = item.rawVendorName || item.platform.name || 'Unknown'
+
+    const key = subLabel
+    if (!detailsByGroup.has(key)) {
+      detailsByGroup.set(key, [])
     }
-    detailsByPlatform.get(key)!.push(item)
+    detailsByGroup.get(key)!.push(item)
   })
 
   return (
@@ -263,9 +267,11 @@ function PayoutDetailsPage() {
 
       {/* Detailed Breakdown */}
       <div className='space-y-6'>
-        <h2 className='pl-1 text-xl font-semibold'>Payout Details</h2>
+        <h2 className='pl-1 text-xl font-semibold'>
+          Payout Details (By Sub-label)
+        </h2>
 
-        {Array.from(detailsByPlatform.entries()).map(([subHeader, items]) => {
+        {Array.from(detailsByGroup.entries()).map(([subHeader, items]) => {
           // 1. Identify all unique metadata keys for this group
           const metadataKeys = Array.from(
             new Set(
@@ -290,6 +296,7 @@ function PayoutDetailsPage() {
                         <TableHead className='min-w-[200px] pl-6'>
                           Title
                         </TableHead>
+                        <TableHead>Platform</TableHead>
                         {/* Dynamic Headers */}
                         {metadataKeys.map((key) => (
                           <TableHead
@@ -309,6 +316,14 @@ function PayoutDetailsPage() {
                         <TableRow key={item.id} className='hover:bg-muted/40'>
                           <TableCell className='text-muted-foreground pl-6 font-medium'>
                             {item.lineItemName || 'N/A'}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant='outline'
+                              className='text-muted-foreground text-xs font-normal'
+                            >
+                              {item.platform.name}
+                            </Badge>
                           </TableCell>
                           {/* Dynamic Metadata Cells */}
                           {metadataKeys.map((key) => (
@@ -334,12 +349,12 @@ function PayoutDetailsPage() {
                         </TableRow>
                       ))}
                       <TableRow className='bg-muted/10 font-medium'>
-                        {/* ColSpan = Title (1) + Metadata Keys length */}
+                        {/* ColSpan = Title (1) + Platform (1) + Metadata Keys length */}
                         <TableCell
-                          className='pl-6'
-                          colSpan={1 + metadataKeys.length}
+                          className='pl-6 text-right'
+                          colSpan={2 + metadataKeys.length}
                         >
-                          Subtotal
+                          Subtotal for {subHeader}:
                         </TableCell>
                         <TableCell className='text-right'>
                           $

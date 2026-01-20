@@ -130,7 +130,9 @@ export function VendorForm({
               name='companyName'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Company Name</FormLabel>
+                  <FormLabel>
+                    Company Name <span className='text-red-500'>*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder='Acme Inc.' {...(field as any)} />
                   </FormControl>
@@ -143,7 +145,12 @@ export function VendorForm({
               name='vendorNumber'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Vendor Number</FormLabel>
+                  <FormLabel>
+                    Vendor Number{' '}
+                    <span className='text-muted-foreground text-xs font-normal'>
+                      (Auto-generated if empty)
+                    </span>
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder='V-1001' {...(field as any)} />
                   </FormControl>
@@ -156,7 +163,7 @@ export function VendorForm({
               name='corporateName'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Corporate Name (Optional)</FormLabel>
+                  <FormLabel>Corporate Name</FormLabel>
                   <FormControl>
                     <Input
                       placeholder='Legal Corporate Name'
@@ -172,7 +179,7 @@ export function VendorForm({
               name='dbaName'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>DBA Name (Optional)</FormLabel>
+                  <FormLabel>DBA Name</FormLabel>
                   <FormControl>
                     <Input
                       placeholder='Doing Business As'
@@ -239,7 +246,9 @@ export function VendorForm({
               name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>
+                    Email <span className='text-red-500'>*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder='john@example.com' {...(field as any)} />
                   </FormControl>
@@ -252,7 +261,7 @@ export function VendorForm({
               name='phone'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone (Optional)</FormLabel>
+                  <FormLabel>Phone</FormLabel>
                   <FormControl>
                     <Input
                       placeholder='+1 (555) 000-0000'

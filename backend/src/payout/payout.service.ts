@@ -200,11 +200,22 @@ export class PayoutService {
         }
 
         // Create Payout
+        // NEW: Aggregate sub-studios for summary
+        const uniqueSubStudios = [
+          ...new Set(records.map((r) => r.rawVendorName).filter(Boolean)),
+        ];
+        // Sort and join, limiting length if necessary
+        const subLabelSummary = uniqueSubStudios
+          .sort()
+          .join(', ')
+          .slice(0, 500); // 500 char safe limit
+
         const payout = await tx.payout.create({
           data: {
             vendorId: vendorId,
             totalAmount: totalPayoutAmount,
             status: 'PENDING',
+            subLabelSummary: subLabelSummary, // Added field
           },
         });
 
@@ -439,7 +450,11 @@ export class PayoutService {
     // Helper to group items
     const groupedItems = new Map<string, any[]>();
     payout.items.forEach((item) => {
-      const key = `${item.platform.name}: ${item.periodStart.toISOString().slice(0, 7)}`; // "Platform: YYYY-MM"
+      // Use rawVendorName as the primary grouping key (Sub-studio)
+      // Fallback to Platform name if rawVendorName is missing
+      const subLabel = item.rawVendorName || item.platform.name || 'Unknown';
+
+      const key = `${subLabel}`;
       if (!groupedItems.has(key)) {
         groupedItems.set(key, []);
       }
@@ -451,51 +466,36 @@ export class PayoutService {
       const workbook = new ExcelJS.Workbook();
       const sheet = workbook.addWorksheet('Payout Report');
 
+      // Header Section
       sheet.addRow(['Vendor:', payout.vendor.companyName]);
       sheet.addRow(['Payout #:', payout.payoutNumber]);
       sheet.addRow(['Date:', payout.createdAt.toISOString().split('T')[0]]);
       sheet.addRow([]);
 
       // --- Summary Section ---
-      sheet.addRow(['Platform', 'Month', 'Gross', 'Net Payout']);
-      sheet.getRow(5).font = { bold: true };
-
-      const summary = new Map();
-      payout.items.forEach((item) => {
-        const key = `${item.platform.name}-${item.periodStart}`;
-        if (!summary.has(key)) {
-          summary.set(key, {
-            platform: item.platform.name,
-            month: item.periodStart,
-            gross: 0,
-            net: 0,
-          });
-        }
-        const s = summary.get(key);
-        s.gross += Number(item.grossRevenue);
-        s.net += Number(item.vendorNet);
-      });
-
-      summary.forEach((val) => {
-        sheet.addRow([
-          val.platform,
-          val.month.toISOString().split('T')[0],
-          val.gross,
-          val.net,
-        ]);
-      });
-
-      sheet.addRow([]);
-      sheet.addRow(['Detail View']);
+      sheet.addRow(['Detailed Breakdown']);
       sheet.getRow(sheet.rowCount).font = { bold: true, size: 14 };
+      sheet.addRow([]);
+
+      let grandCheckTotal = 0;
 
       // --- Grouped Details Section ---
       groupedItems.forEach((items, groupKey) => {
-        sheet.addRow([]); // ID: 890123
-        sheet.addRow([groupKey]); // Group Header
-        sheet.getRow(sheet.rowCount).font = { bold: true, size: 12 };
+        // Group Header
+        sheet.addRow([groupKey]);
+        const groupHeaderRow = sheet.getRow(sheet.rowCount);
+        groupHeaderRow.font = {
+          bold: true,
+          size: 12,
+          color: { argb: 'FFFFFFFF' },
+        };
+        groupHeaderRow.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF0F172A' }, // Slate-900 like color
+        };
 
-        // 1. Determine Dynamic Headers for this group
+        // 1. Determine Dynamic Headers for this group (Metadata)
         const metadataKeys = Array.from(
           new Set(
             items.flatMap((item: any) =>
@@ -505,15 +505,16 @@ export class PayoutService {
         ).sort();
 
         // 2. Add Header Row
-        const headerRow = [
+        const headerRowValues = [
           'Title',
+          'Platform', // Added Platform column
           ...metadataKeys,
           'Gross Revenue',
           'Commission',
           'Net',
         ];
-        sheet.addRow(headerRow);
-        sheet.getRow(sheet.rowCount).font = { bold: true };
+        const headerRow = sheet.addRow(headerRowValues);
+        headerRow.font = { bold: true };
 
         // 3. Add Data Rows
         items.forEach((item) => {
@@ -524,6 +525,7 @@ export class PayoutService {
           );
           sheet.addRow([
             item.lineItemName || 'N/A',
+            item.platform.name, // Added Platform value
             ...metaValues,
             Number(item.grossRevenue),
             Number(item.amgCommission),
@@ -537,14 +539,14 @@ export class PayoutService {
           0,
         );
         const subNet = items.reduce((acc, i) => acc + Number(i.vendorNet), 0);
+        grandCheckTotal += subNet;
 
-        // Calculate empty cells to align Gross/Net correctly.
-        // Headers: [Title (1)] + [Meta (N)] + [Gross (1)] + [Comm (1)] + [Net (1)]
-        // Subtotal row needs to align with Gross (index 1+N+1)
-        const emptyCols = new Array(1 + metadataKeys.length).fill('');
-        // Actually, we can just push empty strings.
+        // Subtotal Row
+        // Align with financial columns.
+        // Title(1) + Platform(1) + Meta(N) -> Total N+2 cols before Gross
         const subRow = [
-          'Subtotal',
+          `Total for ${groupKey}`,
+          '', // Platform placeholder
           ...new Array(metadataKeys.length).fill(''),
           subExp,
           '-',
@@ -553,7 +555,24 @@ export class PayoutService {
 
         const row = sheet.addRow(subRow);
         row.font = { bold: true };
+        row.getCell(headerRowValues.length).numFmt = '$#,##0.00'; // Format Net
+        row.getCell(headerRowValues.length - 2).numFmt = '$#,##0.00'; // Format Gross
+
+        sheet.addRow([]); // Spacer
       });
+
+      // Grand Total
+      sheet.addRow([]);
+      const grandTotalRow = sheet.addRow([
+        'Configuration Check Total',
+        '',
+        '',
+        '',
+        '',
+        grandCheckTotal,
+      ]);
+      grandTotalRow.font = { bold: true, size: 12 };
+      grandTotalRow.getCell(6).numFmt = '$#,##0.00';
 
       return await workbook.xlsx.writeBuffer();
     } else {
@@ -569,22 +588,7 @@ export class PayoutService {
       };
       const printer = new PdfPrinter(fonts);
 
-      const summary = new Map();
-      payout.items.forEach((item) => {
-        const key = `${item.platform.name}-${item.periodStart}`;
-        if (!summary.has(key)) {
-          summary.set(key, {
-            platform: item.platform.name,
-            month: item.periodStart,
-            gross: 0,
-            net: 0,
-          });
-        }
-        const s = summary.get(key);
-        s.gross += Number(item.grossRevenue);
-        s.net += Number(item.vendorNet);
-      });
-
+      // PDF Content
       const docContent: any[] = [
         { text: `Payout Report #${payout.payoutNumber}`, style: 'header' },
         { text: `Vendor: ${payout.vendor.companyName}`, style: 'subheader' },
@@ -592,23 +596,6 @@ export class PayoutService {
           text: `Date: ${payout.createdAt.toISOString().split('T')[0]}`,
           margin: [0, 0, 0, 20],
         },
-        { text: 'Summary', style: 'subheader' },
-        {
-          table: {
-            headerRows: 1,
-            widths: ['*', '*', '*', '*'],
-            body: [
-              ['Platform', 'Month', 'Gross', 'Net'],
-              ...Array.from(summary.values()).map((s: any) => [
-                s.platform,
-                s.month.toISOString().split('T')[0],
-                `$${s.gross.toFixed(2)}`,
-                `$${s.net.toFixed(2)}`,
-              ]),
-            ],
-          },
-        },
-        { text: ' ', margin: [0, 20] },
       ];
 
       // --- Grouped Details Section for PDF ---
@@ -623,10 +610,11 @@ export class PayoutService {
         ).sort();
 
         // Calculate dynamic widths:
-        // Title: '*', then Auto for meta, then Auto for financial
-        // Total columns: 1 (Title) + N (Meta) + 3 (Gross, Comm, Net)
+        // Title: '*', Platform: 'auto', then Auto for meta, then Auto for financial
+        // Total columns: 1 (Title) + 1 (Platform) + N (Meta) + 3 (Gross, Comm, Net)
         const widths = [
           '*',
+          'auto', // Platform width
           ...metadataKeys.map(() => 'auto'),
           'auto',
           'auto',
@@ -637,6 +625,7 @@ export class PayoutService {
           // Header
           [
             { text: 'Title', style: 'tableHeader' },
+            { text: 'Platform', style: 'tableHeader' },
             ...metadataKeys.map((k) => ({ text: k, style: 'tableHeader' })),
             { text: 'Gross', style: 'tableHeader' },
             { text: 'Comm', style: 'tableHeader' },
@@ -645,6 +634,7 @@ export class PayoutService {
           // Rows
           ...items.map((item: any) => [
             item.lineItemName || 'N/A',
+            { text: item.platform.name, style: 'small' },
             ...metadataKeys.map((k) =>
               item.metadata && item.metadata[k] !== undefined
                 ? String(item.metadata[k])
@@ -656,7 +646,13 @@ export class PayoutService {
           ]),
           // Subtotal
           [
-            { text: 'Subtotal', colSpan: 1 + metadataKeys.length, bold: true },
+            {
+              text: `Total for ${groupKey}`,
+              colSpan: 2 + metadataKeys.length,
+              bold: true,
+              alignment: 'right',
+            },
+            {}, // Platform placehold
             ...new Array(metadataKeys.length).fill({}),
             {
               text: `$${items.reduce((acc, i) => acc + Number(i.grossRevenue), 0).toFixed(2)}`,
@@ -671,14 +667,21 @@ export class PayoutService {
         ];
 
         docContent.push(
-          { text: groupKey, style: 'subheader', margin: [0, 10, 0, 5] },
+          {
+            text: groupKey,
+            style: 'subheader',
+            margin: [0, 10, 0, 5],
+            color: '#0f172a',
+          },
           {
             table: {
               headerRows: 1,
               widths: widths,
               body: tableBody,
             },
+            layout: 'lightHorizontalLines',
           },
+          { text: ' ', margin: [0, 5] }, // Spacer
         );
       });
 
@@ -688,6 +691,7 @@ export class PayoutService {
           header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10] },
           subheader: { fontSize: 14, bold: true, margin: [0, 10, 0, 5] },
           tableHeader: { bold: true, fontSize: 10, fillColor: '#eeeeee' },
+          small: { fontSize: 8, color: '#64748b' },
         },
         defaultStyle: { fontSize: 10, columnGap: 10 },
       };

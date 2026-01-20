@@ -58,4 +58,42 @@ describe('UniversalParserUtil', () => {
     expect(row1['Pay Period']).toBe('July, 2025');
     expect(row1['Amount, $']).toBe('1,963.99');
   });
+  it('should identify the correct header row for AEBN format (Title row then Header)', () => {
+    const aebnMockData = [
+      [
+        'Dec. 2025_Studio Statistics - Payout by Title  AEBN Webmaster (1)',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+      ],
+      [
+        'Title',
+        'Total',
+        'PPM',
+        'Rental',
+        'Download',
+        'Studio',
+        'Vendor Number',
+      ],
+      [
+        'Teen (18+) Bait 5',
+        '$3.74',
+        '$0.95',
+        '$0.00',
+        '$2.79',
+        '18 Eighteen, The Score Group',
+        'AMG0169',
+      ],
+    ];
+
+    const headerIndex = scanForHeader(aebnMockData);
+    // Row 0: "Title" appears in string, score might be 1.
+    // Row 1: "Title", "Total", "PPM", "Rental", "Download", "Studio", "Vendor Number"
+    // "Title", "Total", "Rental", "Download", "Studio", "Vendor" (in Vendor Number), "Number" are all keywords.
+    // Score should be very high (>= 5).
+    expect(headerIndex).toBe(1);
+  });
 });

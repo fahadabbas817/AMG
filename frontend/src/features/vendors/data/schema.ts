@@ -2,21 +2,22 @@ import { z } from 'zod'
 
 export const vendorBankDetailsSchema = z
   .object({
-    bankName: z.string().min(1, 'Bank name is required'),
-    accountNumber: z.string().min(1, 'Account number is required'),
-    bankAddress: z.string().min(1, 'Bank address is required'),
-    vendorAddress: z.string().optional(), // New field
-    ibanRouting: z.string().optional(), // Made optional per request
-    swiftCode: z.string().optional(), // DB allows null, so make optional
-    currency: z.string().min(1, 'Currency is required'),
-    payoutMethod: z.string().min(1, 'Payout method is required'),
-    paypalEmail: z.string().optional().or(z.literal('')),
-    accountType: z.string().optional(), // Changed to optional or dropdown value
+    bankName: z.string().nullable().optional(),
+    accountNumber: z.string().nullable().optional(),
+    bankAddress: z.string().nullable().optional(),
+    vendorAddress: z.string().nullable().optional(),
+    ibanRouting: z.string().nullable().optional(),
+    swiftCode: z.string().nullable().optional(),
+    currency: z.string().nullable().optional(),
+    payoutMethod: z.string().nullable().optional(),
+    paypalEmail: z.string().nullable().optional(),
+    accountType: z.string().nullable().optional(),
   })
   .superRefine((data, ctx) => {
     // Require "paypalEmail" (which acts as Wise Tag/Email) for PAYPAL, WISE, ZELLE
     const methodsRequiringEmail = ['PAYPAL', 'WISE', 'ZELLE']
     if (
+      data.payoutMethod &&
       methodsRequiringEmail.includes(data.payoutMethod) &&
       !data.paypalEmail
     ) {
@@ -30,20 +31,20 @@ export const vendorBankDetailsSchema = z
 
 export const vendorSchema = z.object({
   companyName: z.string().min(1, 'Company name is required'),
-  corporateName: z.string().optional(),
-  dbaName: z.string().optional(),
-  taxId: z.string().optional(),
-  contactName: z.string().min(1, 'Contact name is required'),
+  corporateName: z.string().nullable().optional(),
+  dbaName: z.string().nullable().optional(),
+  taxId: z.string().nullable().optional(),
+  contactName: z.string().nullable().optional(),
   email: z.string().email('Invalid email address'),
-  vendorNumber: z.string().min(1, 'Vendor number is required'),
-  phone: z.string().optional(), // Made optional
-  address: z.string().min(1, 'Address is required'),
-  contractSignatory: z.string().min(1, 'Contract signatory is required'),
-  password: z.string().optional(),
+  vendorNumber: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
+  contractSignatory: z.string().nullable().optional(),
+  password: z.string().nullable().optional(),
   subLabels: z.array(
     z.object({ value: z.string().min(1, 'Label cannot be empty') })
   ),
-  bankDetails: vendorBankDetailsSchema,
+  bankDetails: vendorBankDetailsSchema.optional(),
   // Section 5: Platforms (Bonus) - Schema only, might not be in DTO yet
   platformIds: z.array(z.string()).optional(),
 })

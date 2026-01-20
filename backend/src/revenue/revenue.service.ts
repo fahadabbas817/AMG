@@ -3,6 +3,7 @@ import {
   NotFoundException,
   InternalServerErrorException,
   BadRequestException,
+  ConflictException,
 } from '@nestjs/common';
 import { parseSheet, scanForHeader } from './utils/universal-parser.util';
 import { RevenueNormalizationService } from './revenue-normalization.service';
@@ -39,13 +40,44 @@ export class RevenueService {
     const rawRows = parseSheet(file.buffer, { raw: true });
 
     // 3. Smart Scan for Header
-    let headerRowIndex = -1;
+    const autoHeaderIndex = scanForHeader(rawRows);
+    let headerRowIndex = autoHeaderIndex;
+
     // Check if we have a saved template
     if (platform.mappingTemplate) {
-      headerRowIndex = platform.mappingTemplate.headerRowIndex;
-    } else {
-      // Auto-detect
-      headerRowIndex = scanForHeader(rawRows);
+      const templateIndex = platform.mappingTemplate.headerRowIndex;
+      // If template index is valid
+      if (templateIndex < rawRows.length) {
+        // Compare scores to decide whether to trust template or auto-scan
+        // We need calculateRowScore imported from universal-parser
+        const { calculateRowScore } = require('./utils/universal-parser.util');
+        const templateScore = calculateRowScore(rawRows[templateIndex]);
+        const autoScore = calculateRowScore(rawRows[autoHeaderIndex]);
+
+        // Trust template UNLESS auto-scan is significantly better
+        // And if template score is very low (e.g. 0 or 1 like a title row)
+        // If template score is >= 2, we respect it (user might have chosen a weird header)
+        // But if template score < 2 AND auto > template, we switch.
+        // Actually, for this specific case: Template=0 (Title="Dec...", score=0 or 1), Auto=1 (Header, score=6).
+        console.log(
+          `[SmartScan] Template Index: ${templateIndex} (Score: ${templateScore}) | Auto Index: ${autoHeaderIndex} (Score: ${autoScore})`,
+        );
+
+        // Override if Auto-Scan is significantly better (diff >= 2)
+        // OR if Auto-Scan is better match and template score is low (< 3)
+        // This handles:
+        // Case 1: Title Row (Score ~3) vs Header Row (Score ~8) -> 8 > 3+2 (True) -> Override
+        // Case 2: Metadata Row (Score ~2) vs Header Row (Score ~6) -> 6 > 2+2 (True) -> Override
+        // Case 3: Valid Header A (Score 6) vs Valid Header B (Score 6) -> No Override
+        if (autoScore > templateScore + 2) {
+          console.warn(
+            `[SmartScan] Overriding Template (Index ${templateIndex}) with Auto-Detected (Index ${autoHeaderIndex}) due to better score.`,
+          );
+          headerRowIndex = autoHeaderIndex;
+        } else {
+          headerRowIndex = templateIndex;
+        }
+      }
     }
 
     let detectedHeaders: string[] = [];
@@ -145,10 +177,18 @@ export class RevenueService {
             lineItemName = row[key];
           } else if (mappedField === 'rawVendorName') {
             rawVendorName = row[key];
+          } else if (mappedField === 'vendorId') {
+            // NEW: Extract Vendor ID for Tier 1 matching
+            metadata['csvVendorId'] = row[key]; // Store temporarily in metadata or separate field?
+            // Let's allow it to be a top-level property on the object passed to Matcher
           } else {
             metadata[key] = row[key];
           }
         });
+
+        // We attach csvVendorId to the object
+        const csvVendorId =
+          (usageMapping['vendorId'] && row[usageMapping['vendorId']]) || null;
 
         if (!rawVendorName && grossRevenue === 0) {
           return null;
@@ -158,6 +198,7 @@ export class RevenueService {
           grossRevenue,
           lineItemName,
           rawVendorName,
+          csvVendorId, // PASSED TO MATCHER
           metadata,
           periodStart: new Date(month),
           periodEnd: new Date(month),
@@ -207,12 +248,26 @@ export class RevenueService {
 
     // Aggregate
     const summaryMap = new Map<string, any>();
+    const unmatchedMap = new Map<string, any>(); // Group Unmatched by SubLabel
 
     matchedData.forEach((row) => {
       // Must be matched to be in summary? Yes, likely.
-      // But we should also show unmatched volume potentially?
       // For Step 3 Payout Review, we only care about who gets PAID (Matched).
-      if (!row.vendorId) return;
+      if (!row.vendorId) {
+        const key = row.rawVendorName || 'Unknown';
+        if (!unmatchedMap.has(key)) {
+          unmatchedMap.set(key, {
+            rawVendorName: key,
+            grossRevenue: 0,
+            count: 0,
+            status: 'UNMATCHED',
+          });
+        }
+        const entry = unmatchedMap.get(key);
+        entry.grossRevenue += Number(row.grossRevenue);
+        entry.count += 1;
+        return;
+      }
 
       if (!summaryMap.has(row.vendorId)) {
         const vendor = vendorMap.get(row.vendorId);
@@ -243,11 +298,17 @@ export class RevenueService {
       return { ...v, commission, net };
     });
 
+    // Aggregated Unmatched Items
+    const unmatchedItems = Array.from(unmatchedMap.values()).sort(
+      (a, b) => b.grossRevenue - a.grossRevenue,
+    );
+
     return {
       reportId: null, // Indicates Dry Run
       invoiceRef: invoiceNumber || null,
       totalAmount: totalAmount,
       vendors: vendorsSummary,
+      unmatched: unmatchedItems, // Return for Frontend
     };
   }
 
@@ -260,68 +321,132 @@ export class RevenueService {
     invoiceNumber?: string,
     paymentStatus?: 'PAID' | 'PENDING',
   ) {
-    // 1. Process Data
-    const {
-      params: { platform, headerRowIndex },
-      matchedData,
-    } = await this.processReportData(file, platformId, month, mapping);
+    // 1. Calculate Fingerprint (SHA-256 of header + first 5 rows)
+    // We use a partial content hash to detect "Same Content" even if filename differs,
+    // OR we can just hash the whole buffer. Hashing whole buffer is safer for exact match.
+    // Requirement: "duplicate report... by name or by first 5 to 10 records"
+    const crypto = require('crypto');
+    const fingerprint = crypto
+      .createHash('sha256')
+      .update(file.buffer.slice(0, 5000)); // Hash first 5KB or similar? Or parse rows first?
+    // Let's parse rows to be consistent with "records" check.
+    // Actually, hashing the raw buffer is fastest and most accurate for "Same File".
+    // But if they renamed 1 column, buffer hash changes.
+    // Let's stick to "Duplicate Check" logic inside `processReportData` or separate?
+    // For now, simple buffer hash or filename check is a good start.
+    // User asked: "by name or by first 5 to 10 records".
 
-    // 2. Persist Template (if mapping provided)
-    if (mapping) {
-      await this.prisma.platformMappingTemplate.upsert({
-        where: { platformId: platform.id },
-        create: {
-          platformId: platform.id,
-          mappingRules: mapping,
-          headerRowIndex: headerRowIndex,
-        },
-        update: {
-          mappingRules: mapping,
-          headerRowIndex: headerRowIndex,
+    // Let's implement a robust check:
+    // 1. Filename + Platform + Month Check (Existing Check)
+    // 2. Content Fingerprint (First 10 lines of CSV)
+
+    const fileContent = file.buffer.toString('utf-8'); // CAREFUL with large files.
+    // Better: Read first 10 lines.
+    const firstLines = fileContent.split('\n').slice(0, 10).join('\n').trim();
+    const contentFingerprint = crypto
+      .createHash('sha256')
+      .update(firstLines)
+      .digest('hex');
+
+    // DUPLICATE CHECK
+    const existingDupe = await this.prisma.revenueReport.findFirst({
+      where: {
+        OR: [
+          {
+            filename: file.originalname,
+            platformId: platformId,
+            month: month,
+          },
+          {
+            fingerprint: contentFingerprint,
+            platformId: platformId,
+          },
+        ],
+      },
+    });
+
+    if (existingDupe) {
+      // 409 Conflict for Duplicates
+      throw new ConflictException(
+        `Duplicate Report Detected! A report with similar content or name (${existingDupe.filename}) already exists for this platform.`,
+      );
+    }
+
+    // 2. Process Data
+    const { matchedData, params } = await this.processReportData(
+      file,
+      platformId,
+      month,
+      mapping,
+    );
+
+    // Persist Mapping if provided (using detected header row)
+    if (mapping && Object.keys(mapping).length > 0) {
+      await this.prisma.platform.update({
+        where: { id: platformId },
+        data: {
+          mappingTemplate: {
+            upsert: {
+              create: {
+                mappingRules: mapping,
+                headerRowIndex: params.headerRowIndex,
+              },
+              update: {
+                mappingRules: mapping,
+                headerRowIndex: params.headerRowIndex,
+              },
+            },
+          },
         },
       });
     }
 
-    // 3. Database Transaction
+    const platform = params.platform;
+
+    // 4. Database Transaction
     try {
-      const result = await this.prisma.$transaction(async (tx) => {
-        const report = await tx.revenueReport.create({
-          data: {
-            filename: file.originalname,
-            rawFileUrl: '',
-            status: 'PROCESSED', // DIRECTLY TO PROCESSED (Approved)
-            platformId: platform.id,
-            totalAmount: totalAmount,
-            month: new Date(month),
-            invoiceRef: invoiceNumber || null,
-            paymentStatus: paymentStatus || 'PENDING',
-          },
-        });
+      const result = await this.prisma.$transaction(
+        async (tx) => {
+          const report = await tx.revenueReport.create({
+            data: {
+              filename: file.originalname,
+              fingerprint: contentFingerprint,
+              rawFileUrl: '',
+              status: 'PROCESSED', // DIRECTLY TO PROCESSED (Approved)
+              platformId: platform.id,
+              totalAmount: totalAmount,
+              month: new Date(month),
+              invoiceRef: invoiceNumber || null,
+              paymentStatus: paymentStatus || 'PENDING',
+            },
+          });
 
-        await tx.revenueRecord.createMany({
-          data: matchedData.map((row) => ({
+          await tx.revenueRecord.createMany({
+            data: matchedData.map((row) => ({
+              reportId: report.id,
+              vendorId: row.vendorId,
+              rawVendorName: row.rawVendorName,
+              platformId: platform.id,
+              periodStart: new Date(month),
+              periodEnd: new Date(month),
+              grossRevenue: row.grossRevenue,
+              lineItemName: row.lineItemName,
+              metadata: row.metadata,
+              rawLineData: row.originalRow,
+              status: row.status,
+            })),
+          });
+
+          return {
+            message: 'Revenue report saved successfully',
             reportId: report.id,
-            vendorId: row.vendorId,
-            rawVendorName: row.rawVendorName,
-            platformId: platform.id,
-            periodStart: new Date(month),
-            periodEnd: new Date(month),
-            grossRevenue: row.grossRevenue,
-            lineItemName: row.lineItemName,
-            metadata: row.metadata,
-            rawLineData: row.originalRow,
-            status: row.status,
-          })),
-        });
+            totalRecords: matchedData.length,
+          };
+        },
+        { timeout: 20000 },
+      );
 
-        return {
-          message: 'Revenue report saved successfully',
-          reportId: report.id,
-          totalRecords: matchedData.length,
-        };
-      });
-
-      // 4. Trigger Sync (This is now the FINAL Step, so we auto-sync)
+      // 5. Trigger Sync (This is now the FINAL Step, so we auto-sync)
       // The user has already reviewed the dry run summary and clicked "Confirm & Sync"
       this.syncReport(result.reportId).catch((err) => {
         console.error(
@@ -705,5 +830,168 @@ export class RevenueService {
       message: 'Unpaid records deleted successfully',
       count: result.count,
     };
+  }
+
+  // HUB METHODS
+  // HUB METHODS
+  async findAllReports(page = 1, limit = 10, search?: string) {
+    const skip = (page - 1) * limit;
+    const whereClause: any = {};
+
+    if (search) {
+      whereClause.OR = [
+        { filename: { contains: search, mode: 'insensitive' } },
+        // { platform: { name: { contains: search, mode: 'insensitive' } } }, // Relation filter if needed
+      ];
+    }
+
+    const [data, total] = await Promise.all([
+      this.prisma.revenueReport.findMany({
+        where: whereClause,
+        include: {
+          platform: true,
+          _count: {
+            select: { records: true },
+          },
+        },
+        orderBy: { uploadDate: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.revenueReport.count({ where: whereClause }),
+    ]);
+
+    // Enhance data with Payout Count (Manual query to avoid complexity)
+    const enhancedData = await Promise.all(
+      data.map(async (report) => {
+        const payoutCount = await this.prisma.payout.count({
+          where: { items: { some: { reportId: report.id } } },
+        });
+        return { ...report, payoutCount };
+      }),
+    );
+
+    return {
+      data: enhancedData,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async findReportById(id: string) {
+    const report = await this.prisma.revenueReport.findUnique({
+      where: { id },
+      include: {
+        platform: true,
+        records: {
+          include: {
+            vendor: true,
+          },
+          orderBy: {
+            grossRevenue: 'desc', // Optional: Sort by revenue
+          },
+        },
+        _count: {
+          select: { records: true },
+        },
+      },
+    });
+
+    if (!report) throw new NotFoundException('Report not found');
+
+    // Fetch Linked Payouts
+    const payouts = await this.prisma.payout.findMany({
+      where: { items: { some: { reportId: id } } },
+      include: { vendor: true },
+    });
+
+    return { ...report, payouts };
+  }
+
+  async deleteReport(id: string, force = false, deletePayouts = false) {
+    // 1. Check for Payouts
+    const payoutsCount = await this.prisma.payout.count({
+      where: { items: { some: { reportId: id } } },
+    });
+
+    if (payoutsCount > 0 && !force) {
+      throw new ConflictException(
+        `This report is linked to ${payoutsCount} payout(s). Please confirm deletion strategy.`,
+      );
+    }
+
+    return this.prisma.$transaction(
+      async (tx) => {
+        // 2. Handle Payouts / Records
+        if (payoutsCount > 0) {
+          if (deletePayouts) {
+            // Cascade Delete (DANGEROUS: Deletes the actual Payouts)
+            // First delete Payouts linked to this report
+            const linkedPayouts = await tx.payout.findMany({
+              where: { items: { some: { reportId: id } } },
+              select: { id: true, qbBillId: true },
+            });
+            const payoutIds = linkedPayouts.map((p) => p.id);
+
+            // NEW: Sync Delete to QuickBooks
+            for (const payout of linkedPayouts) {
+              if (payout.qbBillId) {
+                try {
+                  await this.qbSyncService.deleteBill(payout.qbBillId);
+                } catch (error: any) {
+                  // strict sync: If QBO fails, we MUST abort local delete.
+                  // Exception: If the bill is already gone (404), we consider it successful/idempotent.
+                  const isNotFound =
+                    error.status === 404 ||
+                    (error.message &&
+                      error.message.toLowerCase().includes('not found'));
+
+                  if (isNotFound) {
+                    // Already deleted in QBO, safe to proceed
+                    console.warn(
+                      `Bill ${payout.qbBillId} not found in QBO, proceeding with local delete.`,
+                    );
+                  } else {
+                    // Any other error -> Abort Transaction
+                    throw new InternalServerErrorException(
+                      `Failed to delete QBO Bill ${payout.qbBillId}. Aborting to maintain sync. Error: ${error.message}`,
+                    );
+                  }
+                }
+              }
+            }
+
+            await tx.payout.deleteMany({
+              where: { id: { in: payoutIds } },
+            });
+          } else {
+            // UNLINK STRATEGY: Keep Payouts, but detach Records from Report
+            // Set reportId = null for records that have a Payout
+            await tx.revenueRecord.updateMany({
+              where: { reportId: id, payoutId: { not: null } },
+              data: { reportId: null },
+            });
+          }
+        }
+
+        // 3. Delete Remaining Records (Unpaid ones, or all if we deleted payouts)
+        // Note: If we "Unlinked", the paid records now have reportId=null, so they won't be deleted here.
+        // If we "Deleted Payouts", those records might still exist?
+        // Wait, if we deleted Payouts, the records might still have payoutId=null now? No, the records are deleted if cascading.
+        // But let's assume records stick around.
+        // We want to delete ALL records associated with this report, UNLESS they were unlinked above.
+        await tx.revenueRecord.deleteMany({ where: { reportId: id } });
+
+        // 4. Delete Report
+        await tx.revenueReport.delete({ where: { id } });
+
+        return { message: 'Report deleted successfully' };
+      },
+      { timeout: 100000 },
+    );
   }
 }

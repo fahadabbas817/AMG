@@ -15,12 +15,12 @@ import { PayoutMethod } from '../../../prisma/generated/enums';
 export class BankDetailsDto {
   @ApiProperty({ example: 'Global Bank', description: 'Name of the bank' })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   bankName: string;
 
   @ApiProperty({ example: '1234567890', description: 'Bank account number' })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   accountNumber: string;
 
   @ApiPropertyOptional({
@@ -57,7 +57,7 @@ export class BankDetailsDto {
     description: 'Currency code (e.g., USD, EUR)',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   currency: string;
 
   @ApiProperty({
@@ -66,6 +66,7 @@ export class BankDetailsDto {
     description: 'Method of payout',
   })
   @IsEnum(PayoutMethod)
+  @IsOptional()
   payoutMethod: PayoutMethod;
 
   @ApiPropertyOptional({
@@ -74,7 +75,7 @@ export class BankDetailsDto {
   })
   @ValidateIf((o) => o.payoutMethod === PayoutMethod.PAYPAL)
   @IsEmail()
-  @IsNotEmpty()
+  @IsOptional()
   paypalEmail?: string;
 
   @ApiPropertyOptional({
@@ -97,7 +98,7 @@ export class CreateVendorDto {
 
   @ApiProperty({ example: 'John Doe', description: 'Primary contact person' })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   contactName: string;
 
   @ApiProperty({
@@ -109,7 +110,7 @@ export class CreateVendorDto {
 
   @ApiProperty({ example: 'VEND-001', description: 'Unique vendor identifier' })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   vendorNumber: string;
 
   @ApiPropertyOptional({

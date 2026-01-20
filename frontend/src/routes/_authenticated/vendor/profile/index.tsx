@@ -2,9 +2,6 @@ import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Header } from '@/components/layout/header'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { useGetVendor } from '@/features/vendors/api/useGetVendor'
 import { EditProfileDialog } from '@/features/vendors/components/edit-profile-dialog'
 import { ProfileInfoCard } from '@/features/vendors/components/profile-info-card'
@@ -74,16 +71,6 @@ function VendorProfilePage() {
 
   return (
     <>
-      <Header>
-        <div className='flex items-center gap-4'>
-          {/* Breadcrumbs could go here */}
-          <h1 className='text-xl font-bold'>My Profile</h1>
-        </div>
-        <div className='ms-auto flex items-center space-x-4'>
-          <ThemeSwitch />
-          <ProfileDropdown />
-        </div>
-      </Header>
       <div className='flex flex-1 flex-col gap-6 p-8 pt-6'>
         <h2 className='text-3xl font-bold tracking-tight'>
           Profile Management

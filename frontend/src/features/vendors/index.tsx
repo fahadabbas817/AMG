@@ -1,8 +1,5 @@
 import { getRouteApi } from '@tanstack/react-router'
-import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { useGetVendors } from './api/useGetVendors'
 import { VendorsDialogs } from './components/vendors-dialogs'
 import { VendorsPrimaryButtons } from './components/vendors-primary-buttons'
@@ -27,13 +24,6 @@ export function Vendors() {
 
   return (
     <VendorsProvider>
-      <Header fixed>
-        <div className='ms-auto flex items-center space-x-4'>
-          <ThemeSwitch />
-          <ProfileDropdown />
-        </div>
-      </Header>
-
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>

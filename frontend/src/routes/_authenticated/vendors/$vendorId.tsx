@@ -50,9 +50,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog'
-import { Header } from '@/components/layout/header'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { useCreatePayout } from '@/features/payouts/api/useCreatePayout'
 import { useGetUnpaidSummaries } from '@/features/payouts/api/useGetUnpaidSummaries'
 import { useDeleteUnpaid } from '@/features/revenue/api/useDeleteUnpaid'
@@ -155,13 +152,6 @@ function VendorDetails() {
 
   return (
     <>
-      <Header>
-        <div className='ms-auto flex items-center space-x-4'>
-          <ThemeSwitch />
-          <ProfileDropdown />
-        </div>
-      </Header>
-
       <div className='bg-muted/40 min-h-screen space-y-6 p-8 pb-32'>
         {/* Header content */}
         <div className='flex items-start justify-between gap-4'>

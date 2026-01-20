@@ -336,7 +336,7 @@ function PayoutActionsCell({ row, table }: { row: any; table: any }) {
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link
-                to={'/_authenticated/payouts/$payoutId' as any}
+                to={'/payouts/$payoutId' as any}
                 params={{ payoutId: payout.id } as any}
               >
                 <Eye className='mr-2 h-4 w-4' />

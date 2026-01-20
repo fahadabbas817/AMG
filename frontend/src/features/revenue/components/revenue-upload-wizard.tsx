@@ -92,7 +92,17 @@ export const RevenueUploadWizard = () => {
       toast.success('Revenue report saved and synced successfully.')
       navigate({ to: '/' })
     } catch (error: any) {
-      toast.error('Failed to save report: ' + error.message)
+      // Check for Conflict (409) with specific duplicate message
+      if (error.response?.status === 409) {
+        toast.error(
+          error.response.data?.message ||
+            'A duplicate report for this month/platform already exists. Please delete the existing report before re-uploading.'
+        )
+      } else {
+        toast.error(
+          'Failed to save report: ' + (error.message || 'Unknown error')
+        )
+      }
     }
   }
 

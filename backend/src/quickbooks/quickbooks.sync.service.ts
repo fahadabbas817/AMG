@@ -67,9 +67,14 @@ export class QuickbooksSyncService {
       if (!match) {
         match = qbVendors.find(
           (q) =>
-            q.DisplayName === local.companyName ||
+            (q.DisplayName &&
+              local.companyName &&
+              q.DisplayName.toLowerCase().trim() ===
+                local.companyName.toLowerCase().trim()) ||
             (q.PrimaryEmailAddr?.Address &&
-              q.PrimaryEmailAddr.Address === local.email),
+              local.email &&
+              q.PrimaryEmailAddr.Address.toLowerCase().trim() ===
+                local.email.toLowerCase().trim()),
         );
       }
 
@@ -461,7 +466,7 @@ export class QuickbooksSyncService {
                 `temp_${Date.now()}_${Math.random().toString(36).substring(7)}@placeholder.com`,
               phone: qboVendor.PrimaryPhone?.FreeFormNumber,
               address: this.formatQboAddress(qboVendor.BillAddr),
-              vendorNumber: `QB${qboVendor.Id}`,
+              vendorNumber: `V-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 1000)}`,
               qbVendorId: qboVendor.Id,
               password: 'temp_password_change_me',
               bankDetails: qboVendor.AcctNum

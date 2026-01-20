@@ -264,18 +264,18 @@ export const RevenueUploadStep1: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className='flex items-center justify-between border-t pt-4'>
+      <div className='flex flex-col-reverse items-center justify-between gap-4 border-t pt-4 sm:flex-row'>
         <Button
           variant='ghost'
           onClick={() => navigate({ to: '/revenue/manual' })}
           disabled={isLoading}
-          className='text-muted-foreground hover:text-foreground'
+          className='text-muted-foreground hover:text-foreground w-full sm:w-auto'
         >
           Want to enter manually?
         </Button>
-        <div className='flex items-center gap-4'>
+        <div className='flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center'>
           {!isValid && (
-            <p className='text-muted-foreground flex items-center gap-2 text-sm'>
+            <p className='text-muted-foreground flex items-center justify-center gap-2 text-sm'>
               <AlertCircle className='h-4 w-4' />
               Fill required fields to proceed
             </p>
@@ -284,7 +284,7 @@ export const RevenueUploadStep1: React.FC<Props> = ({
             onClick={onNext}
             disabled={!isValid || isLoading}
             size='lg'
-            className='min-w-[150px]'
+            className='w-full min-w-[150px] sm:w-auto'
           >
             {isLoading ? (
               <>

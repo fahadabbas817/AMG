@@ -37,6 +37,7 @@ export type RevenueReportSumAggregateOutputType = {
 export type RevenueReportMinAggregateOutputType = {
   id: string | null
   filename: string | null
+  fingerprint: string | null
   uploadDate: Date | null
   status: string | null
   rawFileUrl: string | null
@@ -50,6 +51,7 @@ export type RevenueReportMinAggregateOutputType = {
 export type RevenueReportMaxAggregateOutputType = {
   id: string | null
   filename: string | null
+  fingerprint: string | null
   uploadDate: Date | null
   status: string | null
   rawFileUrl: string | null
@@ -63,6 +65,7 @@ export type RevenueReportMaxAggregateOutputType = {
 export type RevenueReportCountAggregateOutputType = {
   id: number
   filename: number
+  fingerprint: number
   uploadDate: number
   status: number
   rawFileUrl: number
@@ -86,6 +89,7 @@ export type RevenueReportSumAggregateInputType = {
 export type RevenueReportMinAggregateInputType = {
   id?: true
   filename?: true
+  fingerprint?: true
   uploadDate?: true
   status?: true
   rawFileUrl?: true
@@ -99,6 +103,7 @@ export type RevenueReportMinAggregateInputType = {
 export type RevenueReportMaxAggregateInputType = {
   id?: true
   filename?: true
+  fingerprint?: true
   uploadDate?: true
   status?: true
   rawFileUrl?: true
@@ -112,6 +117,7 @@ export type RevenueReportMaxAggregateInputType = {
 export type RevenueReportCountAggregateInputType = {
   id?: true
   filename?: true
+  fingerprint?: true
   uploadDate?: true
   status?: true
   rawFileUrl?: true
@@ -212,6 +218,7 @@ export type RevenueReportGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 export type RevenueReportGroupByOutputType = {
   id: string
   filename: string
+  fingerprint: string | null
   uploadDate: Date
   status: string
   rawFileUrl: string
@@ -248,6 +255,7 @@ export type RevenueReportWhereInput = {
   NOT?: Prisma.RevenueReportWhereInput | Prisma.RevenueReportWhereInput[]
   id?: Prisma.StringFilter<"RevenueReport"> | string
   filename?: Prisma.StringFilter<"RevenueReport"> | string
+  fingerprint?: Prisma.StringNullableFilter<"RevenueReport"> | string | null
   uploadDate?: Prisma.DateTimeFilter<"RevenueReport"> | Date | string
   status?: Prisma.StringFilter<"RevenueReport"> | string
   rawFileUrl?: Prisma.StringFilter<"RevenueReport"> | string
@@ -263,6 +271,7 @@ export type RevenueReportWhereInput = {
 export type RevenueReportOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   filename?: Prisma.SortOrder
+  fingerprint?: Prisma.SortOrderInput | Prisma.SortOrder
   uploadDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rawFileUrl?: Prisma.SortOrder
@@ -281,6 +290,7 @@ export type RevenueReportWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.RevenueReportWhereInput[]
   NOT?: Prisma.RevenueReportWhereInput | Prisma.RevenueReportWhereInput[]
   filename?: Prisma.StringFilter<"RevenueReport"> | string
+  fingerprint?: Prisma.StringNullableFilter<"RevenueReport"> | string | null
   uploadDate?: Prisma.DateTimeFilter<"RevenueReport"> | Date | string
   status?: Prisma.StringFilter<"RevenueReport"> | string
   rawFileUrl?: Prisma.StringFilter<"RevenueReport"> | string
@@ -296,6 +306,7 @@ export type RevenueReportWhereUniqueInput = Prisma.AtLeast<{
 export type RevenueReportOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   filename?: Prisma.SortOrder
+  fingerprint?: Prisma.SortOrderInput | Prisma.SortOrder
   uploadDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rawFileUrl?: Prisma.SortOrder
@@ -317,6 +328,7 @@ export type RevenueReportScalarWhereWithAggregatesInput = {
   NOT?: Prisma.RevenueReportScalarWhereWithAggregatesInput | Prisma.RevenueReportScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"RevenueReport"> | string
   filename?: Prisma.StringWithAggregatesFilter<"RevenueReport"> | string
+  fingerprint?: Prisma.StringNullableWithAggregatesFilter<"RevenueReport"> | string | null
   uploadDate?: Prisma.DateTimeWithAggregatesFilter<"RevenueReport"> | Date | string
   status?: Prisma.StringWithAggregatesFilter<"RevenueReport"> | string
   rawFileUrl?: Prisma.StringWithAggregatesFilter<"RevenueReport"> | string
@@ -330,6 +342,7 @@ export type RevenueReportScalarWhereWithAggregatesInput = {
 export type RevenueReportCreateInput = {
   id?: string
   filename: string
+  fingerprint?: string | null
   uploadDate?: Date | string
   status: string
   rawFileUrl: string
@@ -344,6 +357,7 @@ export type RevenueReportCreateInput = {
 export type RevenueReportUncheckedCreateInput = {
   id?: string
   filename: string
+  fingerprint?: string | null
   uploadDate?: Date | string
   status: string
   rawFileUrl: string
@@ -358,6 +372,7 @@ export type RevenueReportUncheckedCreateInput = {
 export type RevenueReportUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   filename?: Prisma.StringFieldUpdateOperationsInput | string
+  fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -372,6 +387,7 @@ export type RevenueReportUpdateInput = {
 export type RevenueReportUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   filename?: Prisma.StringFieldUpdateOperationsInput | string
+  fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -386,6 +402,7 @@ export type RevenueReportUncheckedUpdateInput = {
 export type RevenueReportCreateManyInput = {
   id?: string
   filename: string
+  fingerprint?: string | null
   uploadDate?: Date | string
   status: string
   rawFileUrl: string
@@ -399,6 +416,7 @@ export type RevenueReportCreateManyInput = {
 export type RevenueReportUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   filename?: Prisma.StringFieldUpdateOperationsInput | string
+  fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -411,6 +429,7 @@ export type RevenueReportUpdateManyMutationInput = {
 export type RevenueReportUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   filename?: Prisma.StringFieldUpdateOperationsInput | string
+  fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -434,6 +453,7 @@ export type RevenueReportOrderByRelationAggregateInput = {
 export type RevenueReportCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   filename?: Prisma.SortOrder
+  fingerprint?: Prisma.SortOrder
   uploadDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rawFileUrl?: Prisma.SortOrder
@@ -451,6 +471,7 @@ export type RevenueReportAvgOrderByAggregateInput = {
 export type RevenueReportMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   filename?: Prisma.SortOrder
+  fingerprint?: Prisma.SortOrder
   uploadDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rawFileUrl?: Prisma.SortOrder
@@ -464,6 +485,7 @@ export type RevenueReportMaxOrderByAggregateInput = {
 export type RevenueReportMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   filename?: Prisma.SortOrder
+  fingerprint?: Prisma.SortOrder
   uploadDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rawFileUrl?: Prisma.SortOrder
@@ -560,6 +582,7 @@ export type RevenueReportUpdateOneWithoutRecordsNestedInput = {
 export type RevenueReportCreateWithoutPlatformInput = {
   id?: string
   filename: string
+  fingerprint?: string | null
   uploadDate?: Date | string
   status: string
   rawFileUrl: string
@@ -573,6 +596,7 @@ export type RevenueReportCreateWithoutPlatformInput = {
 export type RevenueReportUncheckedCreateWithoutPlatformInput = {
   id?: string
   filename: string
+  fingerprint?: string | null
   uploadDate?: Date | string
   status: string
   rawFileUrl: string
@@ -615,6 +639,7 @@ export type RevenueReportScalarWhereInput = {
   NOT?: Prisma.RevenueReportScalarWhereInput | Prisma.RevenueReportScalarWhereInput[]
   id?: Prisma.StringFilter<"RevenueReport"> | string
   filename?: Prisma.StringFilter<"RevenueReport"> | string
+  fingerprint?: Prisma.StringNullableFilter<"RevenueReport"> | string | null
   uploadDate?: Prisma.DateTimeFilter<"RevenueReport"> | Date | string
   status?: Prisma.StringFilter<"RevenueReport"> | string
   rawFileUrl?: Prisma.StringFilter<"RevenueReport"> | string
@@ -628,6 +653,7 @@ export type RevenueReportScalarWhereInput = {
 export type RevenueReportCreateWithoutRecordsInput = {
   id?: string
   filename: string
+  fingerprint?: string | null
   uploadDate?: Date | string
   status: string
   rawFileUrl: string
@@ -641,6 +667,7 @@ export type RevenueReportCreateWithoutRecordsInput = {
 export type RevenueReportUncheckedCreateWithoutRecordsInput = {
   id?: string
   filename: string
+  fingerprint?: string | null
   uploadDate?: Date | string
   status: string
   rawFileUrl: string
@@ -670,6 +697,7 @@ export type RevenueReportUpdateToOneWithWhereWithoutRecordsInput = {
 export type RevenueReportUpdateWithoutRecordsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   filename?: Prisma.StringFieldUpdateOperationsInput | string
+  fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -683,6 +711,7 @@ export type RevenueReportUpdateWithoutRecordsInput = {
 export type RevenueReportUncheckedUpdateWithoutRecordsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   filename?: Prisma.StringFieldUpdateOperationsInput | string
+  fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -696,6 +725,7 @@ export type RevenueReportUncheckedUpdateWithoutRecordsInput = {
 export type RevenueReportCreateManyPlatformInput = {
   id?: string
   filename: string
+  fingerprint?: string | null
   uploadDate?: Date | string
   status: string
   rawFileUrl: string
@@ -708,6 +738,7 @@ export type RevenueReportCreateManyPlatformInput = {
 export type RevenueReportUpdateWithoutPlatformInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   filename?: Prisma.StringFieldUpdateOperationsInput | string
+  fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -721,6 +752,7 @@ export type RevenueReportUpdateWithoutPlatformInput = {
 export type RevenueReportUncheckedUpdateWithoutPlatformInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   filename?: Prisma.StringFieldUpdateOperationsInput | string
+  fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -734,6 +766,7 @@ export type RevenueReportUncheckedUpdateWithoutPlatformInput = {
 export type RevenueReportUncheckedUpdateManyWithoutPlatformInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   filename?: Prisma.StringFieldUpdateOperationsInput | string
+  fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   uploadDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   rawFileUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -777,6 +810,7 @@ export type RevenueReportCountOutputTypeCountRecordsArgs<ExtArgs extends runtime
 export type RevenueReportSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   filename?: boolean
+  fingerprint?: boolean
   uploadDate?: boolean
   status?: boolean
   rawFileUrl?: boolean
@@ -793,6 +827,7 @@ export type RevenueReportSelect<ExtArgs extends runtime.Types.Extensions.Interna
 export type RevenueReportSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   filename?: boolean
+  fingerprint?: boolean
   uploadDate?: boolean
   status?: boolean
   rawFileUrl?: boolean
@@ -807,6 +842,7 @@ export type RevenueReportSelectCreateManyAndReturn<ExtArgs extends runtime.Types
 export type RevenueReportSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   filename?: boolean
+  fingerprint?: boolean
   uploadDate?: boolean
   status?: boolean
   rawFileUrl?: boolean
@@ -821,6 +857,7 @@ export type RevenueReportSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
 export type RevenueReportSelectScalar = {
   id?: boolean
   filename?: boolean
+  fingerprint?: boolean
   uploadDate?: boolean
   status?: boolean
   rawFileUrl?: boolean
@@ -831,7 +868,7 @@ export type RevenueReportSelectScalar = {
   month?: boolean
 }
 
-export type RevenueReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "filename" | "uploadDate" | "status" | "rawFileUrl" | "platformId" | "totalAmount" | "invoiceRef" | "paymentStatus" | "month", ExtArgs["result"]["revenueReport"]>
+export type RevenueReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "filename" | "fingerprint" | "uploadDate" | "status" | "rawFileUrl" | "platformId" | "totalAmount" | "invoiceRef" | "paymentStatus" | "month", ExtArgs["result"]["revenueReport"]>
 export type RevenueReportInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   platform?: boolean | Prisma.RevenueReport$platformArgs<ExtArgs>
   records?: boolean | Prisma.RevenueReport$recordsArgs<ExtArgs>
@@ -853,6 +890,7 @@ export type $RevenueReportPayload<ExtArgs extends runtime.Types.Extensions.Inter
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     filename: string
+    fingerprint: string | null
     uploadDate: Date
     status: string
     rawFileUrl: string
@@ -1288,6 +1326,7 @@ export interface Prisma__RevenueReportClient<T, Null = never, ExtArgs extends ru
 export interface RevenueReportFieldRefs {
   readonly id: Prisma.FieldRef<"RevenueReport", 'String'>
   readonly filename: Prisma.FieldRef<"RevenueReport", 'String'>
+  readonly fingerprint: Prisma.FieldRef<"RevenueReport", 'String'>
   readonly uploadDate: Prisma.FieldRef<"RevenueReport", 'DateTime'>
   readonly status: Prisma.FieldRef<"RevenueReport", 'String'>
   readonly rawFileUrl: Prisma.FieldRef<"RevenueReport", 'String'>
