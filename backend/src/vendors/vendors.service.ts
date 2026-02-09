@@ -109,14 +109,24 @@ export class VendorsService {
     });
   }
 
-  async findAll(page: number = 1, limit: number = 10) {
+  async findAll(page: number = 1, limit: number = 10, search?: string) {
     const pageNumber = Number(page);
     const limitNumber = Number(limit);
 
     const skip = (pageNumber - 1) * limitNumber;
 
+    const where: any = {};
+    if (search) {
+      where.OR = [
+        { companyName: { contains: search, mode: 'insensitive' } },
+        { vendorNumber: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
     const [data, total] = await Promise.all([
       this.prisma.vendor.findMany({
+        where,
         skip,
         take: limitNumber,
         include: {
@@ -124,7 +134,7 @@ export class VendorsService {
         },
         orderBy: { createdAt: 'desc' },
       }),
-      this.prisma.vendor.count(),
+      this.prisma.vendor.count({ where }),
     ]);
 
     return {

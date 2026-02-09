@@ -25,7 +25,8 @@ export function DataTableToolbar<TData>({
   searchPlaceholder = 'Filter...',
   searchKey,
   filters = [],
-}: DataTableToolbarProps<TData>) {
+  children,
+}: DataTableToolbarProps<TData> & { children?: React.ReactNode }) {
   const isFiltered =
     table.getState().columnFilters.length > 0 || table.getState().globalFilter
 
@@ -79,7 +80,10 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
+      <div className='flex items-center gap-2'>
+        {children}
+        <DataTableViewOptions table={table} />
+      </div>
     </div>
   )
 }

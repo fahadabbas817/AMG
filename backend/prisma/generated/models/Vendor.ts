@@ -34,6 +34,9 @@ export type VendorMinAggregateOutputType = {
   phone: string | null
   address: string | null
   contractSignatory: string | null
+  resetToken: string | null
+  resetTokenExpiry: Date | null
+  isFirstLogin: boolean | null
   corporateName: string | null
   dbaName: string | null
   taxId: string | null
@@ -52,6 +55,9 @@ export type VendorMaxAggregateOutputType = {
   phone: string | null
   address: string | null
   contractSignatory: string | null
+  resetToken: string | null
+  resetTokenExpiry: Date | null
+  isFirstLogin: boolean | null
   corporateName: string | null
   dbaName: string | null
   taxId: string | null
@@ -70,6 +76,9 @@ export type VendorCountAggregateOutputType = {
   phone: number
   address: number
   contractSignatory: number
+  resetToken: number
+  resetTokenExpiry: number
+  isFirstLogin: number
   corporateName: number
   dbaName: number
   taxId: number
@@ -91,6 +100,9 @@ export type VendorMinAggregateInputType = {
   phone?: true
   address?: true
   contractSignatory?: true
+  resetToken?: true
+  resetTokenExpiry?: true
+  isFirstLogin?: true
   corporateName?: true
   dbaName?: true
   taxId?: true
@@ -109,6 +121,9 @@ export type VendorMaxAggregateInputType = {
   phone?: true
   address?: true
   contractSignatory?: true
+  resetToken?: true
+  resetTokenExpiry?: true
+  isFirstLogin?: true
   corporateName?: true
   dbaName?: true
   taxId?: true
@@ -127,6 +142,9 @@ export type VendorCountAggregateInputType = {
   phone?: true
   address?: true
   contractSignatory?: true
+  resetToken?: true
+  resetTokenExpiry?: true
+  isFirstLogin?: true
   corporateName?: true
   dbaName?: true
   taxId?: true
@@ -215,10 +233,13 @@ export type VendorGroupByOutputType = {
   companyName: string
   contactName: string
   email: string
-  password: string
+  password: string | null
   phone: string | null
   address: string | null
   contractSignatory: string | null
+  resetToken: string | null
+  resetTokenExpiry: Date | null
+  isFirstLogin: boolean
   corporateName: string | null
   dbaName: string | null
   taxId: string | null
@@ -255,10 +276,13 @@ export type VendorWhereInput = {
   companyName?: Prisma.StringFilter<"Vendor"> | string
   contactName?: Prisma.StringFilter<"Vendor"> | string
   email?: Prisma.StringFilter<"Vendor"> | string
-  password?: Prisma.StringFilter<"Vendor"> | string
+  password?: Prisma.StringNullableFilter<"Vendor"> | string | null
   phone?: Prisma.StringNullableFilter<"Vendor"> | string | null
   address?: Prisma.StringNullableFilter<"Vendor"> | string | null
   contractSignatory?: Prisma.StringNullableFilter<"Vendor"> | string | null
+  resetToken?: Prisma.StringNullableFilter<"Vendor"> | string | null
+  resetTokenExpiry?: Prisma.DateTimeNullableFilter<"Vendor"> | Date | string | null
+  isFirstLogin?: Prisma.BoolFilter<"Vendor"> | boolean
   corporateName?: Prisma.StringNullableFilter<"Vendor"> | string | null
   dbaName?: Prisma.StringNullableFilter<"Vendor"> | string | null
   taxId?: Prisma.StringNullableFilter<"Vendor"> | string | null
@@ -279,10 +303,13 @@ export type VendorOrderByWithRelationInput = {
   companyName?: Prisma.SortOrder
   contactName?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  password?: Prisma.SortOrder
+  password?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   contractSignatory?: Prisma.SortOrderInput | Prisma.SortOrder
+  resetToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  resetTokenExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
+  isFirstLogin?: Prisma.SortOrder
   corporateName?: Prisma.SortOrderInput | Prisma.SortOrder
   dbaName?: Prisma.SortOrderInput | Prisma.SortOrder
   taxId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -306,10 +333,13 @@ export type VendorWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.VendorWhereInput | Prisma.VendorWhereInput[]
   companyName?: Prisma.StringFilter<"Vendor"> | string
   contactName?: Prisma.StringFilter<"Vendor"> | string
-  password?: Prisma.StringFilter<"Vendor"> | string
+  password?: Prisma.StringNullableFilter<"Vendor"> | string | null
   phone?: Prisma.StringNullableFilter<"Vendor"> | string | null
   address?: Prisma.StringNullableFilter<"Vendor"> | string | null
   contractSignatory?: Prisma.StringNullableFilter<"Vendor"> | string | null
+  resetToken?: Prisma.StringNullableFilter<"Vendor"> | string | null
+  resetTokenExpiry?: Prisma.DateTimeNullableFilter<"Vendor"> | Date | string | null
+  isFirstLogin?: Prisma.BoolFilter<"Vendor"> | boolean
   corporateName?: Prisma.StringNullableFilter<"Vendor"> | string | null
   dbaName?: Prisma.StringNullableFilter<"Vendor"> | string | null
   taxId?: Prisma.StringNullableFilter<"Vendor"> | string | null
@@ -330,10 +360,13 @@ export type VendorOrderByWithAggregationInput = {
   companyName?: Prisma.SortOrder
   contactName?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  password?: Prisma.SortOrder
+  password?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   contractSignatory?: Prisma.SortOrderInput | Prisma.SortOrder
+  resetToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  resetTokenExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
+  isFirstLogin?: Prisma.SortOrder
   corporateName?: Prisma.SortOrderInput | Prisma.SortOrder
   dbaName?: Prisma.SortOrderInput | Prisma.SortOrder
   taxId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -355,10 +388,13 @@ export type VendorScalarWhereWithAggregatesInput = {
   companyName?: Prisma.StringWithAggregatesFilter<"Vendor"> | string
   contactName?: Prisma.StringWithAggregatesFilter<"Vendor"> | string
   email?: Prisma.StringWithAggregatesFilter<"Vendor"> | string
-  password?: Prisma.StringWithAggregatesFilter<"Vendor"> | string
+  password?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
   phone?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
   address?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
   contractSignatory?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
+  resetToken?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
+  resetTokenExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"Vendor"> | Date | string | null
+  isFirstLogin?: Prisma.BoolWithAggregatesFilter<"Vendor"> | boolean
   corporateName?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
   dbaName?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
   taxId?: Prisma.StringNullableWithAggregatesFilter<"Vendor"> | string | null
@@ -374,10 +410,13 @@ export type VendorCreateInput = {
   companyName: string
   contactName: string
   email: string
-  password: string
+  password?: string | null
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  isFirstLogin?: boolean
   corporateName?: string | null
   dbaName?: string | null
   taxId?: string | null
@@ -398,10 +437,13 @@ export type VendorUncheckedCreateInput = {
   companyName: string
   contactName: string
   email: string
-  password: string
+  password?: string | null
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  isFirstLogin?: boolean
   corporateName?: string | null
   dbaName?: string | null
   taxId?: string | null
@@ -422,10 +464,13 @@ export type VendorUpdateInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isFirstLogin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -446,10 +491,13 @@ export type VendorUncheckedUpdateInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isFirstLogin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -470,10 +518,13 @@ export type VendorCreateManyInput = {
   companyName: string
   contactName: string
   email: string
-  password: string
+  password?: string | null
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  isFirstLogin?: boolean
   corporateName?: string | null
   dbaName?: string | null
   taxId?: string | null
@@ -489,10 +540,13 @@ export type VendorUpdateManyMutationInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isFirstLogin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -508,10 +562,13 @@ export type VendorUncheckedUpdateManyInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isFirstLogin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -539,6 +596,9 @@ export type VendorCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   contractSignatory?: Prisma.SortOrder
+  resetToken?: Prisma.SortOrder
+  resetTokenExpiry?: Prisma.SortOrder
+  isFirstLogin?: Prisma.SortOrder
   corporateName?: Prisma.SortOrder
   dbaName?: Prisma.SortOrder
   taxId?: Prisma.SortOrder
@@ -558,6 +618,9 @@ export type VendorMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   contractSignatory?: Prisma.SortOrder
+  resetToken?: Prisma.SortOrder
+  resetTokenExpiry?: Prisma.SortOrder
+  isFirstLogin?: Prisma.SortOrder
   corporateName?: Prisma.SortOrder
   dbaName?: Prisma.SortOrder
   taxId?: Prisma.SortOrder
@@ -576,6 +639,9 @@ export type VendorMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   contractSignatory?: Prisma.SortOrder
+  resetToken?: Prisma.SortOrder
+  resetTokenExpiry?: Prisma.SortOrder
+  isFirstLogin?: Prisma.SortOrder
   corporateName?: Prisma.SortOrder
   dbaName?: Prisma.SortOrder
   taxId?: Prisma.SortOrder
@@ -600,6 +666,14 @@ export type VendorCreatesubLabelsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type VendorUpdatesubLabelsInput = {
@@ -685,10 +759,13 @@ export type VendorCreateWithoutPlatformSplitsInput = {
   companyName: string
   contactName: string
   email: string
-  password: string
+  password?: string | null
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  isFirstLogin?: boolean
   corporateName?: string | null
   dbaName?: string | null
   taxId?: string | null
@@ -708,10 +785,13 @@ export type VendorUncheckedCreateWithoutPlatformSplitsInput = {
   companyName: string
   contactName: string
   email: string
-  password: string
+  password?: string | null
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  isFirstLogin?: boolean
   corporateName?: string | null
   dbaName?: string | null
   taxId?: string | null
@@ -747,10 +827,13 @@ export type VendorUpdateWithoutPlatformSplitsInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isFirstLogin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -770,10 +853,13 @@ export type VendorUncheckedUpdateWithoutPlatformSplitsInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isFirstLogin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -793,10 +879,13 @@ export type VendorCreateWithoutBankDetailsInput = {
   companyName: string
   contactName: string
   email: string
-  password: string
+  password?: string | null
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  isFirstLogin?: boolean
   corporateName?: string | null
   dbaName?: string | null
   taxId?: string | null
@@ -816,10 +905,13 @@ export type VendorUncheckedCreateWithoutBankDetailsInput = {
   companyName: string
   contactName: string
   email: string
-  password: string
+  password?: string | null
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  isFirstLogin?: boolean
   corporateName?: string | null
   dbaName?: string | null
   taxId?: string | null
@@ -855,10 +947,13 @@ export type VendorUpdateWithoutBankDetailsInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isFirstLogin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -878,10 +973,13 @@ export type VendorUncheckedUpdateWithoutBankDetailsInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isFirstLogin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -901,10 +999,13 @@ export type VendorCreateWithoutRevenueRecordsInput = {
   companyName: string
   contactName: string
   email: string
-  password: string
+  password?: string | null
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  isFirstLogin?: boolean
   corporateName?: string | null
   dbaName?: string | null
   taxId?: string | null
@@ -924,10 +1025,13 @@ export type VendorUncheckedCreateWithoutRevenueRecordsInput = {
   companyName: string
   contactName: string
   email: string
-  password: string
+  password?: string | null
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  isFirstLogin?: boolean
   corporateName?: string | null
   dbaName?: string | null
   taxId?: string | null
@@ -963,10 +1067,13 @@ export type VendorUpdateWithoutRevenueRecordsInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isFirstLogin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -986,10 +1093,13 @@ export type VendorUncheckedUpdateWithoutRevenueRecordsInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isFirstLogin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1009,10 +1119,13 @@ export type VendorCreateWithoutPayoutsInput = {
   companyName: string
   contactName: string
   email: string
-  password: string
+  password?: string | null
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  isFirstLogin?: boolean
   corporateName?: string | null
   dbaName?: string | null
   taxId?: string | null
@@ -1032,10 +1145,13 @@ export type VendorUncheckedCreateWithoutPayoutsInput = {
   companyName: string
   contactName: string
   email: string
-  password: string
+  password?: string | null
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  isFirstLogin?: boolean
   corporateName?: string | null
   dbaName?: string | null
   taxId?: string | null
@@ -1071,10 +1187,13 @@ export type VendorUpdateWithoutPayoutsInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isFirstLogin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1094,10 +1213,13 @@ export type VendorUncheckedUpdateWithoutPayoutsInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isFirstLogin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1117,10 +1239,13 @@ export type VendorCreateWithoutProfileChangeRequestsInput = {
   companyName: string
   contactName: string
   email: string
-  password: string
+  password?: string | null
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  isFirstLogin?: boolean
   corporateName?: string | null
   dbaName?: string | null
   taxId?: string | null
@@ -1140,10 +1265,13 @@ export type VendorUncheckedCreateWithoutProfileChangeRequestsInput = {
   companyName: string
   contactName: string
   email: string
-  password: string
+  password?: string | null
   phone?: string | null
   address?: string | null
   contractSignatory?: string | null
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  isFirstLogin?: boolean
   corporateName?: string | null
   dbaName?: string | null
   taxId?: string | null
@@ -1179,10 +1307,13 @@ export type VendorUpdateWithoutProfileChangeRequestsInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isFirstLogin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1202,10 +1333,13 @@ export type VendorUncheckedUpdateWithoutProfileChangeRequestsInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contractSignatory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isFirstLogin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   corporateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dbaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   taxId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1287,6 +1421,9 @@ export type VendorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   phone?: boolean
   address?: boolean
   contractSignatory?: boolean
+  resetToken?: boolean
+  resetTokenExpiry?: boolean
+  isFirstLogin?: boolean
   corporateName?: boolean
   dbaName?: boolean
   taxId?: boolean
@@ -1312,6 +1449,9 @@ export type VendorSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   phone?: boolean
   address?: boolean
   contractSignatory?: boolean
+  resetToken?: boolean
+  resetTokenExpiry?: boolean
+  isFirstLogin?: boolean
   corporateName?: boolean
   dbaName?: boolean
   taxId?: boolean
@@ -1331,6 +1471,9 @@ export type VendorSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   phone?: boolean
   address?: boolean
   contractSignatory?: boolean
+  resetToken?: boolean
+  resetTokenExpiry?: boolean
+  isFirstLogin?: boolean
   corporateName?: boolean
   dbaName?: boolean
   taxId?: boolean
@@ -1350,6 +1493,9 @@ export type VendorSelectScalar = {
   phone?: boolean
   address?: boolean
   contractSignatory?: boolean
+  resetToken?: boolean
+  resetTokenExpiry?: boolean
+  isFirstLogin?: boolean
   corporateName?: boolean
   dbaName?: boolean
   taxId?: boolean
@@ -1359,7 +1505,7 @@ export type VendorSelectScalar = {
   updatedAt?: boolean
 }
 
-export type VendorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "vendorNumber" | "companyName" | "contactName" | "email" | "password" | "phone" | "address" | "contractSignatory" | "corporateName" | "dbaName" | "taxId" | "subLabels" | "qbVendorId" | "createdAt" | "updatedAt", ExtArgs["result"]["vendor"]>
+export type VendorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "vendorNumber" | "companyName" | "contactName" | "email" | "password" | "phone" | "address" | "contractSignatory" | "resetToken" | "resetTokenExpiry" | "isFirstLogin" | "corporateName" | "dbaName" | "taxId" | "subLabels" | "qbVendorId" | "createdAt" | "updatedAt", ExtArgs["result"]["vendor"]>
 export type VendorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bankDetails?: boolean | Prisma.Vendor$bankDetailsArgs<ExtArgs>
   platformSplits?: boolean | Prisma.Vendor$platformSplitsArgs<ExtArgs>
@@ -1386,10 +1532,13 @@ export type $VendorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     companyName: string
     contactName: string
     email: string
-    password: string
+    password: string | null
     phone: string | null
     address: string | null
     contractSignatory: string | null
+    resetToken: string | null
+    resetTokenExpiry: Date | null
+    isFirstLogin: boolean
     corporateName: string | null
     dbaName: string | null
     taxId: string | null
@@ -1834,6 +1983,9 @@ export interface VendorFieldRefs {
   readonly phone: Prisma.FieldRef<"Vendor", 'String'>
   readonly address: Prisma.FieldRef<"Vendor", 'String'>
   readonly contractSignatory: Prisma.FieldRef<"Vendor", 'String'>
+  readonly resetToken: Prisma.FieldRef<"Vendor", 'String'>
+  readonly resetTokenExpiry: Prisma.FieldRef<"Vendor", 'DateTime'>
+  readonly isFirstLogin: Prisma.FieldRef<"Vendor", 'Boolean'>
   readonly corporateName: Prisma.FieldRef<"Vendor", 'String'>
   readonly dbaName: Prisma.FieldRef<"Vendor", 'String'>
   readonly taxId: Prisma.FieldRef<"Vendor", 'String'>

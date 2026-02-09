@@ -466,7 +466,7 @@ export class QuickbooksSyncService {
                 `temp_${Date.now()}_${Math.random().toString(36).substring(7)}@placeholder.com`,
               phone: qboVendor.PrimaryPhone?.FreeFormNumber,
               address: this.formatQboAddress(qboVendor.BillAddr),
-              vendorNumber: `V-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 1000)}`,
+              vendorNumber: `QB${qboVendor.Id}`,
               qbVendorId: qboVendor.Id,
               password: 'temp_password_change_me',
               bankDetails: qboVendor.AcctNum

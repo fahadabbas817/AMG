@@ -13,6 +13,7 @@ import {
   DollarSign,
   Upload,
   Inbox,
+  Headset,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -83,6 +84,11 @@ export const sidebarData: SidebarData = {
               url: '/revenue/list', // New List Page
               icon: Layers, // Or FileText
             },
+            {
+              title: 'Unallocated Funds',
+              url: '/revenue/unallocated',
+              icon: Inbox,
+            },
           ],
         },
         {
@@ -99,6 +105,11 @@ export const sidebarData: SidebarData = {
           title: 'Requests',
           url: '/requests',
           icon: Inbox,
+        },
+        {
+          title: 'Support',
+          url: '/support',
+          icon: Headset,
         },
         // {
         //   title: 'Secured by Clerk',

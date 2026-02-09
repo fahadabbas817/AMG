@@ -1,12 +1,34 @@
+import * as React from 'react'
 import { useMemo } from 'react'
 import { useForm, useFieldArray, Controller, useWatch } from 'react-hook-form'
 import { useNavigate } from '@tanstack/react-router'
-import { Plus, ArrowLeft, Trash2, Save } from 'lucide-react'
+import {
+  Plus,
+  ArrowLeft,
+  Trash2,
+  Save,
+  Check,
+  ChevronsUpDown,
+} from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -191,6 +213,9 @@ export const ManualRevenueForm = () => {
                   <TableHead className='w-[400px]'>
                     Vendor <span className='text-red-500'>*</span>
                   </TableHead>
+                  <TableHead className='w-[250px]'>
+                    Sub-Label / Description
+                  </TableHead>
                   <TableHead>Revenue</TableHead>
                   <TableHead className='w-[50px]'></TableHead>
                 </TableRow>
@@ -203,26 +228,123 @@ export const ManualRevenueForm = () => {
                         control={control}
                         name={`rows.${index}.vendorId`}
                         rules={{ required: true }}
-                        render={({ field }) => (
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder='Select Vendor' />
-                            </SelectTrigger>
-                            <SelectContent className='max-h-[300px]'>
-                              {vendors?.data?.map((v: any) => (
-                                <SelectItem key={v.id} value={v.id}>
-                                  {v.vendorNumber}: {v.companyName}{' '}
-                                  {v.subLabels?.length > 0
-                                    ? `(${v.subLabels[0]})`
-                                    : ''}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
+                        render={({ field }) => {
+                          const [open, setOpen] = React.useState(false)
+                          const selectedVendor = vendors?.data?.find(
+                            (v) => v.id === field.value
+                          )
+
+                          return (
+                            <Popover open={open} onOpenChange={setOpen}>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  aria-expanded={open}
+                                  className='w-full justify-between'
+                                >
+                                  {field.value
+                                    ? selectedVendor
+                                      ? `${selectedVendor.vendorNumber}: ${selectedVendor.companyName}`
+                                      : 'Vendor not found'
+                                    : 'Select vendor...'}
+                                  <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className='w-[400px] p-0'>
+                                <Command>
+                                  <CommandInput placeholder='Search vendor...' />
+                                  <CommandList>
+                                    <CommandEmpty>
+                                      No vendor found.
+                                    </CommandEmpty>
+                                    <CommandGroup>
+                                      {vendors?.data?.map((vendor: any) => (
+                                        <CommandItem
+                                          key={vendor.id}
+                                          value={`${vendor.companyName} ${vendor.vendorNumber}`}
+                                          onSelect={() => {
+                                            field.onChange(vendor.id)
+                                            // Reset sublabel when vendor changes
+                                            const currentRows =
+                                              control._formValues.rows
+                                            if (
+                                              currentRows &&
+                                              currentRows[index]
+                                            ) {
+                                              // We need to leverage setValue from useForm context if possible,
+                                              // but here we are in a render prop.
+                                              // Actually, we can just let the user re-select.
+                                              // But optimally we should clear it.
+                                            }
+                                            setOpen(false)
+                                          }}
+                                        >
+                                          <Check
+                                            className={cn(
+                                              'mr-2 h-4 w-4',
+                                              field.value === vendor.id
+                                                ? 'opacity-100'
+                                                : 'opacity-0'
+                                            )}
+                                          />
+                                          {vendor.vendorNumber}:{' '}
+                                          {vendor.companyName}
+                                        </CommandItem>
+                                      ))}
+                                    </CommandGroup>
+                                  </CommandList>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
+                          )
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Controller
+                        control={control}
+                        name={`rows.${index}.lineItemName`}
+                        render={({ field }) => {
+                          // Watch the vendor ID for this row to determine input type
+                          const currentVendorId = useWatch({
+                            control,
+                            name: `rows.${index}.vendorId`,
+                          })
+                          const vendor = vendors?.data?.find(
+                            (v: any) => v.id === currentVendorId
+                          )
+                          const hasSubLabels =
+                            vendor?.subLabels && vendor.subLabels.length > 0
+
+                          if (hasSubLabels) {
+                            return (
+                              <Select
+                                onValueChange={field.onChange}
+                                value={field.value}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder='Select Sub-Label' />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {vendor.subLabels.map((subLabel: string) => (
+                                    <SelectItem key={subLabel} value={subLabel}>
+                                      {subLabel}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            )
+                          }
+
+                          return (
+                            <Input
+                              placeholder='Description (Optional)'
+                              {...field}
+                              value={field.value || ''}
+                            />
+                          )
+                        }}
                       />
                     </TableCell>
                     <TableCell>

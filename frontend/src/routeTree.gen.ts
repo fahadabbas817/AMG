@@ -22,11 +22,13 @@ import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
 import { Route as authSignIn2RouteImport } from './routes/(auth)/sign-in-2'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
+import { Route as authResetPasswordRouteImport } from './routes/(auth)/reset-password'
 import { Route as authOtpRouteImport } from './routes/(auth)/otp'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedVendorsIndexRouteImport } from './routes/_authenticated/vendors/index'
 import { Route as AuthenticatedVendorIndexRouteImport } from './routes/_authenticated/vendor/index'
+import { Route as AuthenticatedSupportIndexRouteImport } from './routes/_authenticated/support/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedRequestsIndexRouteImport } from './routes/_authenticated/requests/index'
 import { Route as AuthenticatedPlatformsIndexRouteImport } from './routes/_authenticated/platforms/index'
@@ -52,6 +54,9 @@ const AuthenticatedPayoutsIndexLazyRouteImport = createFileRoute(
 )()
 const AuthenticatedRevenueUploadLazyRouteImport = createFileRoute(
   '/_authenticated/revenue/upload',
+)()
+const AuthenticatedRevenueUnallocatedLazyRouteImport = createFileRoute(
+  '/_authenticated/revenue/unallocated',
 )()
 const AuthenticatedRevenueManualLazyRouteImport = createFileRoute(
   '/_authenticated/revenue/manual',
@@ -111,6 +116,11 @@ const authSignInRoute = authSignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
+const authResetPasswordRoute = authResetPasswordRouteImport.update({
+  id: '/(auth)/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const authOtpRoute = authOtpRouteImport.update({
   id: '/(auth)/otp',
   path: '/otp',
@@ -147,6 +157,12 @@ const AuthenticatedVendorIndexRoute =
     path: '/vendor/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSupportIndexRoute =
+  AuthenticatedSupportIndexRouteImport.update({
+    id: '/support/',
+    path: '/support/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/',
@@ -178,6 +194,16 @@ const AuthenticatedRevenueUploadLazyRoute =
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any).lazy(() =>
     import('./routes/_authenticated/revenue/upload.lazy').then((d) => d.Route),
+  )
+const AuthenticatedRevenueUnallocatedLazyRoute =
+  AuthenticatedRevenueUnallocatedLazyRouteImport.update({
+    id: '/revenue/unallocated',
+    path: '/revenue/unallocated',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/revenue/unallocated.lazy').then(
+      (d) => d.Route,
+    ),
   )
 const AuthenticatedRevenueManualLazyRoute =
   AuthenticatedRevenueManualLazyRouteImport.update({
@@ -284,6 +310,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
   '/otp': typeof authOtpRoute
+  '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-in-2': typeof authSignIn2Route
   '/401': typeof errors401Route
@@ -302,11 +329,13 @@ export interface FileRoutesByFullPath {
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/vendors/$vendorId': typeof AuthenticatedVendorsVendorIdRoute
   '/revenue/manual': typeof AuthenticatedRevenueManualLazyRoute
+  '/revenue/unallocated': typeof AuthenticatedRevenueUnallocatedLazyRoute
   '/revenue/upload': typeof AuthenticatedRevenueUploadLazyRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/platforms': typeof AuthenticatedPlatformsIndexRoute
   '/requests': typeof AuthenticatedRequestsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/support': typeof AuthenticatedSupportIndexRoute
   '/vendor': typeof AuthenticatedVendorIndexRoute
   '/vendors': typeof AuthenticatedVendorsIndexRoute
   '/payouts': typeof AuthenticatedPayoutsIndexLazyRoute
@@ -322,6 +351,7 @@ export interface FileRoutesByTo {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/otp': typeof authOtpRoute
+  '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-in-2': typeof authSignIn2Route
   '/401': typeof errors401Route
@@ -340,11 +370,13 @@ export interface FileRoutesByTo {
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/vendors/$vendorId': typeof AuthenticatedVendorsVendorIdRoute
   '/revenue/manual': typeof AuthenticatedRevenueManualLazyRoute
+  '/revenue/unallocated': typeof AuthenticatedRevenueUnallocatedLazyRoute
   '/revenue/upload': typeof AuthenticatedRevenueUploadLazyRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/platforms': typeof AuthenticatedPlatformsIndexRoute
   '/requests': typeof AuthenticatedRequestsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/support': typeof AuthenticatedSupportIndexRoute
   '/vendor': typeof AuthenticatedVendorIndexRoute
   '/vendors': typeof AuthenticatedVendorsIndexRoute
   '/payouts': typeof AuthenticatedPayoutsIndexLazyRoute
@@ -363,6 +395,7 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/otp': typeof authOtpRoute
+  '/(auth)/reset-password': typeof authResetPasswordRoute
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-in-2': typeof authSignIn2Route
   '/(errors)/401': typeof errors401Route
@@ -381,11 +414,13 @@ export interface FileRoutesById {
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/_authenticated/vendors/$vendorId': typeof AuthenticatedVendorsVendorIdRoute
   '/_authenticated/revenue/manual': typeof AuthenticatedRevenueManualLazyRoute
+  '/_authenticated/revenue/unallocated': typeof AuthenticatedRevenueUnallocatedLazyRoute
   '/_authenticated/revenue/upload': typeof AuthenticatedRevenueUploadLazyRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/platforms/': typeof AuthenticatedPlatformsIndexRoute
   '/_authenticated/requests/': typeof AuthenticatedRequestsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/support/': typeof AuthenticatedSupportIndexRoute
   '/_authenticated/vendor/': typeof AuthenticatedVendorIndexRoute
   '/_authenticated/vendors/': typeof AuthenticatedVendorsIndexRoute
   '/_authenticated/payouts/': typeof AuthenticatedPayoutsIndexLazyRoute
@@ -404,6 +439,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/forgot-password'
     | '/otp'
+    | '/reset-password'
     | '/sign-in'
     | '/sign-in-2'
     | '/401'
@@ -422,11 +458,13 @@ export interface FileRouteTypes {
     | '/settings/notifications'
     | '/vendors/$vendorId'
     | '/revenue/manual'
+    | '/revenue/unallocated'
     | '/revenue/upload'
     | '/help-center'
     | '/platforms'
     | '/requests'
     | '/settings/'
+    | '/support'
     | '/vendor'
     | '/vendors'
     | '/payouts'
@@ -442,6 +480,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/forgot-password'
     | '/otp'
+    | '/reset-password'
     | '/sign-in'
     | '/sign-in-2'
     | '/401'
@@ -460,11 +499,13 @@ export interface FileRouteTypes {
     | '/settings/notifications'
     | '/vendors/$vendorId'
     | '/revenue/manual'
+    | '/revenue/unallocated'
     | '/revenue/upload'
     | '/help-center'
     | '/platforms'
     | '/requests'
     | '/settings'
+    | '/support'
     | '/vendor'
     | '/vendors'
     | '/payouts'
@@ -482,6 +523,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/(auth)/forgot-password'
     | '/(auth)/otp'
+    | '/(auth)/reset-password'
     | '/(auth)/sign-in'
     | '/(auth)/sign-in-2'
     | '/(errors)/401'
@@ -500,11 +542,13 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/notifications'
     | '/_authenticated/vendors/$vendorId'
     | '/_authenticated/revenue/manual'
+    | '/_authenticated/revenue/unallocated'
     | '/_authenticated/revenue/upload'
     | '/_authenticated/help-center/'
     | '/_authenticated/platforms/'
     | '/_authenticated/requests/'
     | '/_authenticated/settings/'
+    | '/_authenticated/support/'
     | '/_authenticated/vendor/'
     | '/_authenticated/vendors/'
     | '/_authenticated/payouts/'
@@ -522,6 +566,7 @@ export interface RootRouteChildren {
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   authForgotPasswordRoute: typeof authForgotPasswordRoute
   authOtpRoute: typeof authOtpRoute
+  authResetPasswordRoute: typeof authResetPasswordRoute
   authSignInRoute: typeof authSignInRoute
   authSignIn2Route: typeof authSignIn2Route
   errors401Route: typeof errors401Route
@@ -610,6 +655,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignInRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(auth)/reset-password': {
+      id: '/(auth)/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof authResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(auth)/otp': {
       id: '/(auth)/otp'
       path: '/otp'
@@ -652,6 +704,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVendorIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/support/': {
+      id: '/_authenticated/support/'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof AuthenticatedSupportIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
       path: '/'
@@ -685,6 +744,13 @@ declare module '@tanstack/react-router' {
       path: '/revenue/upload'
       fullPath: '/revenue/upload'
       preLoaderRoute: typeof AuthenticatedRevenueUploadLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/revenue/unallocated': {
+      id: '/_authenticated/revenue/unallocated'
+      path: '/revenue/unallocated'
+      fullPath: '/revenue/unallocated'
+      preLoaderRoute: typeof AuthenticatedRevenueUnallocatedLazyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/revenue/manual': {
@@ -834,10 +900,12 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedRevenueListRoute: typeof AuthenticatedRevenueListRoute
   AuthenticatedVendorsVendorIdRoute: typeof AuthenticatedVendorsVendorIdRoute
   AuthenticatedRevenueManualLazyRoute: typeof AuthenticatedRevenueManualLazyRoute
+  AuthenticatedRevenueUnallocatedLazyRoute: typeof AuthenticatedRevenueUnallocatedLazyRoute
   AuthenticatedRevenueUploadLazyRoute: typeof AuthenticatedRevenueUploadLazyRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedPlatformsIndexRoute: typeof AuthenticatedPlatformsIndexRoute
   AuthenticatedRequestsIndexRoute: typeof AuthenticatedRequestsIndexRoute
+  AuthenticatedSupportIndexRoute: typeof AuthenticatedSupportIndexRoute
   AuthenticatedVendorIndexRoute: typeof AuthenticatedVendorIndexRoute
   AuthenticatedVendorsIndexRoute: typeof AuthenticatedVendorsIndexRoute
   AuthenticatedPayoutsIndexLazyRoute: typeof AuthenticatedPayoutsIndexLazyRoute
@@ -858,10 +926,13 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedRevenueListRoute: AuthenticatedRevenueListRoute,
   AuthenticatedVendorsVendorIdRoute: AuthenticatedVendorsVendorIdRoute,
   AuthenticatedRevenueManualLazyRoute: AuthenticatedRevenueManualLazyRoute,
+  AuthenticatedRevenueUnallocatedLazyRoute:
+    AuthenticatedRevenueUnallocatedLazyRoute,
   AuthenticatedRevenueUploadLazyRoute: AuthenticatedRevenueUploadLazyRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedPlatformsIndexRoute: AuthenticatedPlatformsIndexRoute,
   AuthenticatedRequestsIndexRoute: AuthenticatedRequestsIndexRoute,
+  AuthenticatedSupportIndexRoute: AuthenticatedSupportIndexRoute,
   AuthenticatedVendorIndexRoute: AuthenticatedVendorIndexRoute,
   AuthenticatedVendorsIndexRoute: AuthenticatedVendorsIndexRoute,
   AuthenticatedPayoutsIndexLazyRoute: AuthenticatedPayoutsIndexLazyRoute,
@@ -883,6 +954,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   authForgotPasswordRoute: authForgotPasswordRoute,
   authOtpRoute: authOtpRoute,
+  authResetPasswordRoute: authResetPasswordRoute,
   authSignInRoute: authSignInRoute,
   authSignIn2Route: authSignIn2Route,
   errors401Route: errors401Route,

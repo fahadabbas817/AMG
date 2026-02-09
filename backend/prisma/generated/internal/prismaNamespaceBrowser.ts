@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Admin: 'Admin',
   Vendor: 'Vendor',
+  EmailLog: 'EmailLog',
   Platform: 'Platform',
   PlatformMappingTemplate: 'PlatformMappingTemplate',
   PlatformSplit: 'PlatformSplit',
@@ -100,6 +101,9 @@ export const VendorScalarFieldEnum = {
   phone: 'phone',
   address: 'address',
   contractSignatory: 'contractSignatory',
+  resetToken: 'resetToken',
+  resetTokenExpiry: 'resetTokenExpiry',
+  isFirstLogin: 'isFirstLogin',
   corporateName: 'corporateName',
   dbaName: 'dbaName',
   taxId: 'taxId',
@@ -110,6 +114,18 @@ export const VendorScalarFieldEnum = {
 } as const
 
 export type VendorScalarFieldEnum = (typeof VendorScalarFieldEnum)[keyof typeof VendorScalarFieldEnum]
+
+
+export const EmailLogScalarFieldEnum = {
+  id: 'id',
+  subject: 'subject',
+  body: 'body',
+  recipientCount: 'recipientCount',
+  sentBy: 'sentBy',
+  createdAt: 'createdAt'
+} as const
+
+export type EmailLogScalarFieldEnum = (typeof EmailLogScalarFieldEnum)[keyof typeof EmailLogScalarFieldEnum]
 
 
 export const PlatformScalarFieldEnum = {

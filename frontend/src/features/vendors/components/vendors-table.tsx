@@ -11,8 +11,10 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { Mail } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
+import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -23,6 +25,7 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import { Vendor } from '../types'
+import { EmailComposeModal } from './email-compose-modal'
 import { vendorsColumns as columns } from './vendors-columns'
 
 type VendorsTableProps = {
@@ -41,6 +44,7 @@ export function VendorsTable({
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false)
 
   const {
     columnFilters,
@@ -90,6 +94,10 @@ export function VendorsTable({
     ensurePageInRange(table.getPageCount())
   }, [table, ensurePageInRange])
 
+  const selectedVendorIds = table
+    .getFilteredSelectedRowModel()
+    .rows.map((row) => row.original.id)
+
   return (
     <div
       className={cn(
@@ -97,7 +105,25 @@ export function VendorsTable({
         'flex flex-1 flex-col gap-4'
       )}
     >
-      <DataTableToolbar table={table} searchKey='companyName' />
+      <EmailComposeModal
+        isOpen={isEmailModalOpen}
+        onClose={() => setIsEmailModalOpen(false)}
+        selectedVendorIds={selectedVendorIds}
+        onSuccess={() => setRowSelection({})}
+      />
+
+      <DataTableToolbar table={table} searchKey='companyName'>
+        <Button
+          variant='default'
+          size='sm'
+          className='ml-auto hidden h-8 lg:flex'
+          onClick={() => setIsEmailModalOpen(true)}
+          disabled={selectedVendorIds.length === 0}
+        >
+          <Mail className='mr-2 h-4 w-4' />
+          Compose Email ({selectedVendorIds.length})
+        </Button>
+      </DataTableToolbar>
       <div className='overflow-hidden rounded-md border'>
         <Table>
           <TableHeader>

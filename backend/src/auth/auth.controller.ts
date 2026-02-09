@@ -17,6 +17,7 @@ import {
 import { AuthService } from './auth.service';
 import { LoginAuthDto, LoginVendorDto } from './dto/login-auth.dto';
 import { CreateAdminDto } from './dto/create-admin.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import express from 'express';
 
@@ -121,5 +122,17 @@ export class AuthController {
       role: req.user.role, // 👈 This is what you need
       name: req.user.name,
     };
+  }
+
+  @Post('reset-password')
+  @ApiOperation({ summary: 'Reset Vendor Password' })
+  @ApiResponse({ status: 200, description: 'Password reset successful.' })
+  @ApiResponse({ status: 401, description: 'Invalid token or email.' })
+  async resetPassword(@Body() resetDto: ResetPasswordDto) {
+    return this.authService.resetPassword(
+      resetDto.token,
+      resetDto.newPassword,
+      resetDto.email,
+    );
   }
 }

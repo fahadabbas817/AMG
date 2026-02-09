@@ -21,10 +21,15 @@ model Vendor {
   companyName       String
   contactName       String
   email             String  @unique
-  password          String // Hashed
+  password          String? // Hashed, nullable for existing/unregistered vendors
   phone             String?
   address           String? // "5001 SW 74th Ct..."
   contractSignatory String? // "Tushna Pirrongelli"
+
+  // Auth Fields
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  isFirstLogin     Boolean   @default(true)
 
   // New Fields
   corporateName String? // For Vendors
@@ -45,6 +50,15 @@ model Vendor {
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   profileChangeRequests ProfileChangeRequest[]
+}
+
+model EmailLog {
+  id             String   @id @default(uuid())
+  subject        String
+  body           String
+  recipientCount Int
+  sentBy         String // Admin ID
+  createdAt      DateTime @default(now())
 }
 
 model Platform {

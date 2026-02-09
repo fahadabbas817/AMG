@@ -194,6 +194,16 @@ export class RevenueService {
           return null;
         }
 
+        // Filter out "Total" rows (Common in CSV reports)
+        if (
+          (rawVendorName &&
+            rawVendorName.toLowerCase().includes('total') &&
+            !rawVendorName.toLowerCase().includes('totally')) || // naive check
+          (lineItemName && lineItemName.toLowerCase().includes('total'))
+        ) {
+          return null;
+        }
+
         return {
           grossRevenue,
           lineItemName,
@@ -993,5 +1003,254 @@ export class RevenueService {
       },
       { timeout: 100000 },
     );
+  }
+
+  async getUnallocatedGroups(
+    page: number = 1,
+    limit: number = 20,
+    search?: string,
+  ) {
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+    const skip = (pageNumber - 1) * limitNumber;
+
+    // Build Where Clause
+    const where: any = {
+      vendorId: null, // Only Unallocated
+      status: { in: ['UNPROCESSED', 'UNMATCHED'] },
+      grossRevenue: { gt: 0 }, // Ignore zero revenue lines if any
+    };
+
+    if (search) {
+      where.rawVendorName = { contains: search, mode: 'insensitive' };
+    }
+
+    // 1. Group By rawVendorName
+    const groupByResult = await this.prisma.revenueRecord.groupBy({
+      by: ['rawVendorName'],
+      where,
+      _sum: {
+        grossRevenue: true,
+      },
+      _count: {
+        id: true,
+      },
+      orderBy: {
+        _sum: {
+          grossRevenue: 'desc',
+        },
+      },
+    });
+
+    // 2. Client-side Pagination of Groups
+    const totalGroups = groupByResult.length;
+    const paginatedGroups = groupByResult.slice(skip, skip + limitNumber);
+
+    const formattedGroups = paginatedGroups.map((g) => ({
+      rawVendorName: g.rawVendorName,
+      totalRevenue: g._sum.grossRevenue || 0,
+      recordCount: g._count.id || 0,
+    }));
+
+    // 3. Calculate Global Totals (for Stats Cards)
+    // We can use aggregate for fast calculation
+    const globalStats = await this.prisma.revenueRecord.aggregate({
+      where,
+      _sum: {
+        grossRevenue: true,
+      },
+      _count: {
+        id: true,
+      },
+    });
+
+    return {
+      data: formattedGroups,
+      meta: {
+        total: totalGroups,
+        page: pageNumber,
+        limit: limitNumber,
+        totalPages: Math.ceil(totalGroups / limitNumber),
+        totalUnallocatedAmount: globalStats._sum.grossRevenue || 0,
+        totalUnallocatedCount: globalStats._count.id || 0,
+      },
+    };
+  }
+
+  async getUnallocatedDetails(rawVendorName: string) {
+    // Fetch all records for this raw name
+    return this.prisma.revenueRecord.findMany({
+      where: {
+        rawVendorName: rawVendorName,
+        vendorId: null,
+        status: { in: ['UNPROCESSED', 'UNMATCHED'] },
+      },
+      orderBy: { grossRevenue: 'desc' },
+    });
+  }
+
+  async deleteUnallocated(recordIds: string[]) {
+    if (!recordIds || recordIds.length === 0) return { count: 0 };
+
+    // Safety: Only delete UNMATCHED/UNPROCESSED records
+    const deleteResult = await this.prisma.revenueRecord.deleteMany({
+      where: {
+        id: { in: recordIds },
+        status: { in: ['UNPROCESSED', 'UNMATCHED'] },
+        payoutId: null, // Double safety
+      },
+    });
+
+    return { count: deleteResult.count };
+  }
+
+  async assignUnallocated(
+    rawVendorName: string,
+    targetVendorId: string,
+    subLabel?: string,
+    specificRecordIds?: string[],
+    addToVendorSubLabels?: boolean,
+  ) {
+    // 1. Validate Target Vendor
+    const vendor = await this.prisma.vendor.findUnique({
+      where: { id: targetVendorId },
+    });
+    if (!vendor) {
+      throw new NotFoundException('Vendor not found');
+    }
+
+    // 1.5 Update Vendor Sublabels if requested
+    if (
+      addToVendorSubLabels &&
+      rawVendorName &&
+      rawVendorName !== '__EMPTY__'
+    ) {
+      // Check if already exists
+      const existingLabels = vendor.subLabels || [];
+      // Case insensitive check? Or exact? exact for now, or maybe check both
+      if (!existingLabels.includes(rawVendorName)) {
+        await this.prisma.vendor.update({
+          where: { id: targetVendorId },
+          data: {
+            subLabels: {
+              push: rawVendorName,
+            },
+          },
+        });
+      }
+    }
+
+    // 2. Identify Records to Assign
+    let whereClause: any = {
+      rawVendorName: rawVendorName,
+      vendorId: null,
+      status: { in: ['UNPROCESSED', 'UNMATCHED'] },
+    };
+
+    if (specificRecordIds && specificRecordIds.length > 0) {
+      whereClause = {
+        ...whereClause,
+        id: { in: specificRecordIds },
+      };
+    }
+
+    const recordsToAssign = await this.prisma.revenueRecord.findMany({
+      where: whereClause,
+    });
+
+    if (recordsToAssign.length === 0) {
+      throw new BadRequestException('No unallocated records found to assign');
+    }
+
+    // 3. Get Platform Split for this Vendor (Needed for Commission)
+    // Records might belong to different Platforms!
+    // We must group by Platform to calculate correctly.
+    const recordsByPlatform = new Map<string, any[]>();
+    recordsToAssign.forEach((r) => {
+      if (!recordsByPlatform.has(r.platformId)) {
+        recordsByPlatform.set(r.platformId, []);
+      }
+      recordsByPlatform.get(r.platformId)?.push(r);
+    });
+
+    const results = [];
+
+    await this.prisma.$transaction(
+      async (tx) => {
+        for (const [
+          platformId,
+          platformRecords,
+        ] of recordsByPlatform.entries()) {
+          const pIds = platformRecords.map((r) => r.id);
+
+          // Fetch Platform & Split
+          const platform = await tx.platform.findUnique({
+            where: { id: platformId },
+          });
+          const split = await tx.platformSplit.findUnique({
+            where: {
+              vendorId_platformId: { vendorId: targetVendorId, platformId },
+            },
+          });
+
+          const rate = split
+            ? split.commissionRate
+            : platform?.defaultSplit || 0;
+
+          for (const record of platformRecords) {
+            const gross = Number(record.grossRevenue);
+            const commission = gross * rate;
+            const net = gross - commission;
+
+            await tx.revenueRecord.update({
+              where: { id: record.id },
+              data: {
+                vendorId: targetVendorId,
+                lineItemName: subLabel || record.lineItemName,
+                status: 'MATCHED',
+                amgCommission: commission,
+                vendorNet: net,
+              },
+            });
+          }
+        }
+      },
+      { timeout: 10000 },
+    );
+
+    // 4. Create Payouts & Sync (Post-Update)
+    const allRecordIds = recordsToAssign.map((r) => r.id);
+
+    try {
+      const payout = await this.payoutService.createPayout({
+        vendorId: targetVendorId,
+        recordIds: allRecordIds,
+      });
+
+      // 5. Sync to QBO
+      let syncResult: { status: string; billId?: string; error?: any } | null =
+        null;
+      try {
+        const bill = await this.qbSyncService.createBillFromPayout(
+          payout.payoutId,
+        );
+        syncResult = { status: 'SUCCESS', billId: bill.Id };
+      } catch (e) {
+        console.error('QBO Sync failed during assignment', e);
+        syncResult = { status: 'FAILED', error: e.message };
+      }
+
+      return {
+        message: 'Records assigned and payout created',
+        count: allRecordIds.length,
+        payoutId: payout.payoutId,
+        syncResult,
+      };
+    } catch (e) {
+      console.error('Payout creation failed', e);
+      throw new InternalServerErrorException(
+        'Assigned records but failed to create payout: ' + e.message,
+      );
+    }
   }
 }

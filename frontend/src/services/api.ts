@@ -34,4 +34,22 @@ const api = axios.create({
 //   }
 // )
 
+export const sendBroadcastEmail = async (data: {
+  vendorIds: string[]
+  subject: string
+  body: string
+  type: 'CUSTOM' | 'WELCOME'
+}) => {
+  const response = await api.post('/email/broadcast', data)
+  return response.data
+}
+
+export const getEmailLogs = async (params: {
+  page?: number
+  limit?: number
+}) => {
+  const response = await api.get('/email/logs', { params })
+  return response.data
+}
+
 export default api

@@ -10,6 +10,7 @@
  */
 export type * from './models/Admin.js'
 export type * from './models/Vendor.js'
+export type * from './models/EmailLog.js'
 export type * from './models/Platform.js'
 export type * from './models/PlatformMappingTemplate.js'
 export type * from './models/PlatformSplit.js'
