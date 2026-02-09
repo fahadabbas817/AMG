@@ -21,10 +21,20 @@ model Vendor {
   companyName       String
   contactName       String
   email             String  @unique
-  password          String // Hashed
+  password          String? // Hashed, nullable for existing/unregistered vendors
   phone             String?
   address           String? // "5001 SW 74th Ct..."
   contractSignatory String? // "Tushna Pirrongelli"
+
+  // Auth Fields
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  isFirstLogin     Boolean   @default(true)
+
+  // New Fields
+  corporateName String? // For Vendors
+  dbaName       String? // Doing Business As
+  taxId         String? // US Only
 
   // Critical for matching CSV rows to this vendor
   subLabels String[] // e.g. ["PornMegaLoad", "Score", "PornMegaWorld"]
@@ -40,6 +50,15 @@ model Vendor {
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   profileChangeRequests ProfileChangeRequest[]
+}
+
+model EmailLog {
+  id             String   @id @default(uuid())
+  subject        String
+  body           String
+  recipientCount Int
+  sentBy         String // Admin ID
+  createdAt      DateTime @default(now())
 }
 
 model Platform {
@@ -89,8 +108,9 @@ model BankDetails {
   // Fields strictly from your CSV (Rows 13-21)
   bankName      String? // "Bank Name XYZ"
   bankAddress   String? // "Bank Address"
+  vendorAddress String? // "Vendor Address on Bank Account"
   accountNumber String? // "Acct Number"
-  ibanRouting   String? // "IBAN / Routing"
+  ibanRouting   String? // "IBAN / Routing" (Now Optional)
   swiftCode     String? // "SWIFT Code"
   currency      String? // "Currency" (e.g. USD, EUR)
 
@@ -102,13 +122,14 @@ model BankDetails {
 }
 
 model RevenueReport {
-  id         String    @id @default(uuid())
-  filename   String
-  uploadDate DateTime  @default(now())
-  status     String // "PENDING", "PROCESSED", "ERROR"
-  rawFileUrl String
-  platformId String?
-  platform   Platform? @relation(fields: [platformId], references: [id])
+  id          String    @id @default(uuid())
+  filename    String
+  fingerprint String? // Hash of the file content for duplicate detection
+  uploadDate  DateTime  @default(now())
+  status      String // "PENDING", "PROCESSED", "ERROR"
+  rawFileUrl  String
+  platformId  String?
+  platform    Platform? @relation(fields: [platformId], references: [id])
 
   // New: Metadata about the "Big Check" from the Admin UI
   totalAmount   Decimal?              @db.Decimal(10, 2) // "Paid to AMG" amount
@@ -164,12 +185,13 @@ model Payout {
 
   items RevenueRecord[] // The records being paid
 
-  totalAmount  Decimal // Sum of vendorNet of all items
-  status       String // PENDING, PAID
-  paymentDate  DateTime?
-  referenceRef String? // Check # or Transaction ID
-  qbBillId     String? // QuickBooks Bill ID
-  syncStatus   String    @default("NOT_SYNCED") // "NOT_SYNCED", "PENDING_SYNC", "SYNCED", "FAILED"
+  totalAmount     Decimal // Sum of vendorNet of all items
+  status          String // PENDING, PAID
+  paymentDate     DateTime?
+  referenceRef    String? // Check # or Transaction ID
+  qbBillId        String? // QuickBooks Bill ID
+  syncStatus      String    @default("NOT_SYNCED") // "NOT_SYNCED", "PENDING_SYNC", "SYNCED", "FAILED"
+  subLabelSummary String? // Comma-separated list of sub-studios (e.g. "Tyjam, Brazzers")
 
   createdAt DateTime @default(now())
 }
@@ -188,6 +210,8 @@ enum PayoutMethod {
   ACH
   PAYPAL
   WIRE
+  WISE
+  ZELLE
 }
 
 model ProfileChangeRequest {

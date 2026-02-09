@@ -382,14 +382,6 @@ export type PlatformMappingTemplateUncheckedUpdateOneWithoutPlatformNestedInput 
   update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformMappingTemplateUpdateToOneWithWhereWithoutPlatformInput, Prisma.PlatformMappingTemplateUpdateWithoutPlatformInput>, Prisma.PlatformMappingTemplateUncheckedUpdateWithoutPlatformInput>
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type PlatformMappingTemplateCreateWithoutPlatformInput = {
   id?: string
   mappingRules: Prisma.JsonNullValueInput | runtime.InputJsonValue

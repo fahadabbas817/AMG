@@ -8,6 +8,7 @@ import {
   Query,
   Res,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import express from 'express';
 import {
@@ -61,6 +62,12 @@ export class PayoutController {
     @Body('paymentDate') paymentDate: string,
   ) {
     return this.payoutService.settlePayout(id, new Date(paymentDate));
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete a payout report (Reverts items to unpaid)' })
+  deletePayout(@Param('id') id: string) {
+    return this.payoutService.deletePayout(id);
   }
 
   @Get(':id/export')

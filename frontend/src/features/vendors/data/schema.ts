@@ -2,25 +2,28 @@ import { z } from 'zod'
 
 export const vendorBankDetailsSchema = z
   .object({
-    bankName: z.string().min(1, 'Bank name is required'),
-    accountNumber: z.string().min(1, 'Account number is required'),
-    bankAddress: z.string().min(1, 'Bank address is required'),
-    ibanRouting: z.string().min(1, 'IBAN/Routing is required'),
-    swiftCode: z.string().min(1, 'SWIFT code is required'),
-    currency: z.string().min(1, 'Currency is required'),
-    payoutMethod: z.string().min(1, 'Payout method is required'),
-    paypalEmail: z
-      .string()
-      .email('Invalid PayPal email')
-      .optional()
-      .or(z.literal('')),
-    accountType: z.string().min(1, 'Account type is required'),
+    bankName: z.string().nullable().optional(),
+    accountNumber: z.string().nullable().optional(),
+    bankAddress: z.string().nullable().optional(),
+    vendorAddress: z.string().nullable().optional(),
+    ibanRouting: z.string().nullable().optional(),
+    swiftCode: z.string().nullable().optional(),
+    currency: z.string().nullable().optional(),
+    payoutMethod: z.string().nullable().optional(),
+    paypalEmail: z.string().nullable().optional(),
+    accountType: z.string().nullable().optional(),
   })
   .superRefine((data, ctx) => {
-    if (data.payoutMethod === 'PAYPAL' && !data.paypalEmail) {
+    // Require "paypalEmail" (which acts as Wise Tag/Email) for PAYPAL, WISE, ZELLE
+    const methodsRequiringEmail = ['PAYPAL', 'WISE', 'ZELLE']
+    if (
+      data.payoutMethod &&
+      methodsRequiringEmail.includes(data.payoutMethod) &&
+      !data.paypalEmail
+    ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'PayPal email is required when payout method is PAYPAL',
+        message: 'This field is required for the selected payout method',
         path: ['paypalEmail'],
       })
     }
@@ -28,19 +31,38 @@ export const vendorBankDetailsSchema = z
 
 export const vendorSchema = z.object({
   companyName: z.string().min(1, 'Company name is required'),
-  contactName: z.string().min(1, 'Contact name is required'),
+  corporateName: z.string().nullable().optional(),
+  dbaName: z.string().nullable().optional(),
+  taxId: z.string().nullable().optional(),
+  contactName: z.string().nullable().optional(),
   email: z.string().email('Invalid email address'),
-  vendorNumber: z.string().min(1, 'Vendor number is required'),
-  phone: z.string().min(1, 'Phone number is required'),
-  address: z.string().min(1, 'Address is required'),
-  contractSignatory: z.string().min(1, 'Contract signatory is required'),
-  password: z.string().optional(),
+  vendorNumber: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
+  contractSignatory: z.string().nullable().optional(),
+  password: z.string().nullable().optional(),
   subLabels: z.array(
     z.object({ value: z.string().min(1, 'Label cannot be empty') })
   ),
-  bankDetails: vendorBankDetailsSchema,
+  bankDetails: vendorBankDetailsSchema.optional(),
   // Section 5: Platforms (Bonus) - Schema only, might not be in DTO yet
   platformIds: z.array(z.string()).optional(),
 })
 
 export type VendorFormSchema = z.infer<typeof vendorSchema>
+
+// Relaxed schema for updates: explicit optionality for everything
+export const vendorUpdateSchema = vendorSchema.partial()
+
+// But we might want some deep partials for objects like bankDetails?
+// zod .partial() is shallow. access bankDetails and make it partial too.
+// Actually, nested objects in .partial() are NOT automatically partial.
+// So we need to construct it manually or use a deep partial util if we had one.
+// Better approach: Re-define update schema to be partial of the base.
+export const vendorUpdateFormSchema = vendorSchema
+  .extend({
+    bankDetails: vendorBankDetailsSchema.partial(),
+    // arrays like subLabels are already optional in base or handled
+    subLabels: z.array(z.object({ value: z.string().optional() })).optional(),
+  })
+  .partial()

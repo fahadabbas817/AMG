@@ -15,12 +15,12 @@ import { PayoutMethod } from '../../../prisma/generated/enums';
 export class BankDetailsDto {
   @ApiProperty({ example: 'Global Bank', description: 'Name of the bank' })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   bankName: string;
 
   @ApiProperty({ example: '1234567890', description: 'Bank account number' })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   accountNumber: string;
 
   @ApiPropertyOptional({
@@ -30,6 +30,14 @@ export class BankDetailsDto {
   @IsString()
   @IsOptional()
   bankAddress?: string;
+
+  @ApiPropertyOptional({
+    example: '789 Vendor St, Los Angeles, CA',
+    description: 'Address of the vendor on the bank account',
+  })
+  @IsString()
+  @IsOptional()
+  vendorAddress?: string;
 
   @ApiPropertyOptional({
     example: 'US123456789',
@@ -49,7 +57,7 @@ export class BankDetailsDto {
     description: 'Currency code (e.g., USD, EUR)',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   currency: string;
 
   @ApiProperty({
@@ -58,6 +66,7 @@ export class BankDetailsDto {
     description: 'Method of payout',
   })
   @IsEnum(PayoutMethod)
+  @IsOptional()
   payoutMethod: PayoutMethod;
 
   @ApiPropertyOptional({
@@ -66,7 +75,7 @@ export class BankDetailsDto {
   })
   @ValidateIf((o) => o.payoutMethod === PayoutMethod.PAYPAL)
   @IsEmail()
-  @IsNotEmpty()
+  @IsOptional()
   paypalEmail?: string;
 
   @ApiPropertyOptional({
@@ -89,7 +98,7 @@ export class CreateVendorDto {
 
   @ApiProperty({ example: 'John Doe', description: 'Primary contact person' })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   contactName: string;
 
   @ApiProperty({
@@ -101,7 +110,7 @@ export class CreateVendorDto {
 
   @ApiProperty({ example: 'VEND-001', description: 'Unique vendor identifier' })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   vendorNumber: string;
 
   @ApiPropertyOptional({
@@ -135,6 +144,30 @@ export class CreateVendorDto {
   @IsString()
   @IsOptional()
   contractSignatory?: string;
+
+  @ApiPropertyOptional({
+    example: 'Tech Solutions Inc',
+    description: 'Corporate Name (if different)',
+  })
+  @IsString()
+  @IsOptional()
+  corporateName?: string;
+
+  @ApiPropertyOptional({
+    example: 'Tech Sol',
+    description: 'Doing Business As (DBA)',
+  })
+  @IsString()
+  @IsOptional()
+  dbaName?: string;
+
+  @ApiPropertyOptional({
+    example: '12-3456789',
+    description: 'Tax ID (EIN/SSN)',
+  })
+  @IsString()
+  @IsOptional()
+  taxId?: string;
 
   @ApiPropertyOptional({
     example: ['VIP', 'Urgent'],

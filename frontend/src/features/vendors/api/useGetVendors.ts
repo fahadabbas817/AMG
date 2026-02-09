@@ -5,6 +5,7 @@ import { VendorsApiResponse } from '../types'
 interface GetVendorsParams {
   page?: number
   limit?: number
+  search?: string
 }
 
 export const getVendorsQueryOptions = (params?: GetVendorsParams) =>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
+import { useDryRunRevenueReport } from '../api/useDryRunRevenueReport'
 import { usePreviewRevenueReport } from '../api/usePreviewRevenueReport'
 import { useSaveRevenueReport } from '../api/useSaveRevenueReport'
 import { RevenueUploadStep1, Step1Data } from './revenue-upload-step-1'
@@ -19,13 +20,14 @@ export const RevenueUploadWizard = () => {
     file: null,
   })
 
-  // New state for Step 3
-  const [savedReportId, setSavedReportId] = useState<string | null>(null)
+  // New state for Step 3: Stores the dry run summary (calculated but not saved)
+  const [dryRunSummary, setDryRunSummary] = useState<any>(null)
 
   const [previewData, setPreviewData] = useState<any>(null)
   const [mapping, setMapping] = useState<Record<string, string>>({})
 
   const previewMutation = usePreviewRevenueReport()
+  const dryRunMutation = useDryRunRevenueReport()
   const saveMutation = useSaveRevenueReport()
 
   const handleStep1Next = async () => {
@@ -51,11 +53,33 @@ export const RevenueUploadWizard = () => {
     }
   }
 
-  const handleSave = async () => {
+  // Step 2 Next: Run Dry Run (No Save)
+  const handleDryRun = async () => {
     if (!step1Data.file || !step1Data.platformId) return
 
     try {
-      const response = await saveMutation.mutateAsync({
+      const summary = await dryRunMutation.mutateAsync({
+        file: step1Data.file,
+        platformId: step1Data.platformId,
+        month: step1Data.month,
+        totalAmount: parseFloat(step1Data.totalAmount),
+        mapping: mapping,
+        invoiceNumber: step1Data.invoiceNumber,
+      })
+
+      setDryRunSummary(summary)
+      setStep(3)
+    } catch (error: any) {
+      toast.error('Failed to process dry run: ' + error.message)
+    }
+  }
+
+  // Step 3 Confirm: Final Save (Writes to DB + Syncs)
+  const handleFinalSave = async () => {
+    if (!step1Data.file || !step1Data.platformId) return
+
+    try {
+      await saveMutation.mutateAsync({
         file: step1Data.file,
         platformId: step1Data.platformId,
         month: step1Data.month,
@@ -65,18 +89,20 @@ export const RevenueUploadWizard = () => {
         paymentStatus: step1Data.paymentStatus,
       })
 
-      toast.success('Revenue report saved. Proceeding to review.')
-
-      // Store ID and move to Step 3
-      if (response && response.reportId) {
-        setSavedReportId(response.reportId)
-        setStep(3)
-      } else {
-        // Fallback if no ID (should not happen)
-        navigate({ to: '/' })
-      }
+      toast.success('Revenue report saved and synced successfully.')
+      navigate({ to: '/' })
     } catch (error: any) {
-      toast.error('Failed to save report: ' + error.message)
+      // Check for Conflict (409) with specific duplicate message
+      if (error.response?.status === 409) {
+        toast.error(
+          error.response.data?.message ||
+            'A duplicate report for this month/platform already exists. Please delete the existing report before re-uploading.'
+        )
+      } else {
+        toast.error(
+          'Failed to save report: ' + (error.message || 'Unknown error')
+        )
+      }
     }
   }
 
@@ -106,15 +132,17 @@ export const RevenueUploadWizard = () => {
           previewRows={previewData.sampleRows}
           mapping={mapping}
           onChange={setMapping}
-          onSave={handleSave}
+          onSave={handleDryRun}
           onBack={() => setStep(1)}
-          isSaving={saveMutation.isPending}
+          isSaving={dryRunMutation.isPending}
         />
       )}
 
-      {step === 3 && savedReportId && (
+      {step === 3 && dryRunSummary && (
         <RevenueUploadStep3
-          reportId={savedReportId}
+          summary={dryRunSummary}
+          onConfirm={handleFinalSave}
+          isSaving={saveMutation.isPending}
           invoiceNumber={step1Data.invoiceNumber}
         />
       )}

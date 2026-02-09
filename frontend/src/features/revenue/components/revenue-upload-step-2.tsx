@@ -31,7 +31,8 @@ export type Mapping = {
 const SYSTEM_FIELDS = [
   { key: 'grossRevenue', label: 'Revenue Amount', required: true },
   { key: 'lineItemName', label: 'Title / Line Item', required: false },
-  { key: 'rawVendorName', label: 'Vendor Name', required: true },
+  { key: 'rawVendorName', label: 'Vendor Name (Sub-label)', required: true },
+  { key: 'vendorId', label: 'Vendor ID / Number (Optional)', required: false }, // NEW
 ] as const
 
 type Props = {

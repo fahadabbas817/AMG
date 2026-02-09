@@ -24,7 +24,11 @@ import { useGetPlatforms } from '@/features/platforms/api/useGetPlatforms'
 import { useCreateVendor } from '../api/useCreateVendor'
 import { useGetVendor } from '../api/useGetVendor'
 import { useUpdateVendor } from '../api/useUpdateVendor'
-import { type VendorFormSchema } from '../data/schema'
+import {
+  vendorSchema,
+  vendorUpdateFormSchema,
+  type VendorFormSchema,
+} from '../data/schema'
 import { Vendor } from '../types'
 import { VendorForm } from './vendor-form'
 
@@ -146,18 +150,30 @@ export function VendorsMutateDialog({
   const defaultValues: Partial<VendorFormSchema> = vendorData
     ? {
         ...vendorData,
+        corporateName: vendorData.corporateName ?? '',
+        dbaName: vendorData.dbaName ?? '',
+        taxId: vendorData.taxId ?? '',
         subLabels: vendorData.subLabels?.map((l) => ({ value: l })) ?? [],
-        bankDetails: vendorData.bankDetails ?? {
-          bankName: '',
-          accountNumber: '',
-          bankAddress: '',
-          ibanRouting: '',
-          swiftCode: '',
-          currency: 'USD',
-          payoutMethod: 'WIRE',
-          paypalEmail: '',
-          accountType: 'Checking',
-        },
+        bankDetails: vendorData.bankDetails
+          ? {
+              ...vendorData.bankDetails,
+              ibanRouting: vendorData.bankDetails.ibanRouting ?? '',
+              swiftCode: vendorData.bankDetails.swiftCode ?? '',
+              vendorAddress: vendorData.bankDetails.vendorAddress ?? '',
+              accountType: vendorData.bankDetails.accountType ?? 'Checking',
+            }
+          : {
+              bankName: '',
+              accountNumber: '',
+              bankAddress: '',
+              ibanRouting: '',
+              swiftCode: '',
+              currency: 'USD',
+              payoutMethod: 'WIRE',
+              paypalEmail: '',
+              accountType: 'Checking',
+              vendorAddress: '',
+            },
         platformIds:
           fetchedVendor?.platformSplits?.map((split) => split.platformId) ?? [],
       }
@@ -170,17 +186,43 @@ export function VendorsMutateDialog({
     try {
       const formattedData = {
         ...data,
-        subLabels: data.subLabels.map((item: { value: string }) => item.value),
-        bankDetails: {
-          ...data.bankDetails,
-          paypalEmail: data.bankDetails.paypalEmail ?? '',
-        },
+        // Sanitize nullable fields to undefined to match DTO
+        corporateName: data.corporateName ?? undefined,
+        dbaName: data.dbaName ?? undefined,
+        taxId: data.taxId ?? undefined,
+        contactName: data.contactName ?? undefined,
+        vendorNumber: data.vendorNumber ?? undefined,
+        phone: data.phone ?? undefined,
+        address: data.address ?? undefined,
+        contractSignatory: data.contractSignatory ?? undefined,
+        password: data.password ?? undefined,
+        subLabels:
+          data.subLabels?.map(
+            (item: { value: string | undefined }) => item.value ?? ''
+          ) ?? [],
+        bankDetails: data.bankDetails
+          ? {
+              ...data.bankDetails,
+              bankName: data.bankDetails.bankName ?? undefined,
+              accountNumber: data.bankDetails.accountNumber ?? undefined,
+              bankAddress: data.bankDetails.bankAddress ?? undefined,
+              vendorAddress: data.bankDetails.vendorAddress ?? undefined,
+              ibanRouting: data.bankDetails.ibanRouting ?? undefined,
+              swiftCode: data.bankDetails.swiftCode ?? undefined,
+              currency: data.bankDetails.currency ?? undefined,
+              payoutMethod: data.bankDetails.payoutMethod ?? undefined,
+              accountType: data.bankDetails.accountType ?? undefined,
+              paypalEmail: data.bankDetails.paypalEmail ?? '',
+            }
+          : undefined,
       }
 
       if (isUpdate) {
+        // @ts-expect-error - Formatting logic handles types but TS is strict about mismatch
         await updateVendor({ id: currentRow.id, data: formattedData })
         toast.success('Vendor updated successfully')
       } else {
+        // @ts-expect-error - Formatting logic handles types but TS is strict about mismatch
         await createVendor(formattedData)
         toast.success('Vendor created successfully')
       }
@@ -215,6 +257,7 @@ export function VendorsMutateDialog({
               id='vendor-mutate-form'
               onSubmit={onSubmit}
               defaultValues={defaultValues}
+              schema={isUpdate ? vendorUpdateFormSchema : vendorSchema}
             >
               <PlatformSection />
             </VendorForm>

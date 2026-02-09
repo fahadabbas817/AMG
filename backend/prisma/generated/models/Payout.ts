@@ -46,6 +46,7 @@ export type PayoutMinAggregateOutputType = {
   referenceRef: string | null
   qbBillId: string | null
   syncStatus: string | null
+  subLabelSummary: string | null
   createdAt: Date | null
 }
 
@@ -59,6 +60,7 @@ export type PayoutMaxAggregateOutputType = {
   referenceRef: string | null
   qbBillId: string | null
   syncStatus: string | null
+  subLabelSummary: string | null
   createdAt: Date | null
 }
 
@@ -72,6 +74,7 @@ export type PayoutCountAggregateOutputType = {
   referenceRef: number
   qbBillId: number
   syncStatus: number
+  subLabelSummary: number
   createdAt: number
   _all: number
 }
@@ -97,6 +100,7 @@ export type PayoutMinAggregateInputType = {
   referenceRef?: true
   qbBillId?: true
   syncStatus?: true
+  subLabelSummary?: true
   createdAt?: true
 }
 
@@ -110,6 +114,7 @@ export type PayoutMaxAggregateInputType = {
   referenceRef?: true
   qbBillId?: true
   syncStatus?: true
+  subLabelSummary?: true
   createdAt?: true
 }
 
@@ -123,6 +128,7 @@ export type PayoutCountAggregateInputType = {
   referenceRef?: true
   qbBillId?: true
   syncStatus?: true
+  subLabelSummary?: true
   createdAt?: true
   _all?: true
 }
@@ -223,6 +229,7 @@ export type PayoutGroupByOutputType = {
   referenceRef: string | null
   qbBillId: string | null
   syncStatus: string
+  subLabelSummary: string | null
   createdAt: Date
   _count: PayoutCountAggregateOutputType | null
   _avg: PayoutAvgAggregateOutputType | null
@@ -259,6 +266,7 @@ export type PayoutWhereInput = {
   referenceRef?: Prisma.StringNullableFilter<"Payout"> | string | null
   qbBillId?: Prisma.StringNullableFilter<"Payout"> | string | null
   syncStatus?: Prisma.StringFilter<"Payout"> | string
+  subLabelSummary?: Prisma.StringNullableFilter<"Payout"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Payout"> | Date | string
   vendor?: Prisma.XOR<Prisma.VendorScalarRelationFilter, Prisma.VendorWhereInput>
   items?: Prisma.RevenueRecordListRelationFilter
@@ -274,6 +282,7 @@ export type PayoutOrderByWithRelationInput = {
   referenceRef?: Prisma.SortOrderInput | Prisma.SortOrder
   qbBillId?: Prisma.SortOrderInput | Prisma.SortOrder
   syncStatus?: Prisma.SortOrder
+  subLabelSummary?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   vendor?: Prisma.VendorOrderByWithRelationInput
   items?: Prisma.RevenueRecordOrderByRelationAggregateInput
@@ -292,6 +301,7 @@ export type PayoutWhereUniqueInput = Prisma.AtLeast<{
   referenceRef?: Prisma.StringNullableFilter<"Payout"> | string | null
   qbBillId?: Prisma.StringNullableFilter<"Payout"> | string | null
   syncStatus?: Prisma.StringFilter<"Payout"> | string
+  subLabelSummary?: Prisma.StringNullableFilter<"Payout"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Payout"> | Date | string
   vendor?: Prisma.XOR<Prisma.VendorScalarRelationFilter, Prisma.VendorWhereInput>
   items?: Prisma.RevenueRecordListRelationFilter
@@ -307,6 +317,7 @@ export type PayoutOrderByWithAggregationInput = {
   referenceRef?: Prisma.SortOrderInput | Prisma.SortOrder
   qbBillId?: Prisma.SortOrderInput | Prisma.SortOrder
   syncStatus?: Prisma.SortOrder
+  subLabelSummary?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.PayoutCountOrderByAggregateInput
   _avg?: Prisma.PayoutAvgOrderByAggregateInput
@@ -328,6 +339,7 @@ export type PayoutScalarWhereWithAggregatesInput = {
   referenceRef?: Prisma.StringNullableWithAggregatesFilter<"Payout"> | string | null
   qbBillId?: Prisma.StringNullableWithAggregatesFilter<"Payout"> | string | null
   syncStatus?: Prisma.StringWithAggregatesFilter<"Payout"> | string
+  subLabelSummary?: Prisma.StringNullableWithAggregatesFilter<"Payout"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Payout"> | Date | string
 }
 
@@ -340,6 +352,7 @@ export type PayoutCreateInput = {
   referenceRef?: string | null
   qbBillId?: string | null
   syncStatus?: string
+  subLabelSummary?: string | null
   createdAt?: Date | string
   vendor: Prisma.VendorCreateNestedOneWithoutPayoutsInput
   items?: Prisma.RevenueRecordCreateNestedManyWithoutPayoutInput
@@ -355,6 +368,7 @@ export type PayoutUncheckedCreateInput = {
   referenceRef?: string | null
   qbBillId?: string | null
   syncStatus?: string
+  subLabelSummary?: string | null
   createdAt?: Date | string
   items?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutPayoutInput
 }
@@ -368,6 +382,7 @@ export type PayoutUpdateInput = {
   referenceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qbBillId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   syncStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  subLabelSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   vendor?: Prisma.VendorUpdateOneRequiredWithoutPayoutsNestedInput
   items?: Prisma.RevenueRecordUpdateManyWithoutPayoutNestedInput
@@ -383,6 +398,7 @@ export type PayoutUncheckedUpdateInput = {
   referenceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qbBillId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   syncStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  subLabelSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.RevenueRecordUncheckedUpdateManyWithoutPayoutNestedInput
 }
@@ -397,6 +413,7 @@ export type PayoutCreateManyInput = {
   referenceRef?: string | null
   qbBillId?: string | null
   syncStatus?: string
+  subLabelSummary?: string | null
   createdAt?: Date | string
 }
 
@@ -409,6 +426,7 @@ export type PayoutUpdateManyMutationInput = {
   referenceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qbBillId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   syncStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  subLabelSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -422,6 +440,7 @@ export type PayoutUncheckedUpdateManyInput = {
   referenceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qbBillId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   syncStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  subLabelSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -450,6 +469,7 @@ export type PayoutCountOrderByAggregateInput = {
   referenceRef?: Prisma.SortOrder
   qbBillId?: Prisma.SortOrder
   syncStatus?: Prisma.SortOrder
+  subLabelSummary?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -468,6 +488,7 @@ export type PayoutMaxOrderByAggregateInput = {
   referenceRef?: Prisma.SortOrder
   qbBillId?: Prisma.SortOrder
   syncStatus?: Prisma.SortOrder
+  subLabelSummary?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -481,6 +502,7 @@ export type PayoutMinOrderByAggregateInput = {
   referenceRef?: Prisma.SortOrder
   qbBillId?: Prisma.SortOrder
   syncStatus?: Prisma.SortOrder
+  subLabelSummary?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -556,6 +578,7 @@ export type PayoutCreateWithoutVendorInput = {
   referenceRef?: string | null
   qbBillId?: string | null
   syncStatus?: string
+  subLabelSummary?: string | null
   createdAt?: Date | string
   items?: Prisma.RevenueRecordCreateNestedManyWithoutPayoutInput
 }
@@ -569,6 +592,7 @@ export type PayoutUncheckedCreateWithoutVendorInput = {
   referenceRef?: string | null
   qbBillId?: string | null
   syncStatus?: string
+  subLabelSummary?: string | null
   createdAt?: Date | string
   items?: Prisma.RevenueRecordUncheckedCreateNestedManyWithoutPayoutInput
 }
@@ -612,6 +636,7 @@ export type PayoutScalarWhereInput = {
   referenceRef?: Prisma.StringNullableFilter<"Payout"> | string | null
   qbBillId?: Prisma.StringNullableFilter<"Payout"> | string | null
   syncStatus?: Prisma.StringFilter<"Payout"> | string
+  subLabelSummary?: Prisma.StringNullableFilter<"Payout"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Payout"> | Date | string
 }
 
@@ -624,6 +649,7 @@ export type PayoutCreateWithoutItemsInput = {
   referenceRef?: string | null
   qbBillId?: string | null
   syncStatus?: string
+  subLabelSummary?: string | null
   createdAt?: Date | string
   vendor: Prisma.VendorCreateNestedOneWithoutPayoutsInput
 }
@@ -638,6 +664,7 @@ export type PayoutUncheckedCreateWithoutItemsInput = {
   referenceRef?: string | null
   qbBillId?: string | null
   syncStatus?: string
+  subLabelSummary?: string | null
   createdAt?: Date | string
 }
 
@@ -666,6 +693,7 @@ export type PayoutUpdateWithoutItemsInput = {
   referenceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qbBillId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   syncStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  subLabelSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   vendor?: Prisma.VendorUpdateOneRequiredWithoutPayoutsNestedInput
 }
@@ -680,6 +708,7 @@ export type PayoutUncheckedUpdateWithoutItemsInput = {
   referenceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qbBillId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   syncStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  subLabelSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -692,6 +721,7 @@ export type PayoutCreateManyVendorInput = {
   referenceRef?: string | null
   qbBillId?: string | null
   syncStatus?: string
+  subLabelSummary?: string | null
   createdAt?: Date | string
 }
 
@@ -704,6 +734,7 @@ export type PayoutUpdateWithoutVendorInput = {
   referenceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qbBillId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   syncStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  subLabelSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.RevenueRecordUpdateManyWithoutPayoutNestedInput
 }
@@ -717,6 +748,7 @@ export type PayoutUncheckedUpdateWithoutVendorInput = {
   referenceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qbBillId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   syncStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  subLabelSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.RevenueRecordUncheckedUpdateManyWithoutPayoutNestedInput
 }
@@ -730,6 +762,7 @@ export type PayoutUncheckedUpdateManyWithoutVendorInput = {
   referenceRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qbBillId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   syncStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  subLabelSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -774,6 +807,7 @@ export type PayoutSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   referenceRef?: boolean
   qbBillId?: boolean
   syncStatus?: boolean
+  subLabelSummary?: boolean
   createdAt?: boolean
   vendor?: boolean | Prisma.VendorDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Payout$itemsArgs<ExtArgs>
@@ -790,6 +824,7 @@ export type PayoutSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   referenceRef?: boolean
   qbBillId?: boolean
   syncStatus?: boolean
+  subLabelSummary?: boolean
   createdAt?: boolean
   vendor?: boolean | Prisma.VendorDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payout"]>
@@ -804,6 +839,7 @@ export type PayoutSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   referenceRef?: boolean
   qbBillId?: boolean
   syncStatus?: boolean
+  subLabelSummary?: boolean
   createdAt?: boolean
   vendor?: boolean | Prisma.VendorDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payout"]>
@@ -818,10 +854,11 @@ export type PayoutSelectScalar = {
   referenceRef?: boolean
   qbBillId?: boolean
   syncStatus?: boolean
+  subLabelSummary?: boolean
   createdAt?: boolean
 }
 
-export type PayoutOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "payoutNumber" | "vendorId" | "totalAmount" | "status" | "paymentDate" | "referenceRef" | "qbBillId" | "syncStatus" | "createdAt", ExtArgs["result"]["payout"]>
+export type PayoutOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "payoutNumber" | "vendorId" | "totalAmount" | "status" | "paymentDate" | "referenceRef" | "qbBillId" | "syncStatus" | "subLabelSummary" | "createdAt", ExtArgs["result"]["payout"]>
 export type PayoutInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   vendor?: boolean | Prisma.VendorDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Payout$itemsArgs<ExtArgs>
@@ -850,6 +887,7 @@ export type $PayoutPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     referenceRef: string | null
     qbBillId: string | null
     syncStatus: string
+    subLabelSummary: string | null
     createdAt: Date
   }, ExtArgs["result"]["payout"]>
   composites: {}
@@ -1285,6 +1323,7 @@ export interface PayoutFieldRefs {
   readonly referenceRef: Prisma.FieldRef<"Payout", 'String'>
   readonly qbBillId: Prisma.FieldRef<"Payout", 'String'>
   readonly syncStatus: Prisma.FieldRef<"Payout", 'String'>
+  readonly subLabelSummary: Prisma.FieldRef<"Payout", 'String'>
   readonly createdAt: Prisma.FieldRef<"Payout", 'DateTime'>
 }
     

@@ -9,6 +9,8 @@ import {
   Get,
   Param,
   UseGuards,
+  Delete,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -18,6 +20,7 @@ import {
   ApiResponse,
   ApiTags,
   ApiBearerAuth,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { RevenueService } from './revenue.service';
 import { memoryStorage } from 'multer';
@@ -82,6 +85,59 @@ export class RevenueController {
     @Body('platformId') platformId: string,
   ) {
     return this.revenueService.previewRevenueReport(file, platformId);
+  }
+
+  @Post('dry-run')
+  @ApiOperation({
+    summary: 'Dry Run revenue report (Generate Summary, No Save)',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        platformId: { type: 'string' },
+        file: { type: 'string', format: 'binary' },
+        month: { type: 'string', format: 'date' },
+        totalAmount: { type: 'number' },
+        mapping: { type: 'string' }, // JSON string
+        invoiceNumber: { type: 'string' },
+      },
+    },
+  })
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: memoryStorage(),
+      limits: { fileSize: 10 * 1024 * 1024 },
+      fileFilter: (req, file, callback) => {
+        if (!file.originalname.match(/\.(csv|xls|xlsx)$/)) {
+          return callback(new Error('Invalid format'), false);
+        }
+        callback(null, true);
+      },
+    }),
+  )
+  dryRunRevenueReport(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: any,
+  ) {
+    const platformId = body.platformId;
+    const month = new Date(body.month);
+    const totalAmount =
+      body.totalAmount && body.totalAmount !== 'null' && body.totalAmount !== ''
+        ? parseFloat(body.totalAmount)
+        : null;
+    const mapping = body.mapping ? JSON.parse(body.mapping) : undefined;
+    const invoiceNumber = body.invoiceNumber;
+
+    return this.revenueService.dryRunRevenueReport(
+      file,
+      platformId,
+      month,
+      totalAmount,
+      mapping,
+      invoiceNumber,
+    );
   }
 
   @Post('upload')
@@ -196,5 +252,48 @@ export class RevenueController {
   @ApiResponse({ status: 201, description: 'Sync initiated.' })
   syncReport(@Param('id') id: string, @Body('invoiceRef') invoiceRef?: string) {
     return this.revenueService.syncReport(id, invoiceRef);
+  }
+
+  // HUB ENDPOINTS
+  @Get()
+  @ApiOperation({ summary: 'List all revenue reports' })
+  findAllReports(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('search') search?: string,
+  ) {
+    return this.revenueService.findAllReports(
+      Number(page),
+      Number(limit),
+      search,
+    );
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get revenue report details' })
+  findReportById(@Param('id') id: string) {
+    return this.revenueService.findReportById(id);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete revenue report (safely)' })
+  @ApiQuery({ name: 'force', required: false, type: Boolean })
+  @ApiQuery({ name: 'deletePayouts', required: false, type: Boolean })
+  deleteReport(
+    @Param('id') id: string,
+    @Query('force') force = false,
+    @Query('deletePayouts') deletePayouts = false,
+  ) {
+    // Parse booleans from query strings if needed, NestJS @Query with primitive type might need ParseBoolPipe or manual casting
+    const isForce = String(force) === 'true';
+    const isDeletePayouts = String(deletePayouts) === 'true';
+    return this.revenueService.deleteReport(id, isForce, isDeletePayouts);
+  }
+
+  @Delete('unpaid/:vendorId')
+  @ApiOperation({ summary: 'Delete all unpaid revenue records for a vendor' })
+  @ApiResponse({ status: 200, description: 'Records deleted.' })
+  deleteUnpaid(@Param('vendorId') vendorId: string) {
+    return this.revenueService.deleteUnpaidRecords(vendorId);
   }
 }

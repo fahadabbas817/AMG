@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { type ZodType } from 'zod'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus, Trash2 } from 'lucide-react'
@@ -29,6 +30,7 @@ interface VendorFormProps {
   defaultValues?: Partial<VendorFormSchema>
   isPending?: boolean // for loading state if needed internally, though usually buttons are external
   children?: React.ReactNode // For sticking buttons or extra sections at the bottom
+  schema?: ZodType<any>
 }
 
 export function VendorForm({
@@ -36,9 +38,10 @@ export function VendorForm({
   onSubmit,
   defaultValues,
   children,
+  schema,
 }: VendorFormProps) {
   const form = useForm<VendorFormSchema>({
-    resolver: zodResolver(vendorSchema),
+    resolver: zodResolver((schema || vendorSchema) as any) as any,
     defaultValues: {
       companyName: '',
       contactName: '',
@@ -47,6 +50,9 @@ export function VendorForm({
       phone: '',
       address: '',
       contractSignatory: '',
+      corporateName: '',
+      dbaName: '',
+      taxId: '',
 
       subLabels: [],
       platformIds: [],
@@ -60,6 +66,7 @@ export function VendorForm({
         payoutMethod: 'WIRE',
         paypalEmail: '',
         accountType: 'Checking',
+        vendorAddress: '',
       },
       ...defaultValues,
     },
@@ -82,6 +89,9 @@ export function VendorForm({
         phone: '',
         address: '',
         contractSignatory: '',
+        corporateName: '',
+        dbaName: '',
+        taxId: '',
         subLabels: [],
         platformIds: [],
         bankDetails: {
@@ -94,6 +104,7 @@ export function VendorForm({
           payoutMethod: 'WIRE',
           paypalEmail: '',
           accountType: 'Checking',
+          vendorAddress: '',
         },
         ...defaultValues,
       })
@@ -104,7 +115,7 @@ export function VendorForm({
     <Form {...form}>
       <form
         id={id}
-        onSubmit={form.handleSubmit(onSubmit, (errors) => {
+        onSubmit={(form.handleSubmit as any)(onSubmit, (errors: any) => {
           console.error('Form validation errors:', errors)
           toast.error('Please check the form for errors')
         })}
@@ -114,40 +125,95 @@ export function VendorForm({
         <div className='space-y-4'>
           <h3 className='text-lg font-medium'>Corporate Information</h3>
           <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='companyName'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Company Name</FormLabel>
+                  <FormLabel>
+                    Company Name <span className='text-red-500'>*</span>
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder='Acme Inc.' {...field} />
+                    <Input placeholder='Acme Inc.' {...(field as any)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='vendorNumber'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Vendor Number</FormLabel>
+                  <FormLabel>
+                    Vendor Number{' '}
+                    <span className='text-muted-foreground text-xs font-normal'>
+                      (Auto-generated if empty)
+                    </span>
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder='V-1001' {...field} />
+                    <Input placeholder='V-1001' {...(field as any)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
+              name='corporateName'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Corporate Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='Legal Corporate Name'
+                      {...(field as any)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField<VendorFormSchema>
+              control={form.control as any}
+              name='dbaName'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>DBA Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='Doing Business As'
+                      {...(field as any)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField<VendorFormSchema>
+              control={form.control as any}
+              name='taxId'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tax ID</FormLabel>
+                  <FormControl>
+                    <Input placeholder='EIN or SSN' {...(field as any)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='address'
               render={({ field }) => (
                 <FormItem className='col-span-1 md:col-span-2'>
                   <FormLabel>Corporate Address</FormLabel>
                   <FormControl>
-                    <Input placeholder='123 Wall St, New York, NY' {...field} />
+                    <Input
+                      placeholder='123 Wall St, New York, NY'
+                      {...(field as any)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -162,53 +228,58 @@ export function VendorForm({
         <div className='space-y-4'>
           <h3 className='text-lg font-medium'>Contact Information</h3>
           <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='contactName'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Contact Name</FormLabel>
                   <FormControl>
-                    <Input placeholder='John Doe' {...field} />
+                    <Input placeholder='John Doe' {...(field as any)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>
+                    Email <span className='text-red-500'>*</span>
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder='john@example.com' {...field} />
+                    <Input placeholder='john@example.com' {...(field as any)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='phone'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Phone</FormLabel>
                   <FormControl>
-                    <Input placeholder='+1 (555) 000-0000' {...field} />
+                    <Input
+                      placeholder='+1 (555) 000-0000'
+                      {...(field as any)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='contractSignatory'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Contract Signatory</FormLabel>
                   <FormControl>
-                    <Input placeholder='Jane Smith' {...field} />
+                    <Input placeholder='Jane Smith' {...(field as any)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -223,99 +294,123 @@ export function VendorForm({
         <div className='space-y-4'>
           <h3 className='text-lg font-medium'>Banking Details</h3>
           <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='bankDetails.bankName'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Bank Name</FormLabel>
                   <FormControl>
-                    <Input placeholder='Chase Bank' {...field} />
+                    <Input placeholder='Chase Bank' {...(field as any)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='bankDetails.accountNumber'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Account Number</FormLabel>
                   <FormControl>
-                    <Input placeholder='1234567890' {...field} />
+                    <Input placeholder='1234567890' {...(field as any)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='bankDetails.bankAddress'
               render={({ field }) => (
                 <FormItem className='col-span-1 md:col-span-2'>
                   <FormLabel>Bank Address</FormLabel>
                   <FormControl>
-                    <Input placeholder='456 Main St, City, State' {...field} />
+                    <Input
+                      placeholder='456 Main St, City, State'
+                      {...(field as any)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
+              name='bankDetails.vendorAddress'
+              render={({ field }) => (
+                <FormItem className='col-span-1 md:col-span-2'>
+                  <FormLabel>Vendor Address (On Bank Account)</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='Address associated with bank account'
+                      {...(field as any)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='bankDetails.ibanRouting'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>IBAN / Routing</FormLabel>
                   <FormControl>
-                    <Input placeholder='ACH or Wire Routing' {...field} />
+                    <Input
+                      placeholder='ACH or Wire Routing'
+                      {...(field as any)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='bankDetails.swiftCode'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>SWIFT Code</FormLabel>
                   <FormControl>
-                    <Input placeholder='CHASEUS33' {...field} />
+                    <Input placeholder='CHASEUS33' {...(field as any)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name='bankDetails.ibanRouting'
+            <FormField<VendorFormSchema>
+              control={form.control as any}
+              name='bankDetails.accountType'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>IBAN / Routing</FormLabel>
+                  <FormLabel>Account Type</FormLabel>
                   <FormControl>
-                    <Input placeholder='ACH or Wire Routing' {...field} />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value as string}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder='Select account type' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value='Checking'>Checking</SelectItem>
+                        <SelectItem value='Savings'>Savings</SelectItem>
+                        <SelectItem value='Business'>Business</SelectItem>
+                        <SelectItem value='Personal'>Personal</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name='bankDetails.swiftCode'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>SWIFT Code</FormLabel>
-                  <FormControl>
-                    <Input placeholder='CHASEUS33' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='bankDetails.currency'
               render={({ field }) => (
                 <FormItem>
@@ -323,7 +418,7 @@ export function VendorForm({
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={field.value as string}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -341,8 +436,8 @@ export function VendorForm({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='bankDetails.payoutMethod'
               render={({ field }) => (
                 <FormItem>
@@ -350,7 +445,7 @@ export function VendorForm({
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={field.value as string}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -361,6 +456,8 @@ export function VendorForm({
                         <SelectItem value='WIRE'>WIRE</SelectItem>
                         <SelectItem value='ACH'>ACH</SelectItem>
                         <SelectItem value='PAYPAL'>PAYPAL</SelectItem>
+                        <SelectItem value='WISE'>WISE</SelectItem>
+                        <SelectItem value='ZELLE'>ZELLE</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -368,14 +465,14 @@ export function VendorForm({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
+            <FormField<VendorFormSchema>
+              control={form.control as any}
               name='bankDetails.paypalEmail'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>PayPal Email (Optional)</FormLabel>
+                  <FormLabel>Paypal Email / Wise Tag / Zelle</FormLabel>
                   <FormControl>
-                    <Input placeholder='pay@example.com' {...field} />
+                    <Input placeholder='pay@example.com' {...(field as any)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -402,13 +499,16 @@ export function VendorForm({
           </div>
           {fields.map((field, index) => (
             <div key={field.id} className='flex items-center gap-2'>
-              <FormField
-                control={form.control}
+              <FormField<VendorFormSchema>
+                control={form.control as any}
                 name={`subLabels.${index}.value`}
                 render={({ field }) => (
                   <FormItem className='flex-1'>
                     <FormControl>
-                      <Input placeholder='e.g. Trading Name' {...field} />
+                      <Input
+                        placeholder='e.g. Trading Name'
+                        {...(field as any)}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

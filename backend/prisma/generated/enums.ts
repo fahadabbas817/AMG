@@ -28,7 +28,9 @@ export type Role = (typeof Role)[keyof typeof Role]
 export const PayoutMethod = {
   ACH: 'ACH',
   PAYPAL: 'PAYPAL',
-  WIRE: 'WIRE'
+  WIRE: 'WIRE',
+  WISE: 'WISE',
+  ZELLE: 'ZELLE'
 } as const
 
 export type PayoutMethod = (typeof PayoutMethod)[keyof typeof PayoutMethod]

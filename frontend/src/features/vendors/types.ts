@@ -2,12 +2,13 @@ export interface VendorBankDetails {
   bankName: string
   accountNumber: string
   bankAddress: string
-  ibanRouting: string
-  swiftCode: string
+  ibanRouting?: string
+  swiftCode?: string
   currency: string
   payoutMethod: string
   paypalEmail: string
-  accountType: string
+  accountType?: string
+  vendorAddress?: string
 }
 
 export interface Platform {
@@ -31,9 +32,12 @@ export interface Vendor {
   contactName: string
   email: string
   vendorNumber: string
-  phone: string
+  phone?: string
   address: string
   contractSignatory: string
+  corporateName?: string
+  dbaName?: string
+  taxId?: string
   subLabels: string[]
   platformSplits?: PlatformSplit[]
   // For frontend display/edit primarily

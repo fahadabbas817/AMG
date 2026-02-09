@@ -9,6 +9,13 @@ export function sleep(ms: number = 1000) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
+export function formatCurrency(amount: number) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(amount)
+}
+
 /**
  * Generates page numbers for pagination with ellipsis
  * @param currentPage - Current page number (1-based)

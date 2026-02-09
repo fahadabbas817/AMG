@@ -7,9 +7,11 @@ import { VendorMatcherService } from './vendor-matcher.service';
 import { PayoutModule } from '../payout/payout.module';
 import { QuickbooksModule } from '../quickbooks/quickbooks.module';
 
+import { RevenueUnallocatedController } from './revenue-unallocated.controller';
+
 @Module({
   imports: [PayoutModule, QuickbooksModule],
-  controllers: [RevenueController],
+  controllers: [RevenueUnallocatedController, RevenueController],
   providers: [
     RevenueService,
     PrismaService,

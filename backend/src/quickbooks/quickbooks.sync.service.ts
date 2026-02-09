@@ -26,6 +26,11 @@ export interface VendorDiff {
     email: DiffField;
     phone: DiffField;
     address: DiffField;
+    // New Fields
+    corporateName: DiffField;
+    contactName: DiffField;
+    taxId: DiffField;
+    accountNumber: DiffField;
   };
 }
 
@@ -62,9 +67,14 @@ export class QuickbooksSyncService {
       if (!match) {
         match = qbVendors.find(
           (q) =>
-            q.DisplayName === local.companyName ||
+            (q.DisplayName &&
+              local.companyName &&
+              q.DisplayName.toLowerCase().trim() ===
+                local.companyName.toLowerCase().trim()) ||
             (q.PrimaryEmailAddr?.Address &&
-              q.PrimaryEmailAddr.Address === local.email),
+              local.email &&
+              q.PrimaryEmailAddr.Address.toLowerCase().trim() ===
+                local.email.toLowerCase().trim()),
         );
       }
 
@@ -77,7 +87,11 @@ export class QuickbooksSyncService {
           !diff.changes.companyName.matches ||
           !diff.changes.email.matches ||
           !diff.changes.phone.matches ||
-          !diff.changes.address.matches
+          !diff.changes.address.matches ||
+          !diff.changes.corporateName.matches ||
+          !diff.changes.contactName.matches ||
+          !diff.changes.taxId.matches ||
+          !diff.changes.accountNumber.matches
         ) {
           // DEBUG: Log one mismatch example to verify QBO data
           if (conflicts.length === 0) {
@@ -178,6 +192,31 @@ export class QuickbooksSyncService {
           local: local.address,
           qbo: qboAddress,
         },
+        // New Fields Logic
+        corporateName: {
+          matches: compare(local.corporateName, qbo.CompanyName), // Corporate Name often maps to QBO CompanyName (legal)
+          local: local.corporateName,
+          qbo: qbo.CompanyName || null,
+        },
+        contactName: {
+          matches: compare(
+            local.contactName,
+            [qbo.GivenName, qbo.FamilyName].filter(Boolean).join(' '),
+          ),
+          local: local.contactName,
+          qbo:
+            [qbo.GivenName, qbo.FamilyName].filter(Boolean).join(' ') || null,
+        },
+        taxId: {
+          matches: compare(local.taxId, qbo.TaxIdentifier),
+          local: local.taxId,
+          qbo: qbo.TaxIdentifier || null,
+        },
+        accountNumber: {
+          matches: compare(local.bankDetails?.accountNumber, qbo.AcctNum),
+          local: local.bankDetails?.accountNumber || null,
+          qbo: qbo.AcctNum || null,
+        },
       },
     };
 
@@ -256,6 +295,7 @@ export class QuickbooksSyncService {
           // Fetch existing local vendor to get current values
           const localVendor = await this.prisma.vendor.findUnique({
             where: { id: item.vendorId },
+            include: { bankDetails: true },
           });
 
           if (!localVendor) throw new Error('Local vendor not found');
@@ -306,6 +346,31 @@ export class QuickbooksSyncService {
               if (field === 'address')
                 localUpdates.address =
                   this.formatQboAddress(qboVendor.BillAddr) || null;
+
+              // New Fields Mappings
+              if (field === 'corporateName')
+                localUpdates.corporateName = qboVendor.CompanyName || null;
+              if (field === 'contactName')
+                localUpdates.contactName =
+                  [qboVendor.GivenName, qboVendor.FamilyName]
+                    .filter(Boolean)
+                    .join(' ') || null;
+              if (field === 'taxId')
+                localUpdates.taxId = qboVendor.TaxIdentifier || null;
+
+              if (field === 'accountNumber') {
+                // Upsert Bank Details
+                await this.prisma.bankDetails.upsert({
+                  where: { vendorId: item.vendorId },
+                  create: {
+                    vendorId: item.vendorId,
+                    accountNumber: qboVendor.AcctNum || null,
+                  },
+                  update: {
+                    accountNumber: qboVendor.AcctNum || null,
+                  },
+                });
+              }
             } else if (direction === 'LOCAL') {
               // Keep Local Value -> Update QBO
               if (field === 'companyName')
@@ -317,12 +382,25 @@ export class QuickbooksSyncService {
                 qboUpdates.PrimaryPhone = { FreeFormNumber: localVendor.phone };
               }
               if (field === 'address') {
-                // Parsing address string back to object is complex/imprecise.
-                // For now, we might skip full address push or just put it in Line1.
-                // A better approach would be storing structured address locally, but we store string.
-                // Best effort: Put everything in Line1.
                 qboUpdates.BillAddr = { Line1: localVendor.address };
               }
+              // New Fields Mappings
+              if (field === 'corporateName')
+                qboUpdates.CompanyName = localVendor.corporateName;
+              if (field === 'contactName') {
+                // Splitting Name is hard, maybe just put in DisplayName?
+                // Or GivenName/FamilyName if we can split by space.
+                const parts = (localVendor.contactName || '').split(' ');
+                if (parts.length > 0) {
+                  qboUpdates.GivenName = parts[0];
+                  qboUpdates.FamilyName = parts.slice(1).join(' ');
+                }
+              }
+              if (field === 'taxId')
+                qboUpdates.TaxIdentifier = localVendor.taxId;
+              if (field === 'accountNumber')
+                qboUpdates.AcctNum =
+                  localVendor.bankDetails?.accountNumber || '';
             }
           }
 
@@ -376,7 +454,13 @@ export class QuickbooksSyncService {
           await this.prisma.vendor.create({
             data: {
               companyName: qboVendor.DisplayName,
-              contactName: qboVendor.DisplayName,
+              corporateName: qboVendor.CompanyName || qboVendor.DisplayName, // Best guess
+              dbaName: qboVendor.PrintOnCheckName || null,
+              contactName:
+                [qboVendor.GivenName, qboVendor.FamilyName]
+                  .filter(Boolean)
+                  .join(' ') || qboVendor.DisplayName,
+              taxId: qboVendor.TaxIdentifier || null,
               email:
                 qboVendor.PrimaryEmailAddr?.Address ||
                 `temp_${Date.now()}_${Math.random().toString(36).substring(7)}@placeholder.com`,
@@ -385,6 +469,13 @@ export class QuickbooksSyncService {
               vendorNumber: `QB${qboVendor.Id}`,
               qbVendorId: qboVendor.Id,
               password: 'temp_password_change_me',
+              bankDetails: qboVendor.AcctNum
+                ? {
+                    create: {
+                      accountNumber: qboVendor.AcctNum,
+                    },
+                  }
+                : undefined,
             },
           });
           results.imported++;
@@ -438,6 +529,10 @@ export class QuickbooksSyncService {
       email: diff.changes.email,
       phone: diff.changes.phone,
       address: diff.changes.address,
+      corporateName: diff.changes.corporateName,
+      contactName: diff.changes.contactName,
+      taxId: diff.changes.taxId,
+      accountNumber: diff.changes.accountNumber,
     };
   }
 
@@ -701,6 +796,13 @@ export class QuickbooksSyncService {
       checked: pendingPayouts.length,
       updated: updatedCount,
     };
+  }
+
+  async deleteBill(qbBillId: string) {
+    if (!(await this.quickbooksService.isConnected())) {
+      throw new Error('QuickBooks not connected');
+    }
+    await this.quickbooksService.deleteBill(qbBillId);
   }
 
   private chunkArray<T>(array: T[], size: number): T[][] {

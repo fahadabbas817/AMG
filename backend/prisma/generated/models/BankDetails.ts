@@ -29,6 +29,7 @@ export type BankDetailsMinAggregateOutputType = {
   vendorId: string | null
   bankName: string | null
   bankAddress: string | null
+  vendorAddress: string | null
   accountNumber: string | null
   ibanRouting: string | null
   swiftCode: string | null
@@ -43,6 +44,7 @@ export type BankDetailsMaxAggregateOutputType = {
   vendorId: string | null
   bankName: string | null
   bankAddress: string | null
+  vendorAddress: string | null
   accountNumber: string | null
   ibanRouting: string | null
   swiftCode: string | null
@@ -57,6 +59,7 @@ export type BankDetailsCountAggregateOutputType = {
   vendorId: number
   bankName: number
   bankAddress: number
+  vendorAddress: number
   accountNumber: number
   ibanRouting: number
   swiftCode: number
@@ -73,6 +76,7 @@ export type BankDetailsMinAggregateInputType = {
   vendorId?: true
   bankName?: true
   bankAddress?: true
+  vendorAddress?: true
   accountNumber?: true
   ibanRouting?: true
   swiftCode?: true
@@ -87,6 +91,7 @@ export type BankDetailsMaxAggregateInputType = {
   vendorId?: true
   bankName?: true
   bankAddress?: true
+  vendorAddress?: true
   accountNumber?: true
   ibanRouting?: true
   swiftCode?: true
@@ -101,6 +106,7 @@ export type BankDetailsCountAggregateInputType = {
   vendorId?: true
   bankName?: true
   bankAddress?: true
+  vendorAddress?: true
   accountNumber?: true
   ibanRouting?: true
   swiftCode?: true
@@ -188,6 +194,7 @@ export type BankDetailsGroupByOutputType = {
   vendorId: string
   bankName: string | null
   bankAddress: string | null
+  vendorAddress: string | null
   accountNumber: string | null
   ibanRouting: string | null
   swiftCode: string | null
@@ -223,6 +230,7 @@ export type BankDetailsWhereInput = {
   vendorId?: Prisma.StringFilter<"BankDetails"> | string
   bankName?: Prisma.StringNullableFilter<"BankDetails"> | string | null
   bankAddress?: Prisma.StringNullableFilter<"BankDetails"> | string | null
+  vendorAddress?: Prisma.StringNullableFilter<"BankDetails"> | string | null
   accountNumber?: Prisma.StringNullableFilter<"BankDetails"> | string | null
   ibanRouting?: Prisma.StringNullableFilter<"BankDetails"> | string | null
   swiftCode?: Prisma.StringNullableFilter<"BankDetails"> | string | null
@@ -238,6 +246,7 @@ export type BankDetailsOrderByWithRelationInput = {
   vendorId?: Prisma.SortOrder
   bankName?: Prisma.SortOrderInput | Prisma.SortOrder
   bankAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  vendorAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   accountNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   ibanRouting?: Prisma.SortOrderInput | Prisma.SortOrder
   swiftCode?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -256,6 +265,7 @@ export type BankDetailsWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.BankDetailsWhereInput | Prisma.BankDetailsWhereInput[]
   bankName?: Prisma.StringNullableFilter<"BankDetails"> | string | null
   bankAddress?: Prisma.StringNullableFilter<"BankDetails"> | string | null
+  vendorAddress?: Prisma.StringNullableFilter<"BankDetails"> | string | null
   accountNumber?: Prisma.StringNullableFilter<"BankDetails"> | string | null
   ibanRouting?: Prisma.StringNullableFilter<"BankDetails"> | string | null
   swiftCode?: Prisma.StringNullableFilter<"BankDetails"> | string | null
@@ -271,6 +281,7 @@ export type BankDetailsOrderByWithAggregationInput = {
   vendorId?: Prisma.SortOrder
   bankName?: Prisma.SortOrderInput | Prisma.SortOrder
   bankAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  vendorAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   accountNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   ibanRouting?: Prisma.SortOrderInput | Prisma.SortOrder
   swiftCode?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -291,6 +302,7 @@ export type BankDetailsScalarWhereWithAggregatesInput = {
   vendorId?: Prisma.StringWithAggregatesFilter<"BankDetails"> | string
   bankName?: Prisma.StringNullableWithAggregatesFilter<"BankDetails"> | string | null
   bankAddress?: Prisma.StringNullableWithAggregatesFilter<"BankDetails"> | string | null
+  vendorAddress?: Prisma.StringNullableWithAggregatesFilter<"BankDetails"> | string | null
   accountNumber?: Prisma.StringNullableWithAggregatesFilter<"BankDetails"> | string | null
   ibanRouting?: Prisma.StringNullableWithAggregatesFilter<"BankDetails"> | string | null
   swiftCode?: Prisma.StringNullableWithAggregatesFilter<"BankDetails"> | string | null
@@ -304,6 +316,7 @@ export type BankDetailsCreateInput = {
   id?: string
   bankName?: string | null
   bankAddress?: string | null
+  vendorAddress?: string | null
   accountNumber?: string | null
   ibanRouting?: string | null
   swiftCode?: string | null
@@ -319,6 +332,7 @@ export type BankDetailsUncheckedCreateInput = {
   vendorId: string
   bankName?: string | null
   bankAddress?: string | null
+  vendorAddress?: string | null
   accountNumber?: string | null
   ibanRouting?: string | null
   swiftCode?: string | null
@@ -332,6 +346,7 @@ export type BankDetailsUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendorAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ibanRouting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   swiftCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -347,6 +362,7 @@ export type BankDetailsUncheckedUpdateInput = {
   vendorId?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendorAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ibanRouting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   swiftCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -361,6 +377,7 @@ export type BankDetailsCreateManyInput = {
   vendorId: string
   bankName?: string | null
   bankAddress?: string | null
+  vendorAddress?: string | null
   accountNumber?: string | null
   ibanRouting?: string | null
   swiftCode?: string | null
@@ -374,6 +391,7 @@ export type BankDetailsUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendorAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ibanRouting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   swiftCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -388,6 +406,7 @@ export type BankDetailsUncheckedUpdateManyInput = {
   vendorId?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendorAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ibanRouting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   swiftCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -407,6 +426,7 @@ export type BankDetailsCountOrderByAggregateInput = {
   vendorId?: Prisma.SortOrder
   bankName?: Prisma.SortOrder
   bankAddress?: Prisma.SortOrder
+  vendorAddress?: Prisma.SortOrder
   accountNumber?: Prisma.SortOrder
   ibanRouting?: Prisma.SortOrder
   swiftCode?: Prisma.SortOrder
@@ -421,6 +441,7 @@ export type BankDetailsMaxOrderByAggregateInput = {
   vendorId?: Prisma.SortOrder
   bankName?: Prisma.SortOrder
   bankAddress?: Prisma.SortOrder
+  vendorAddress?: Prisma.SortOrder
   accountNumber?: Prisma.SortOrder
   ibanRouting?: Prisma.SortOrder
   swiftCode?: Prisma.SortOrder
@@ -435,6 +456,7 @@ export type BankDetailsMinOrderByAggregateInput = {
   vendorId?: Prisma.SortOrder
   bankName?: Prisma.SortOrder
   bankAddress?: Prisma.SortOrder
+  vendorAddress?: Prisma.SortOrder
   accountNumber?: Prisma.SortOrder
   ibanRouting?: Prisma.SortOrder
   swiftCode?: Prisma.SortOrder
@@ -484,6 +506,7 @@ export type BankDetailsCreateWithoutVendorInput = {
   id?: string
   bankName?: string | null
   bankAddress?: string | null
+  vendorAddress?: string | null
   accountNumber?: string | null
   ibanRouting?: string | null
   swiftCode?: string | null
@@ -497,6 +520,7 @@ export type BankDetailsUncheckedCreateWithoutVendorInput = {
   id?: string
   bankName?: string | null
   bankAddress?: string | null
+  vendorAddress?: string | null
   accountNumber?: string | null
   ibanRouting?: string | null
   swiftCode?: string | null
@@ -526,6 +550,7 @@ export type BankDetailsUpdateWithoutVendorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendorAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ibanRouting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   swiftCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -539,6 +564,7 @@ export type BankDetailsUncheckedUpdateWithoutVendorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendorAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ibanRouting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   swiftCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -555,6 +581,7 @@ export type BankDetailsSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   vendorId?: boolean
   bankName?: boolean
   bankAddress?: boolean
+  vendorAddress?: boolean
   accountNumber?: boolean
   ibanRouting?: boolean
   swiftCode?: boolean
@@ -570,6 +597,7 @@ export type BankDetailsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   vendorId?: boolean
   bankName?: boolean
   bankAddress?: boolean
+  vendorAddress?: boolean
   accountNumber?: boolean
   ibanRouting?: boolean
   swiftCode?: boolean
@@ -585,6 +613,7 @@ export type BankDetailsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   vendorId?: boolean
   bankName?: boolean
   bankAddress?: boolean
+  vendorAddress?: boolean
   accountNumber?: boolean
   ibanRouting?: boolean
   swiftCode?: boolean
@@ -600,6 +629,7 @@ export type BankDetailsSelectScalar = {
   vendorId?: boolean
   bankName?: boolean
   bankAddress?: boolean
+  vendorAddress?: boolean
   accountNumber?: boolean
   ibanRouting?: boolean
   swiftCode?: boolean
@@ -609,7 +639,7 @@ export type BankDetailsSelectScalar = {
   accountType?: boolean
 }
 
-export type BankDetailsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "vendorId" | "bankName" | "bankAddress" | "accountNumber" | "ibanRouting" | "swiftCode" | "currency" | "payoutMethod" | "paypalEmail" | "accountType", ExtArgs["result"]["bankDetails"]>
+export type BankDetailsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "vendorId" | "bankName" | "bankAddress" | "vendorAddress" | "accountNumber" | "ibanRouting" | "swiftCode" | "currency" | "payoutMethod" | "paypalEmail" | "accountType", ExtArgs["result"]["bankDetails"]>
 export type BankDetailsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   vendor?: boolean | Prisma.VendorDefaultArgs<ExtArgs>
 }
@@ -630,6 +660,7 @@ export type $BankDetailsPayload<ExtArgs extends runtime.Types.Extensions.Interna
     vendorId: string
     bankName: string | null
     bankAddress: string | null
+    vendorAddress: string | null
     accountNumber: string | null
     ibanRouting: string | null
     swiftCode: string | null
@@ -1065,6 +1096,7 @@ export interface BankDetailsFieldRefs {
   readonly vendorId: Prisma.FieldRef<"BankDetails", 'String'>
   readonly bankName: Prisma.FieldRef<"BankDetails", 'String'>
   readonly bankAddress: Prisma.FieldRef<"BankDetails", 'String'>
+  readonly vendorAddress: Prisma.FieldRef<"BankDetails", 'String'>
   readonly accountNumber: Prisma.FieldRef<"BankDetails", 'String'>
   readonly ibanRouting: Prisma.FieldRef<"BankDetails", 'String'>
   readonly swiftCode: Prisma.FieldRef<"BankDetails", 'String'>

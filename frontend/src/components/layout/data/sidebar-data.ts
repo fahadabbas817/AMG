@@ -13,6 +13,7 @@ import {
   DollarSign,
   Upload,
   Inbox,
+  Headset,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -71,8 +72,24 @@ export const sidebarData: SidebarData = {
         },
         {
           title: 'Revenue',
-          url: '/revenue/upload',
-          icon: Upload, // You might want a different icon like FileText or Upload
+          icon: DollarSign, // Using DollarSign or similar for Revenue group
+          items: [
+            {
+              title: 'Upload Reports',
+              url: '/revenue/upload',
+              icon: Upload,
+            },
+            {
+              title: 'Report Hub',
+              url: '/revenue/list', // New List Page
+              icon: Layers, // Or FileText
+            },
+            {
+              title: 'Unallocated Funds',
+              url: '/revenue/unallocated',
+              icon: Inbox,
+            },
+          ],
         },
         {
           title: 'Platforms',
@@ -88,6 +105,11 @@ export const sidebarData: SidebarData = {
           title: 'Requests',
           url: '/requests',
           icon: Inbox,
+        },
+        {
+          title: 'Support',
+          url: '/support',
+          icon: Headset,
         },
         // {
         //   title: 'Secured by Clerk',

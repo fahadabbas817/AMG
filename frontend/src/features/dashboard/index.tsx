@@ -2,15 +2,12 @@ import { useNavigate } from '@tanstack/react-router'
 import { CreditCard, Layers, UploadCloud, UserPlus } from 'lucide-react'
 import {
   Card,
-  CardContent,
-  CardDescription,
   CardHeader,
+  CardContent,
   CardTitle,
+  CardDescription,
 } from '@/components/ui/card'
-import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { ConnectQboButton } from '@/features/quickbooks/components/connect-qbo-button'
 
 export function Dashboard() {
@@ -18,12 +15,6 @@ export function Dashboard() {
   return (
     <>
       {/* ===== Top Heading ===== */}
-      <Header>
-        <div className='ms-auto flex items-center space-x-4'>
-          <ThemeSwitch />
-          <ProfileDropdown />
-        </div>
-      </Header>
 
       {/* ===== Main ===== */}
       <Main>

@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Admin: 'Admin',
   Vendor: 'Vendor',
+  EmailLog: 'EmailLog',
   Platform: 'Platform',
   PlatformMappingTemplate: 'PlatformMappingTemplate',
   PlatformSplit: 'PlatformSplit',
@@ -100,6 +101,12 @@ export const VendorScalarFieldEnum = {
   phone: 'phone',
   address: 'address',
   contractSignatory: 'contractSignatory',
+  resetToken: 'resetToken',
+  resetTokenExpiry: 'resetTokenExpiry',
+  isFirstLogin: 'isFirstLogin',
+  corporateName: 'corporateName',
+  dbaName: 'dbaName',
+  taxId: 'taxId',
   subLabels: 'subLabels',
   qbVendorId: 'qbVendorId',
   createdAt: 'createdAt',
@@ -107,6 +114,18 @@ export const VendorScalarFieldEnum = {
 } as const
 
 export type VendorScalarFieldEnum = (typeof VendorScalarFieldEnum)[keyof typeof VendorScalarFieldEnum]
+
+
+export const EmailLogScalarFieldEnum = {
+  id: 'id',
+  subject: 'subject',
+  body: 'body',
+  recipientCount: 'recipientCount',
+  sentBy: 'sentBy',
+  createdAt: 'createdAt'
+} as const
+
+export type EmailLogScalarFieldEnum = (typeof EmailLogScalarFieldEnum)[keyof typeof EmailLogScalarFieldEnum]
 
 
 export const PlatformScalarFieldEnum = {
@@ -145,6 +164,7 @@ export const BankDetailsScalarFieldEnum = {
   vendorId: 'vendorId',
   bankName: 'bankName',
   bankAddress: 'bankAddress',
+  vendorAddress: 'vendorAddress',
   accountNumber: 'accountNumber',
   ibanRouting: 'ibanRouting',
   swiftCode: 'swiftCode',
@@ -160,6 +180,7 @@ export type BankDetailsScalarFieldEnum = (typeof BankDetailsScalarFieldEnum)[key
 export const RevenueReportScalarFieldEnum = {
   id: 'id',
   filename: 'filename',
+  fingerprint: 'fingerprint',
   uploadDate: 'uploadDate',
   status: 'status',
   rawFileUrl: 'rawFileUrl',
@@ -205,6 +226,7 @@ export const PayoutScalarFieldEnum = {
   referenceRef: 'referenceRef',
   qbBillId: 'qbBillId',
   syncStatus: 'syncStatus',
+  subLabelSummary: 'subLabelSummary',
   createdAt: 'createdAt'
 } as const
 

@@ -18,6 +18,13 @@ const HEADER_KEYWORDS = [
   'amount',
   'currency',
   'payouts',
+  'payout',
+  'total',
+  'rental',
+  'download',
+  'ppm',
+  'number',
+  'vendor number',
 ];
 
 export interface ParseOptions {
@@ -28,7 +35,7 @@ export interface ParseOptions {
 /**
  * Calculates a "header score" for a row based on keyword matches.
  */
-const calculateRowScore = (row: any[]): number => {
+export const calculateRowScore = (row: any[]): number => {
   if (!Array.isArray(row)) return 0;
   let score = 0;
   const rowString = row.join(' ').toLowerCase();

@@ -28,6 +28,11 @@ export type Admin = Prisma.AdminModel
  */
 export type Vendor = Prisma.VendorModel
 /**
+ * Model EmailLog
+ * 
+ */
+export type EmailLog = Prisma.EmailLogModel
+/**
  * Model Platform
  * 
  */

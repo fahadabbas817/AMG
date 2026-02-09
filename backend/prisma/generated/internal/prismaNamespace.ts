@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Admin: 'Admin',
   Vendor: 'Vendor',
+  EmailLog: 'EmailLog',
   Platform: 'Platform',
   PlatformMappingTemplate: 'PlatformMappingTemplate',
   PlatformSplit: 'PlatformSplit',
@@ -410,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "admin" | "vendor" | "platform" | "platformMappingTemplate" | "platformSplit" | "bankDetails" | "revenueReport" | "revenueRecord" | "payout" | "profileChangeRequest" | "quickBooksConfig"
+    modelProps: "admin" | "vendor" | "emailLog" | "platform" | "platformMappingTemplate" | "platformSplit" | "bankDetails" | "revenueReport" | "revenueRecord" | "payout" | "profileChangeRequest" | "quickBooksConfig"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -559,6 +560,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.VendorCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.VendorCountAggregateOutputType> | number
+        }
+      }
+    }
+    EmailLog: {
+      payload: Prisma.$EmailLogPayload<ExtArgs>
+      fields: Prisma.EmailLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmailLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmailLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailLogPayload>
+        }
+        findFirst: {
+          args: Prisma.EmailLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmailLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailLogPayload>
+        }
+        findMany: {
+          args: Prisma.EmailLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailLogPayload>[]
+        }
+        create: {
+          args: Prisma.EmailLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailLogPayload>
+        }
+        createMany: {
+          args: Prisma.EmailLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmailLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailLogPayload>[]
+        }
+        delete: {
+          args: Prisma.EmailLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailLogPayload>
+        }
+        update: {
+          args: Prisma.EmailLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmailLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmailLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmailLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.EmailLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailLogPayload>
+        }
+        aggregate: {
+          args: Prisma.EmailLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmailLog>
+        }
+        groupBy: {
+          args: Prisma.EmailLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmailLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailLogCountAggregateOutputType> | number
         }
       }
     }
@@ -1287,6 +1362,12 @@ export const VendorScalarFieldEnum = {
   phone: 'phone',
   address: 'address',
   contractSignatory: 'contractSignatory',
+  resetToken: 'resetToken',
+  resetTokenExpiry: 'resetTokenExpiry',
+  isFirstLogin: 'isFirstLogin',
+  corporateName: 'corporateName',
+  dbaName: 'dbaName',
+  taxId: 'taxId',
   subLabels: 'subLabels',
   qbVendorId: 'qbVendorId',
   createdAt: 'createdAt',
@@ -1294,6 +1375,18 @@ export const VendorScalarFieldEnum = {
 } as const
 
 export type VendorScalarFieldEnum = (typeof VendorScalarFieldEnum)[keyof typeof VendorScalarFieldEnum]
+
+
+export const EmailLogScalarFieldEnum = {
+  id: 'id',
+  subject: 'subject',
+  body: 'body',
+  recipientCount: 'recipientCount',
+  sentBy: 'sentBy',
+  createdAt: 'createdAt'
+} as const
+
+export type EmailLogScalarFieldEnum = (typeof EmailLogScalarFieldEnum)[keyof typeof EmailLogScalarFieldEnum]
 
 
 export const PlatformScalarFieldEnum = {
@@ -1332,6 +1425,7 @@ export const BankDetailsScalarFieldEnum = {
   vendorId: 'vendorId',
   bankName: 'bankName',
   bankAddress: 'bankAddress',
+  vendorAddress: 'vendorAddress',
   accountNumber: 'accountNumber',
   ibanRouting: 'ibanRouting',
   swiftCode: 'swiftCode',
@@ -1347,6 +1441,7 @@ export type BankDetailsScalarFieldEnum = (typeof BankDetailsScalarFieldEnum)[key
 export const RevenueReportScalarFieldEnum = {
   id: 'id',
   filename: 'filename',
+  fingerprint: 'fingerprint',
   uploadDate: 'uploadDate',
   status: 'status',
   rawFileUrl: 'rawFileUrl',
@@ -1392,6 +1487,7 @@ export const PayoutScalarFieldEnum = {
   referenceRef: 'referenceRef',
   qbBillId: 'qbBillId',
   syncStatus: 'syncStatus',
+  subLabelSummary: 'subLabelSummary',
   createdAt: 'createdAt'
 } as const
 
@@ -1508,6 +1604,27 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1532,20 +1649,6 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  * Reference to a field of type 'QueryMode'
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -1701,6 +1804,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   admin?: Prisma.AdminOmit
   vendor?: Prisma.VendorOmit
+  emailLog?: Prisma.EmailLogOmit
   platform?: Prisma.PlatformOmit
   platformMappingTemplate?: Prisma.PlatformMappingTemplateOmit
   platformSplit?: Prisma.PlatformSplitOmit
