@@ -83,7 +83,7 @@ export class EmailService {
     // Prepare Brevo Email
     const sendSmtpEmail = new Brevo.SendSmtpEmail();
     sendSmtpEmail.subject = 'Reset Your Password - AMG Portal';
-    sendSmtpEmail.to = [{ email: vendor.email, name: vendor.contactName }];
+    sendSmtpEmail.to = [{ email: vendor.email, name: vendor.companyName }];
     sendSmtpEmail.htmlContent = this.getCompiledHtml('reset-password', {
       link,
     });
@@ -163,7 +163,7 @@ export class EmailService {
           // Basic replacement for internal variable before passing to template
           const personalizedBody = bodyOrTemplate.replace(
             /{{name}}/g,
-            vendor.contactName || vendor.companyName || 'Partner',
+            vendor.companyName || vendor.contactName || 'Partner',
           );
           context = { body: personalizedBody };
         }

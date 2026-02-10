@@ -59,8 +59,13 @@ export function EmailComposeModal({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      subject: '',
-      body: '',
+      subject: 'Update from All Media Group',
+      body: `Hi {{name}},
+
+[Your message here]
+
+Regards,
+amy@allmediagroup.tv`,
       type: 'CUSTOM',
     },
   })
@@ -77,8 +82,17 @@ export function EmailComposeModal({
         'Welcome! Click the link below to set up your account: {{link}}'
       ) // Placeholder logic
     } else {
-      form.setValue('subject', '')
-      form.setValue('body', '')
+      form.setValue('subject', 'Update from All Media Group')
+      form.setValue(
+        'body',
+        `Hi {{name}},
+
+[Your message here]
+
+Regards,
+Amy
+amy@allmediagroup.tv`
+      )
     }
   }
 
