@@ -114,7 +114,19 @@ amy@allmediagroup.tv`,
       form.setValue('subject', 'Welcome to AMG Vendor Portal')
       form.setValue(
         'body',
-        'Your account has been created. Please click the link below to set your password and access the portal.'
+        `Hi {{name}},
+
+Welcome to the AMG Vendor Portal. We are excited to have you on board.
+
+Here are your account details:
+Vendor Number: {{vendorNumber}}
+Email: {{email}}
+
+Please click the link below to set your password and access the portal:
+{{link}}
+
+Regards,
+amy@allmediagroup.tv`
       )
     } else {
       // CUSTOM template
