@@ -71,8 +71,13 @@ export function EmailCompose() {
   const form = useForm<EmailFormValues>({
     resolver: zodResolver(emailSchema),
     defaultValues: {
-      subject: '',
-      body: '',
+      subject: 'Update from All Media Group',
+      body: `Hi {{name}},
+
+[Your message here]
+
+Regards,
+amy@allmediagroup.tv`,
       type: 'CUSTOM',
       vendorIds: [],
     },
@@ -96,9 +101,6 @@ export function EmailCompose() {
   }
 
   const selectedVendorIds = form.watch('vendorIds')
-  const selectedVendors = vendors.filter((v) =>
-    selectedVendorIds.includes(v.id)
-  )
 
   // Template change handler
   const onTemplateChange = (
@@ -115,8 +117,17 @@ export function EmailCompose() {
         'Your account has been created. Please click the link below to set your password and access the portal.'
       )
     } else {
-      form.setValue('subject', '')
-      form.setValue('body', '')
+      // CUSTOM template
+      form.setValue('subject', 'Update from All Media Group')
+      form.setValue(
+        'body',
+        `Hi {{name}},
+
+[Your message here]
+
+Regards,
+amy@allmediagroup.tv`
+      )
     }
   }
 
