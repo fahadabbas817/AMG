@@ -606,26 +606,10 @@ export class QuickbooksSyncService {
     };
 
     // 3. Send to QBO (Expense Account Lookup Logic)
-    const accountQuery =
-      "select * from Account where AccountType = 'Cost of Goods Sold' maxresults 1";
     try {
-      const accRes = await this.quickbooksService.makeApiCall(
-        'GET',
-        `/query?query=${encodeURIComponent(accountQuery)}`,
-      );
-      if (accRes.QueryResponse?.Account?.length > 0) {
-        billData.Line[0].AccountBasedExpenseLineDetail.AccountRef.value =
-          accRes.QueryResponse.Account[0].Id;
-      } else {
-        const anyExp = await this.quickbooksService.makeApiCall(
-          'GET',
-          `/query?query=${encodeURIComponent("select * from Account where AccountType = 'Expense' maxresults 1")}`,
-        );
-        if (anyExp.QueryResponse?.Account?.length > 0) {
-          billData.Line[0].AccountBasedExpenseLineDetail.AccountRef.value =
-            anyExp.QueryResponse.Account[0].Id;
-        }
-      }
+      const accountId = await this.quickbooksService.getRevenueShareAccountId();
+      billData.Line[0].AccountBasedExpenseLineDetail.AccountRef.value =
+        accountId;
     } catch (e) {
       this.logger.warn("Could not fetch expense account, using Id '1'", e);
     }

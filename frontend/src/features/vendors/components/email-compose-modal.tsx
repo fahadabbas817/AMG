@@ -64,8 +64,8 @@ export function EmailComposeModal({
 
 [Your message here]
 
-Regards,
-amy@allmediagroup.tv`,
+
+The AMG Team`,
       type: 'CUSTOM',
     },
   })
@@ -79,20 +79,21 @@ amy@allmediagroup.tv`,
       form.setValue('subject', 'Welcome to AMG Vendor Portal')
       form.setValue(
         'body',
-        `Hi {{name}},
+        `Dear {{name}}, 
+I hope you're doing well. Apologies for the recently delayed revenue share payouts. We've been busy developing a database that will allow you to login and see your monthly statistics from the different platforms where we place your content. You will also be able to track your payouts, both previous and pending. 
 
-Welcome to the AMG Vendor Portal. We are excited to have you on board.
+Reports will not be shown for months prior to December 2025 unless AMG receives the payout for an older report sometime in 2026. Then it will appear in the database. 
 
-Here are your account details:
-Vendor Number: {{vendorNumber}}
-Email: {{email}}
+Please take a minute to reset your password to ensure you're able to access your account. Also make sure your banking details are correct. If they are not, we request that you submit your updated payout information as soon as possible to avoid future delays. 
 
-Please click the link below to set your password and access the portal:
-{{link}}
+Here is the link: {{link}}
+Your Vendor Number is: {{vendorNumber}}
 
-Regards,
-Amy
-amy@allmediagroup.tv`
+Any questions, feel free to reach out. 
+
+Thanks for your continued support!
+
+The AMG Team`
       )
     } else {
       form.setValue('subject', 'Update from All Media Group')
@@ -102,9 +103,7 @@ amy@allmediagroup.tv`
 
 [Your message here]
 
-Regards,
-Amy
-amy@allmediagroup.tv`
+The AMG Team`
       )
     }
   }
@@ -135,7 +134,7 @@ amy@allmediagroup.tv`
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className='sm:max-w-[600px]'>
+      <DialogContent className='no-scrollbar max-h-[90vh] overflow-y-scroll sm:max-w-[600px]'>
         <DialogHeader>
           <DialogTitle>Compose Email</DialogTitle>
           <DialogDescription>
@@ -193,7 +192,7 @@ amy@allmediagroup.tv`
                   <FormControl>
                     <Textarea
                       placeholder='Type your message here...'
-                      className='min-h-[200px]'
+                      className='no-scrollbar max-h-[50vh] min-h-[200px] resize-none overflow-y-auto font-mono text-sm'
                       {...field}
                     />
                   </FormControl>

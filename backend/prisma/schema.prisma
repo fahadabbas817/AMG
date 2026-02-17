@@ -20,7 +20,7 @@ model Vendor {
   vendorNumber      String  @unique // e.g., "001"
   companyName       String
   contactName       String
-  email             String  @unique
+  email             String
   password          String? // Hashed, nullable for existing/unregistered vendors
   phone             String?
   address           String? // "5001 SW 74th Ct..."
