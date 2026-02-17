@@ -274,30 +274,8 @@ export class QuickbooksService {
     // 2. Prepare Bill Payload
     const amount = Number(payout.totalAmount); // Ensure number
 
-    // Finding a fallback account for the line item (required by QBO)
-    // Ideally this should be configurable. We'll try to find 'Commissions and fees' or similar.
-    let accountId = '80'; // Common default for Commissions in Sandbox?
-    // Better: Query for an account
-    try {
-      const accounts = await this.makeApiCall(
-        'GET',
-        "/query?query=SELECT * FROM Account WHERE Name LIKE 'Commissions%' MAXRESULTS 1",
-      );
-      if (accounts.QueryResponse?.Account?.length > 0) {
-        accountId = accounts.QueryResponse.Account[0].Id;
-      } else {
-        // Fallback query for ANY expense account
-        const expenses = await this.makeApiCall(
-          'GET',
-          "/query?query=SELECT * FROM Account WHERE AccountType = 'Expense' MAXRESULTS 1",
-        );
-        if (expenses.QueryResponse?.Account?.length > 0) {
-          accountId = expenses.QueryResponse.Account[0].Id;
-        }
-      }
-    } catch (e) {
-      this.logger.warn('Failed to fetch account for sync, using default', e);
-    }
+    // Finding the account for the line item (required by QBO)
+    const accountId = await this.getRevenueShareAccountId();
 
     const billPayload = {
       VendorRef: {
@@ -350,6 +328,17 @@ export class QuickbooksService {
         `QuickBooks Sync Failed: ${error.response?.data?.Fault?.Error?.[0]?.Message || error.message}`,
       );
     }
+  }
+
+  /**
+   * Helper to find the correct Revenue Share / COGS Account.
+   * Uses QBO_BILL_ACCOUNT_ID from env, defaults to '157'.
+   * Fallbacks removed per user request.
+   */
+  async getRevenueShareAccountId(): Promise<string> {
+    const accountId = process.env.QBO_BILL_ACCOUNT_ID || '1';
+    this.logger.log(`Using Revenue Share Account ID: ${accountId}`);
+    return accountId;
   }
   async deleteBill(qbBillId: string) {
     // 1. Fetch Bill to get SyncToken
