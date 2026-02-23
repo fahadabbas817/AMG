@@ -15,6 +15,7 @@ export type SavePayload = {
   mapping?: Record<string, string>
   invoiceNumber?: string
   paymentStatus?: string
+  headerRowIndex?: number
 }
 
 export const useSaveRevenueReport = () => {
@@ -33,6 +34,9 @@ export const useSaveRevenueReport = () => {
       }
       if (payload.paymentStatus) {
         formData.append('paymentStatus', payload.paymentStatus)
+      }
+      if (payload.headerRowIndex !== undefined) {
+        formData.append('headerRowIndex', payload.headerRowIndex.toString())
       }
 
       const response = await api.post('/revenue/upload', formData, {

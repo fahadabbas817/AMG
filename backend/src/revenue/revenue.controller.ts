@@ -83,8 +83,16 @@ export class RevenueController {
     )
     file: Express.Multer.File,
     @Body('platformId') platformId: string,
+    @Body('headerRowIndex') _headerRowIndex?: string,
   ) {
-    return this.revenueService.previewRevenueReport(file, platformId);
+    const headerRowIndex = _headerRowIndex
+      ? parseInt(_headerRowIndex, 10)
+      : undefined;
+    return this.revenueService.previewRevenueReport(
+      file,
+      platformId,
+      headerRowIndex,
+    );
   }
 
   @Post('dry-run')
@@ -129,6 +137,9 @@ export class RevenueController {
         : null;
     const mapping = body.mapping ? JSON.parse(body.mapping) : undefined;
     const invoiceNumber = body.invoiceNumber;
+    const headerRowIndex = body.headerRowIndex
+      ? parseInt(body.headerRowIndex, 10)
+      : undefined;
 
     return this.revenueService.dryRunRevenueReport(
       file,
@@ -137,6 +148,7 @@ export class RevenueController {
       totalAmount,
       mapping,
       invoiceNumber,
+      headerRowIndex,
     );
   }
 
@@ -199,6 +211,9 @@ export class RevenueController {
     const mapping = body.mapping ? JSON.parse(body.mapping) : undefined;
     const invoiceNumber = body.invoiceNumber; // Already optional
     const paymentStatus = body.paymentStatus;
+    const headerRowIndex = body.headerRowIndex
+      ? parseInt(body.headerRowIndex, 10)
+      : undefined;
 
     return this.revenueService.saveRevenueReport(
       file,
@@ -208,6 +223,7 @@ export class RevenueController {
       mapping,
       invoiceNumber,
       paymentStatus,
+      headerRowIndex,
     );
   }
 

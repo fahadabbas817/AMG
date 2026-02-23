@@ -8,6 +8,7 @@ interface DryRunDto {
   totalAmount?: number | null
   mapping?: Record<string, string>
   invoiceNumber?: string
+  headerRowIndex?: number
 }
 
 export const useDryRunRevenueReport = () => {
@@ -25,6 +26,9 @@ export const useDryRunRevenueReport = () => {
       }
       if (data.invoiceNumber) {
         formData.append('invoiceNumber', data.invoiceNumber)
+      }
+      if (data.headerRowIndex !== undefined) {
+        formData.append('headerRowIndex', data.headerRowIndex.toString())
       }
 
       const response = await api.post('/revenue/dry-run', formData, {

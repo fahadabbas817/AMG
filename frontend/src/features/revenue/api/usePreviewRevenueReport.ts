@@ -16,13 +16,18 @@ export const usePreviewRevenueReport = () => {
     mutationFn: async ({
       file,
       platformId,
+      headerRowIndex,
     }: {
       file: File
       platformId: string
+      headerRowIndex?: number
     }): Promise<PreviewResponse> => {
       const formData = new FormData()
       formData.append('file', file)
       formData.append('platformId', platformId)
+      if (headerRowIndex !== undefined) {
+        formData.append('headerRowIndex', headerRowIndex.toString())
+      }
 
       const response = await api.post('/revenue/preview', formData, {
         headers: {
