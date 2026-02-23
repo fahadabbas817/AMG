@@ -11,6 +11,7 @@ import OAuthClient from 'intuit-oauth';
 export class QuickbooksService {
   private readonly logger = new Logger(QuickbooksService.name);
   private oauthClient: any;
+  private qboCustomerCache = new Map<string, string | null>();
 
   constructor(private readonly prisma: PrismaService) {
     this.oauthClient = new OAuthClient({
@@ -260,7 +261,12 @@ export class QuickbooksService {
     // 1. Fetch Payout
     const payout = await this.prisma.payout.findUnique({
       where: { id: payoutId },
-      include: { vendor: true },
+      include: {
+        vendor: true,
+        items: {
+          include: { platform: true },
+        },
+      },
     });
 
     if (!payout) {
@@ -271,11 +277,32 @@ export class QuickbooksService {
       throw new BadRequestException('Vendor is not linked to QuickBooks');
     }
 
+    // Extract Platform Name
+    const platformName = payout.items[0]?.platform?.name || 'Unknown Platform';
+    const month = payout.items[0]?.periodStart
+      ? payout.items[0].periodStart.toISOString().slice(0, 7)
+      : 'Unknown Month';
+
     // 2. Prepare Bill Payload
     const amount = Number(payout.totalAmount); // Ensure number
 
     // Finding the account for the line item (required by QBO)
     const accountId = await this.getRevenueShareAccountId();
+
+    // Finding the CustomerRef for Platform Tagging
+    const customerId = await this.getQbCustomerIdByName(platformName);
+
+    const expenseLineDetail: any = {
+      AccountRef: {
+        value: accountId,
+      },
+    };
+
+    if (customerId) {
+      expenseLineDetail.CustomerRef = {
+        value: customerId,
+      };
+    }
 
     const billPayload = {
       VendorRef: {
@@ -283,16 +310,13 @@ export class QuickbooksService {
       },
       DocNumber: `PO-${payout.payoutNumber}`,
       TxnDate: new Date().toISOString().split('T')[0],
-      PrivateNote: `Payout for ${payout.vendor.companyName}`,
+      PrivateNote: `Payout for ${payout.vendor.companyName}. Platform: ${platformName}`,
       Line: [
         {
           DetailType: 'AccountBasedExpenseLineDetail',
           Amount: amount,
-          AccountBasedExpenseLineDetail: {
-            AccountRef: {
-              value: accountId,
-            },
-          },
+          Description: `Payout for ${platformName} (${month})`,
+          AccountBasedExpenseLineDetail: expenseLineDetail,
         },
       ],
     };
@@ -340,6 +364,49 @@ export class QuickbooksService {
     this.logger.log(`Using Revenue Share Account ID: ${accountId}`);
     return accountId;
   }
+  /**
+   * Helper to find the QBO Customer ID for Platform Tagging.
+   * Uses an in-memory Map to cache results and prevent repeated API calls.
+   */
+  async getQbCustomerIdByName(platformName: string): Promise<string | null> {
+    if (!platformName) return null;
+
+    if (this.qboCustomerCache.has(platformName)) {
+      const cachedVal = this.qboCustomerCache.get(platformName);
+      // Ensure we return null if that's what we cached (meaning 'Not Found')
+      return cachedVal !== undefined ? cachedVal : null;
+    }
+
+    try {
+      const safeName = platformName.replace(/'/g, "\\'");
+      // Ensure we only query active Customers to prevent invalid reference IDs
+      const query = `SELECT Id FROM Customer WHERE DisplayName = '${safeName}' AND Active = true MAXRESULTS 1`;
+      const response = await this.makeApiCall(
+        'GET',
+        `/query?query=${encodeURIComponent(query)}`,
+      );
+
+      if (response.QueryResponse?.Customer?.length > 0) {
+        const id = response.QueryResponse.Customer[0].Id;
+        this.qboCustomerCache.set(platformName, id);
+        this.logger.log(
+          `[QBO Customer Cache] Mapped platform "${platformName}" to Customer ID ${id}`,
+        );
+        return id;
+      }
+    } catch (e: any) {
+      this.logger.warn(
+        `[QBO Customer Cache] Failed to lookup Customer for platform "${platformName}": ${e.message}`,
+      );
+    }
+
+    this.qboCustomerCache.set(platformName, null);
+    this.logger.warn(
+      `[QBO Customer Cache] Customer for platform "${platformName}" not found in QBO. Platform Tagging will be skipped for this bill.`,
+    );
+    return null;
+  }
+
   async deleteBill(qbBillId: string) {
     // 1. Fetch Bill to get SyncToken
     let bill;

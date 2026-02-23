@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { type Table } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
@@ -20,6 +21,39 @@ type DataTableToolbarProps<TData> = {
   }[]
 }
 
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 300,
+  ...props
+}: {
+  value: string | number
+  onChange: (value: string | number) => void
+  debounce?: number
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+  const [value, setValue] = React.useState(initialValue)
+
+  React.useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      onChange(value)
+    }, debounce)
+
+    return () => clearTimeout(timeout)
+  }, [value, debounce, onChange])
+
+  return (
+    <Input
+      {...props}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    />
+  )
+}
+
 export function DataTableToolbar<TData>({
   table,
   searchPlaceholder = 'Filter...',
@@ -28,27 +62,25 @@ export function DataTableToolbar<TData>({
   children,
 }: DataTableToolbarProps<TData> & { children?: React.ReactNode }) {
   const isFiltered =
-    table.getState().columnFilters.length > 0 || table.getState().globalFilter
+    table.getState().columnFilters.length > 0 || !!table.getState().globalFilter
 
   return (
     <div className='flex items-center justify-between'>
       <div className='flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2'>
         {searchKey ? (
-          <Input
+          <DebouncedInput
             placeholder={searchPlaceholder}
             value={
               (table.getColumn(searchKey)?.getFilterValue() as string) ?? ''
             }
-            onChange={(event) =>
-              table.getColumn(searchKey)?.setFilterValue(event.target.value)
-            }
+            onChange={(val) => table.getColumn(searchKey)?.setFilterValue(val)}
             className='h-8 w-[150px] lg:w-[250px]'
           />
         ) : (
-          <Input
+          <DebouncedInput
             placeholder={searchPlaceholder}
-            value={table.getState().globalFilter ?? ''}
-            onChange={(event) => table.setGlobalFilter(event.target.value)}
+            value={(table.getState().globalFilter as string) ?? ''}
+            onChange={(val) => table.setGlobalFilter(val)}
             className='h-8 w-[150px] lg:w-[250px]'
           />
         )}

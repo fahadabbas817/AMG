@@ -46,7 +46,6 @@ import { Route as AuthenticatedVendorStatsIndexRouteImport } from './routes/_aut
 import { Route as AuthenticatedVendorProfileIndexRouteImport } from './routes/_authenticated/vendor/profile/index'
 import { Route as AuthenticatedVendorPayoutsIndexRouteImport } from './routes/_authenticated/vendor/payouts/index'
 import { Route as AuthenticatedVendorStatsReportRouteImport } from './routes/_authenticated/vendor/stats/report'
-import { Route as AuthenticatedVendorStatsStatsRouteImport } from './routes/_authenticated/vendor/stats/$stats'
 import { Route as AuthenticatedVendorPayoutsPayoutidRouteImport } from './routes/_authenticated/vendor/payouts/$payoutid'
 
 const AuthenticatedPayoutsIndexLazyRouteImport = createFileRoute(
@@ -291,12 +290,6 @@ const AuthenticatedVendorStatsReportRoute =
     path: '/vendor/stats/report',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedVendorStatsStatsRoute =
-  AuthenticatedVendorStatsStatsRouteImport.update({
-    id: '/vendor/stats/$stats',
-    path: '/vendor/stats/$stats',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedVendorPayoutsPayoutidRoute =
   AuthenticatedVendorPayoutsPayoutidRouteImport.update({
     id: '/vendor/payouts/$payoutid',
@@ -340,7 +333,6 @@ export interface FileRoutesByFullPath {
   '/vendors': typeof AuthenticatedVendorsIndexRoute
   '/payouts': typeof AuthenticatedPayoutsIndexLazyRoute
   '/vendor/payouts/$payoutid': typeof AuthenticatedVendorPayoutsPayoutidRoute
-  '/vendor/stats/$stats': typeof AuthenticatedVendorStatsStatsRoute
   '/vendor/stats/report': typeof AuthenticatedVendorStatsReportRoute
   '/vendor/payouts': typeof AuthenticatedVendorPayoutsIndexRoute
   '/vendor/profile': typeof AuthenticatedVendorProfileIndexRoute
@@ -381,7 +373,6 @@ export interface FileRoutesByTo {
   '/vendors': typeof AuthenticatedVendorsIndexRoute
   '/payouts': typeof AuthenticatedPayoutsIndexLazyRoute
   '/vendor/payouts/$payoutid': typeof AuthenticatedVendorPayoutsPayoutidRoute
-  '/vendor/stats/$stats': typeof AuthenticatedVendorStatsStatsRoute
   '/vendor/stats/report': typeof AuthenticatedVendorStatsReportRoute
   '/vendor/payouts': typeof AuthenticatedVendorPayoutsIndexRoute
   '/vendor/profile': typeof AuthenticatedVendorProfileIndexRoute
@@ -425,7 +416,6 @@ export interface FileRoutesById {
   '/_authenticated/vendors/': typeof AuthenticatedVendorsIndexRoute
   '/_authenticated/payouts/': typeof AuthenticatedPayoutsIndexLazyRoute
   '/_authenticated/vendor/payouts/$payoutid': typeof AuthenticatedVendorPayoutsPayoutidRoute
-  '/_authenticated/vendor/stats/$stats': typeof AuthenticatedVendorStatsStatsRoute
   '/_authenticated/vendor/stats/report': typeof AuthenticatedVendorStatsReportRoute
   '/_authenticated/vendor/payouts/': typeof AuthenticatedVendorPayoutsIndexRoute
   '/_authenticated/vendor/profile/': typeof AuthenticatedVendorProfileIndexRoute
@@ -469,7 +459,6 @@ export interface FileRouteTypes {
     | '/vendors'
     | '/payouts'
     | '/vendor/payouts/$payoutid'
-    | '/vendor/stats/$stats'
     | '/vendor/stats/report'
     | '/vendor/payouts'
     | '/vendor/profile'
@@ -510,7 +499,6 @@ export interface FileRouteTypes {
     | '/vendors'
     | '/payouts'
     | '/vendor/payouts/$payoutid'
-    | '/vendor/stats/$stats'
     | '/vendor/stats/report'
     | '/vendor/payouts'
     | '/vendor/profile'
@@ -553,7 +541,6 @@ export interface FileRouteTypes {
     | '/_authenticated/vendors/'
     | '/_authenticated/payouts/'
     | '/_authenticated/vendor/payouts/$payoutid'
-    | '/_authenticated/vendor/stats/$stats'
     | '/_authenticated/vendor/stats/report'
     | '/_authenticated/vendor/payouts/'
     | '/_authenticated/vendor/profile/'
@@ -851,13 +838,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVendorStatsReportRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/vendor/stats/$stats': {
-      id: '/_authenticated/vendor/stats/$stats'
-      path: '/vendor/stats/$stats'
-      fullPath: '/vendor/stats/$stats'
-      preLoaderRoute: typeof AuthenticatedVendorStatsStatsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/vendor/payouts/$payoutid': {
       id: '/_authenticated/vendor/payouts/$payoutid'
       path: '/vendor/payouts/$payoutid'
@@ -910,7 +890,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedVendorsIndexRoute: typeof AuthenticatedVendorsIndexRoute
   AuthenticatedPayoutsIndexLazyRoute: typeof AuthenticatedPayoutsIndexLazyRoute
   AuthenticatedVendorPayoutsPayoutidRoute: typeof AuthenticatedVendorPayoutsPayoutidRoute
-  AuthenticatedVendorStatsStatsRoute: typeof AuthenticatedVendorStatsStatsRoute
   AuthenticatedVendorStatsReportRoute: typeof AuthenticatedVendorStatsReportRoute
   AuthenticatedVendorPayoutsIndexRoute: typeof AuthenticatedVendorPayoutsIndexRoute
   AuthenticatedVendorProfileIndexRoute: typeof AuthenticatedVendorProfileIndexRoute
@@ -938,7 +917,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPayoutsIndexLazyRoute: AuthenticatedPayoutsIndexLazyRoute,
   AuthenticatedVendorPayoutsPayoutidRoute:
     AuthenticatedVendorPayoutsPayoutidRoute,
-  AuthenticatedVendorStatsStatsRoute: AuthenticatedVendorStatsStatsRoute,
   AuthenticatedVendorStatsReportRoute: AuthenticatedVendorStatsReportRoute,
   AuthenticatedVendorPayoutsIndexRoute: AuthenticatedVendorPayoutsIndexRoute,
   AuthenticatedVendorProfileIndexRoute: AuthenticatedVendorProfileIndexRoute,
