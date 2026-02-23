@@ -35,8 +35,7 @@ export function VendorsDialogs() {
           vendor={currentRow}
         />
       )}
-      {open === 'details' && console.log('Details dialog open')}
-      {open === 'splits' && console.log('Splits dialog open')}
+      {/* Provide components for Details and Splits dialogs if needed */}
     </>
   )
 }

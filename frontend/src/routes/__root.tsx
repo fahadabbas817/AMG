@@ -48,10 +48,7 @@ export const Route = createRootRouteWithContext<{
 
     // Try to fetch profile if we have a cookie (auto-login)
     try {
-      console.log('🔍 Checking for existing session...')
       const profileData = await AuthService.getProfile()
-
-      console.log('✅ Session found, auto-logging in:', profileData)
 
       // Profile exists, user is authenticated
       const user = {
@@ -69,11 +66,9 @@ export const Route = createRootRouteWithContext<{
       // Redirect to appropriate dashboard if on auth route
       if (isAuthRoute) {
         const targetPath = user.role === 'vendor' ? '/vendor' : '/'
-        console.log('🚀 Redirecting authenticated user to:', targetPath)
         throw redirect({ to: targetPath })
       }
     } catch (error) {
-      console.log('❌ No valid session found')
       // No valid session, user needs to login
       if (!isPublicRoute) {
         throw redirect({ to: '/sign-in' })

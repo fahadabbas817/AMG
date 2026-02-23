@@ -63,50 +63,55 @@ export class VendorsService {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(rawPassword, salt);
 
-    return this.prisma.$transaction(async (prisma) => {
-      const vendor = await prisma.vendor.create({
-        data: {
-          ...vendorData,
-          password: hashedPassword,
-        },
-      });
-
-      if (bankDetails) {
-        await prisma.bankDetails.create({
+    return this.prisma.$transaction(
+      async (prisma) => {
+        const vendor = await prisma.vendor.create({
           data: {
-            ...bankDetails,
-            vendorId: vendor.id,
+            ...vendorData,
+            password: hashedPassword,
           },
         });
-      }
 
-      // Handle Platform Splits
-      if (platformIds && platformIds.length > 0) {
-        // Fetch platforms to retrieve default splits
-        const platforms = await prisma.platform.findMany({
-          where: { id: { in: platformIds } },
-        });
-
-        if (platforms.length !== platformIds.length) {
-          throw new BadRequestException('One or more platform IDs are invalid');
+        if (bankDetails) {
+          await prisma.bankDetails.create({
+            data: {
+              ...bankDetails,
+              vendorId: vendor.id,
+            },
+          });
         }
 
-        const splitPromises = platforms.map((platform) =>
-          prisma.platformSplit.create({
-            data: {
-              vendorId: vendor.id,
-              platformId: platform.id,
-              commissionRate: platform.defaultSplit,
-            },
-          }),
-        );
+        // Handle Platform Splits
+        if (platformIds && platformIds.length > 0) {
+          // Fetch platforms to retrieve default splits
+          const platforms = await prisma.platform.findMany({
+            where: { id: { in: platformIds } },
+          });
 
-        await Promise.all(splitPromises);
-      }
+          if (platforms.length !== platformIds.length) {
+            throw new BadRequestException(
+              'One or more platform IDs are invalid',
+            );
+          }
 
-      const { password, ...result } = vendor;
-      return result;
-    });
+          const splitPromises = platforms.map((platform) =>
+            prisma.platformSplit.create({
+              data: {
+                vendorId: vendor.id,
+                platformId: platform.id,
+                commissionRate: platform.defaultSplit,
+              },
+            }),
+          );
+
+          await Promise.all(splitPromises);
+        }
+
+        const { password, ...result } = vendor;
+        return result;
+      },
+      { maxWait: 5000, timeout: 20000 },
+    );
   }
 
   async findAll(page: number = 1, limit: number = 10, search?: string) {
@@ -179,76 +184,79 @@ export class VendorsService {
       throw new NotFoundException(`Vendor with ID ${id} not found`);
     }
 
-    const result = await this.prisma.$transaction(async (prisma) => {
-      // Update vendor details
-      const updatedVendor = await prisma.vendor.update({
-        where: { id },
-        data: vendorData,
-      });
-
-      // Update or create bank details
-      if (bankDetails) {
-        await prisma.bankDetails.upsert({
-          where: { vendorId: id },
-          create: {
-            ...bankDetails,
-            vendorId: id,
-          },
-          update: bankDetails,
-        });
-      }
-
-      // Handle Platform Splits Update
-      if (platformIds) {
-        // Get existing splits
-        const existingSplits = await prisma.platformSplit.findMany({
-          where: { vendorId: id },
-          select: { platformId: true },
+    const result = await this.prisma.$transaction(
+      async (prisma) => {
+        // Update vendor details
+        const updatedVendor = await prisma.vendor.update({
+          where: { id },
+          data: vendorData,
         });
 
-        const existingPlatformIds = existingSplits.map((s) => s.platformId);
-
-        // Determine additions and removals
-        const toAdd = platformIds.filter(
-          (pid) => !existingPlatformIds.includes(pid),
-        );
-        const toRemove = existingPlatformIds.filter(
-          (pid) => !platformIds.includes(pid),
-        );
-
-        // Add new splits
-        if (toAdd.length > 0) {
-          // Fetch platforms to get default splits
-          const platformsToAdd = await prisma.platform.findMany({
-            where: { id: { in: toAdd } },
-          });
-
-          await Promise.all(
-            platformsToAdd.map((platform) =>
-              prisma.platformSplit.create({
-                data: {
-                  vendorId: id,
-                  platformId: platform.id,
-                  commissionRate: platform.defaultSplit,
-                },
-              }),
-            ),
-          );
-        }
-
-        // Remove old splits
-        if (toRemove.length > 0) {
-          await prisma.platformSplit.deleteMany({
-            where: {
+        // Update or create bank details
+        if (bankDetails) {
+          await prisma.bankDetails.upsert({
+            where: { vendorId: id },
+            create: {
+              ...bankDetails,
               vendorId: id,
-              platformId: { in: toRemove },
             },
+            update: bankDetails,
           });
         }
-      }
 
-      return updatedVendor;
-    });
+        // Handle Platform Splits Update
+        if (platformIds) {
+          // Get existing splits
+          const existingSplits = await prisma.platformSplit.findMany({
+            where: { vendorId: id },
+            select: { platformId: true },
+          });
+
+          const existingPlatformIds = existingSplits.map((s) => s.platformId);
+
+          // Determine additions and removals
+          const toAdd = platformIds.filter(
+            (pid) => !existingPlatformIds.includes(pid),
+          );
+          const toRemove = existingPlatformIds.filter(
+            (pid) => !platformIds.includes(pid),
+          );
+
+          // Add new splits
+          if (toAdd.length > 0) {
+            // Fetch platforms to get default splits
+            const platformsToAdd = await prisma.platform.findMany({
+              where: { id: { in: toAdd } },
+            });
+
+            await Promise.all(
+              platformsToAdd.map((platform) =>
+                prisma.platformSplit.create({
+                  data: {
+                    vendorId: id,
+                    platformId: platform.id,
+                    commissionRate: platform.defaultSplit,
+                  },
+                }),
+              ),
+            );
+          }
+
+          // Remove old splits
+          if (toRemove.length > 0) {
+            await prisma.platformSplit.deleteMany({
+              where: {
+                vendorId: id,
+                platformId: { in: toRemove },
+              },
+            });
+          }
+        }
+
+        return updatedVendor;
+      },
+      { maxWait: 5000, timeout: 20000 },
+    );
 
     return result;
   }
@@ -260,14 +268,17 @@ export class VendorsService {
     }
 
     try {
-      return await this.prisma.$transaction(async (prisma) => {
-        // Delete dependencies first
-        await prisma.bankDetails.deleteMany({ where: { vendorId: id } });
-        await prisma.platformSplit.deleteMany({ where: { vendorId: id } });
+      return await this.prisma.$transaction(
+        async (prisma) => {
+          // Delete dependencies first
+          await prisma.bankDetails.deleteMany({ where: { vendorId: id } });
+          await prisma.platformSplit.deleteMany({ where: { vendorId: id } });
 
-        // Attempt to delete vendor
-        return await prisma.vendor.delete({ where: { id } });
-      });
+          // Attempt to delete vendor
+          return await prisma.vendor.delete({ where: { id } });
+        },
+        { maxWait: 5000, timeout: 20000 },
+      );
     } catch (error) {
       // Check for foreign key constraint violation (Prisma code 'P2003')
       if (error.code === 'P2003') {

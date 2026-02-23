@@ -379,7 +379,7 @@ function VendorDetails() {
               </Button>
             </div>
           </CardHeader>
-          <CardContent className='p-0'>
+          <CardContent className='overflow-x-auto p-0'>
             <Table>
               <TableHeader>
                 <TableRow className='hover:bg-transparent'>
@@ -532,7 +532,7 @@ function VendorDetails() {
                   </Button>
                 )}
               </div>
-              <div className='rounded-md border'>
+              <div className='overflow-x-auto rounded-md border'>
                 <Table>
                   <TableHeader>
                     <TableRow className='bg-muted/50 hover:bg-muted/50'>

@@ -214,7 +214,7 @@ export function AssignVendorDialog({
                         {hasSubLabels ? (
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            value={field.value || ''}
                           >
                             <SelectTrigger>
                               <SelectValue placeholder='Select a sub-label' />

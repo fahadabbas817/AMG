@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useLocation } from '@tanstack/react-router'
 import { LayoutDashboard, Command, BarChart3, CreditCard } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import { useLayout } from '@/context/layout-provider'
@@ -7,6 +9,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  useSidebar,
 } from '@/components/ui/sidebar'
 import { NavGroup } from './nav-group'
 import { NavUser } from './nav-user'
@@ -56,6 +59,12 @@ export function VendorSidebar() {
     avatar: '', // You might want to generate this from name
     profileUrl: '/vendor/profile',
   }
+  const { setOpenMobile } = useSidebar()
+  const pathname = useLocation({ select: (location) => location.pathname })
+
+  useEffect(() => {
+    setOpenMobile(false)
+  }, [pathname, setOpenMobile])
 
   return (
     <Sidebar collapsible={collapsible} variant={variant}>

@@ -152,7 +152,7 @@ The AMG Team`
                   <FormLabel>Template</FormLabel>
                   <Select
                     onValueChange={(val) => handleTemplateChange(val as any)}
-                    defaultValue={field.value}
+                    value={field.value || ''}
                   >
                     <FormControl>
                       <SelectTrigger>

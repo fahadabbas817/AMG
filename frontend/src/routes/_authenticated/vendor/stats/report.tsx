@@ -157,7 +157,7 @@ function StatsReportPage() {
                   No records found for the selected period.
                 </div>
               ) : (
-                <div className='rounded-md border'>
+                <div className='overflow-x-auto rounded-md border'>
                   <Table>
                     {Array.from(groupedData.entries()).map(
                       ([groupKey, items]) => {

@@ -86,7 +86,7 @@ export function EmailHistory() {
         <CardTitle>Email History</CardTitle>
       </CardHeader>
       <CardContent className='px-0'>
-        <div className='rounded-md border'>
+        <div className='overflow-x-auto rounded-md border'>
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

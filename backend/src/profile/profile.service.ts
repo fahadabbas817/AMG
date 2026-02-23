@@ -153,8 +153,8 @@ export class ProfileService {
         });
       },
       {
-        maxWait: 5000, // default: 2000
-        timeout: 10000, // default: 5000
+        maxWait: 10000, // default: 2000
+        timeout: 30000, // default: 5000
       },
     );
   }
