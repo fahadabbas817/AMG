@@ -64,7 +64,7 @@ export class EmailService {
     const rawToken = crypto.randomBytes(32).toString('hex');
     const tokenHash = await bcrypt.hash(rawToken, 10);
     const expiry = new Date();
-    expiry.setHours(expiry.getHours() + 1); // 1 Hour
+    expiry.setHours(expiry.getHours() + 48); // 48 Hours
 
     // Save to Vendor
     await this.prisma.vendor.update({

@@ -24,12 +24,13 @@ export const Route = createRootRouteWithContext<{
     const isAuthRoute =
       location.pathname.startsWith('/(auth)') ||
       location.pathname.includes('/sign-in') ||
-      location.pathname.includes('/forgot-password') ||
       location.pathname.includes('/otp')
 
     const isPublicRoute =
       location.pathname.includes('/privacy-policy') ||
       location.pathname.includes('/eula') ||
+      location.pathname.includes('/forgot-password') ||
+      location.pathname.includes('/reset-password') ||
       isAuthRoute
 
     // If user is already in auth store, they're authenticated

@@ -17,7 +17,17 @@ export function Vendors() {
   // @ts-expect-error search is unknown
   const limit = Number(search?.pageSize) || 10
 
-  const { data: vendorsResponse, isLoading } = useGetVendors({ page, limit })
+  const searchObj = search as Record<string, unknown> | undefined
+  const searchQuery =
+    (searchObj?.companyName as string) ||
+    (searchObj?.vendorNumber as string) ||
+    undefined
+
+  const { data: vendorsResponse, isLoading } = useGetVendors({
+    page,
+    limit,
+    search: searchQuery,
+  })
 
   const vendors = vendorsResponse?.data || []
   const totalVendors = vendorsResponse?.meta?.total || 0

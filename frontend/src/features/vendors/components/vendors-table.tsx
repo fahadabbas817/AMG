@@ -69,6 +69,7 @@ export function VendorsTable({
     columns,
     rowCount,
     manualPagination: true,
+    manualFiltering: true,
     state: {
       sorting,
       pagination,
