@@ -67,7 +67,7 @@ export function VendorSplitsList({ vendorId }: VendorSplitsListProps) {
         </Button>
       </CardHeader>
       <CardContent>
-        <div className='rounded-md border'>
+        <div className='overflow-x-auto rounded-md border'>
           <Table>
             <TableHeader>
               <TableRow>

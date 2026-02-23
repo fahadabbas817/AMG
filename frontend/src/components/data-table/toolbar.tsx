@@ -37,13 +37,18 @@ function DebouncedInput({
     setValue(initialValue)
   }, [initialValue])
 
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
+  const onChangeRef = React.useRef(onChange)
+  onChangeRef.current = onChange
 
-    return () => clearTimeout(timeout)
-  }, [value, debounce, onChange])
+  React.useEffect(() => {
+    if (value !== initialValue) {
+      const timeout = setTimeout(() => {
+        onChangeRef.current(value)
+      }, debounce)
+
+      return () => clearTimeout(timeout)
+    }
+  }, [value, initialValue, debounce])
 
   return (
     <Input

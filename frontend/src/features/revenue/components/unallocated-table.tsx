@@ -134,7 +134,7 @@ export function UnallocatedTable({
 
   return (
     <>
-      <div className='rounded-md border'>
+      <div className='overflow-x-auto rounded-md border'>
         <Table>
           <TableHeader>
             <TableRow>
@@ -239,7 +239,7 @@ export function UnallocatedTable({
                           {isLoadingThis ? (
                             <Skeleton className='h-20 w-full' />
                           ) : details ? (
-                            <div className='bg-background rounded-md border'>
+                            <div className='bg-background overflow-x-auto rounded-md border'>
                               <Table>
                                 <TableHeader>
                                   <TableRow>

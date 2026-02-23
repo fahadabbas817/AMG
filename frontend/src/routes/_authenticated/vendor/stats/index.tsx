@@ -218,7 +218,7 @@ function VendorStatsPage() {
             <CardTitle>Detailed Breakdown</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='rounded-md border'>
+            <div className='overflow-x-auto rounded-md border'>
               <Table>
                 <TableHeader>
                   <TableRow>

@@ -418,7 +418,7 @@ export function VendorForm({
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value as string}
+                      value={(field.value as string) || ''}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -445,7 +445,7 @@ export function VendorForm({
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value as string}
+                      value={(field.value as string) || ''}
                     >
                       <FormControl>
                         <SelectTrigger>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
   type SortingState,
   type VisibilityState,
@@ -45,7 +45,6 @@ export function PlatformsTable({
     onColumnFiltersChange,
     pagination,
     onPaginationChange,
-    ensurePageInRange,
   } = useTableUrlState({
     search,
     navigate,
@@ -80,10 +79,6 @@ export function PlatformsTable({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
-  useEffect(() => {
-    ensurePageInRange(table.getPageCount())
-  }, [table, ensurePageInRange])
-
   return (
     <div
       className={cn(
@@ -92,7 +87,7 @@ export function PlatformsTable({
       )}
     >
       <DataTableToolbar table={table} searchKey='name' />
-      <div className='overflow-hidden rounded-md border'>
+      <div className='overflow-x-auto rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

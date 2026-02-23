@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useLocation } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { useLayout } from '@/context/layout-provider'
 import {
@@ -6,6 +8,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  useSidebar,
 } from '@/components/ui/sidebar'
 // import { AppTitle } from './app-title'
 import { sidebarData } from './data/sidebar-data'
@@ -23,6 +26,13 @@ export function AppSidebar() {
     avatar: '',
     profileUrl: '/help-center',
   }
+  const { setOpenMobile } = useSidebar()
+  const pathname = useLocation({ select: (location) => location.pathname })
+
+  useEffect(() => {
+    setOpenMobile(false)
+  }, [pathname, setOpenMobile])
+
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader>

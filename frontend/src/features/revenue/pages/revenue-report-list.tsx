@@ -198,7 +198,7 @@ export default function RevenueReportList() {
         </div>
 
         {/* TABLE */}
-        <div className='bg-card rounded-md border'>
+        <div className='bg-card overflow-x-auto rounded-md border'>
           <Table>
             <TableHeader>
               <TableRow>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useRef } from 'react'
 import type {
   ColumnFiltersState,
   OnChangeFn,
@@ -7,13 +7,7 @@ import type {
 
 type SearchRecord = Record<string, unknown>
 
-export type NavigateFn = (opts: {
-  search:
-    | true
-    | SearchRecord
-    | ((prev: SearchRecord) => Partial<SearchRecord> | SearchRecord)
-  replace?: boolean
-}) => void
+export type NavigateFn = any
 
 type UseTableUrlStateParams = {
   search: SearchRecord
@@ -124,7 +118,8 @@ export function useTableUrlState(
     const nextPage = next.pageIndex + 1
     const nextPageSize = next.pageSize
     navigate({
-      search: (prev) => ({
+      replace: true,
+      search: (prev: SearchRecord) => ({
         ...(prev as SearchRecord),
         [pageKey]: nextPage <= defaultPage ? undefined : nextPage,
         [pageSizeKey]:
@@ -149,7 +144,8 @@ export function useTableUrlState(
           const value = trimGlobal ? next.trim() : next
           setGlobalFilter(value)
           navigate({
-            search: (prev) => ({
+            replace: true,
+            search: (prev: SearchRecord) => ({
               ...(prev as SearchRecord),
               [pageKey]: undefined,
               [globalFilterKey]: value ? value : undefined,
@@ -182,7 +178,8 @@ export function useTableUrlState(
     }
 
     navigate({
-      search: (prev) => ({
+      replace: true,
+      search: (prev: SearchRecord) => ({
         ...(prev as SearchRecord),
         [pageKey]: undefined,
         ...patch,
@@ -190,22 +187,33 @@ export function useTableUrlState(
     })
   }
 
-  const ensurePageInRange = (
-    pageCount: number,
-    opts: { resetTo?: 'first' | 'last' } = { resetTo: 'first' }
-  ) => {
-    const currentPage = (search as SearchRecord)[pageKey]
-    const pageNum = typeof currentPage === 'number' ? currentPage : defaultPage
-    if (pageCount > 0 && pageNum > pageCount) {
-      navigate({
-        replace: true,
-        search: (prev) => ({
-          ...(prev as SearchRecord),
-          [pageKey]: opts.resetTo === 'last' ? pageCount : undefined,
-        }),
-      })
-    }
-  }
+  const searchRef = useRef(search)
+  searchRef.current = search
+
+  const navigateRef = useRef(navigate)
+  navigateRef.current = navigate
+
+  const ensurePageInRange = useMemo(
+    () =>
+      (
+        pageCount: number,
+        opts: { resetTo?: 'first' | 'last' } = { resetTo: 'first' }
+      ) => {
+        const currentPage = (searchRef.current as SearchRecord)[pageKey]
+        const pageNum =
+          typeof currentPage === 'number' ? currentPage : defaultPage
+        if (pageCount > 0 && pageNum > pageCount) {
+          navigateRef.current({
+            replace: true,
+            search: (prev: SearchRecord) => ({
+              ...(prev as SearchRecord),
+              [pageKey]: opts.resetTo === 'last' ? pageCount : undefined,
+            }),
+          })
+        }
+      },
+    [pageKey, defaultPage]
+  )
 
   return {
     globalFilter: globalFilterEnabled ? (globalFilter ?? '') : undefined,

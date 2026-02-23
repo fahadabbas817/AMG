@@ -453,7 +453,7 @@ export class RevenueService {
             totalRecords: matchedData.length,
           };
         },
-        { timeout: 20000 },
+        { maxWait: 10000, timeout: 120000 },
       );
 
       // 5. Trigger Sync (This is now the FINAL Step, so we auto-sync)
@@ -778,40 +778,43 @@ export class RevenueService {
 
     // 4. Transactional Save
     try {
-      const result = await this.prisma.$transaction(async (tx) => {
-        const report = await tx.revenueReport.create({
-          data: {
-            filename: 'Platform Total',
-            rawFileUrl: '', // No physical file
-            status: 'PROCESSED',
-            platformId: platform.id,
-            totalAmount: totalAmount,
-            month: new Date(month),
-            invoiceRef: invoiceNumber || null,
-          },
-        });
+      const result = await this.prisma.$transaction(
+        async (tx) => {
+          const report = await tx.revenueReport.create({
+            data: {
+              filename: 'Platform Total',
+              rawFileUrl: '', // No physical file
+              status: 'PROCESSED',
+              platformId: platform.id,
+              totalAmount: totalAmount,
+              month: new Date(month),
+              invoiceRef: invoiceNumber || null,
+            },
+          });
 
-        await tx.revenueRecord.createMany({
-          data: processedRows.map((row) => ({
+          await tx.revenueRecord.createMany({
+            data: processedRows.map((row) => ({
+              reportId: report.id,
+              vendorId: row.vendorId || null,
+              rawVendorName: row.vendorName,
+              platformId: platform.id,
+              periodStart: new Date(month),
+              periodEnd: new Date(month),
+              grossRevenue: row.grossRevenue,
+              lineItemName: row.lineItemName || 'Platform Total',
+              status: row.status,
+              metadata: {},
+            })),
+          });
+
+          return {
+            message: 'Manual report saved successfully',
             reportId: report.id,
-            vendorId: row.vendorId || null,
-            rawVendorName: row.vendorName,
-            platformId: platform.id,
-            periodStart: new Date(month),
-            periodEnd: new Date(month),
-            grossRevenue: row.grossRevenue,
-            lineItemName: row.lineItemName || 'Platform Total',
-            status: row.status,
-            metadata: {},
-          })),
-        });
-
-        return {
-          message: 'Manual report saved successfully',
-          reportId: report.id,
-          totalRecords: processedRows.length,
-        };
-      });
+            totalRecords: processedRows.length,
+          };
+        },
+        { maxWait: 10000, timeout: 60000 },
+      );
 
       // AUTOMATED SYNC: Immediately try to sync the report (Best Effort)
       this.syncReport(result.reportId).catch((err) => {
@@ -1215,7 +1218,7 @@ export class RevenueService {
           }
         }
       },
-      { timeout: 10000 },
+      { maxWait: 10000, timeout: 60000 },
     );
 
     // 4. Create Payouts & Sync (Post-Update)
