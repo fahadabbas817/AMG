@@ -20,10 +20,10 @@ export class ManualRowDto {
   vendorName: string;
 
   @ApiProperty({
-    description: 'The UUID of the Vendor (if selected)',
+    description: 'The ID of the Vendor (if selected)',
     required: true,
   })
-  @IsUUID()
+  @IsString()
   vendorId: string;
 
   @ApiProperty({ description: 'Gross Revenue amount for this vendor' })
