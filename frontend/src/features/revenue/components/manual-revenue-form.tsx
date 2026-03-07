@@ -99,6 +99,15 @@ export const ManualRevenueForm = () => {
       return
     }
 
+    // Explicitly validate all rows have a vendor selected
+    const hasInvalidRows = data.rows.some(
+      (r) => !r.vendorId || r.vendorId.trim() === ''
+    )
+    if (hasInvalidRows) {
+      toast.error('Please select a vendor for all rows before submitting.')
+      return
+    }
+
     try {
       await saveMutation.mutateAsync({
         ...data,
@@ -231,10 +240,10 @@ export const ManualRevenueForm = () => {
                         control={control}
                         name={`rows.${index}.vendorId`}
                         rules={{ required: true }}
-                        render={({ field }) => {
+                        render={({ field, fieldState }) => {
                           const [open, setOpen] = React.useState(false)
                           const selectedVendor = vendors?.data?.find(
-                            (v) => v.id === field.value
+                            (v: any) => v.id === field.value
                           )
 
                           return (
@@ -244,7 +253,10 @@ export const ManualRevenueForm = () => {
                                   variant='outline'
                                   role='combobox'
                                   aria-expanded={open}
-                                  className='w-full justify-between'
+                                  className={cn(
+                                    'w-full justify-between',
+                                    fieldState.error && 'border-red-500'
+                                  )}
                                 >
                                   {field.value
                                     ? selectedVendor
