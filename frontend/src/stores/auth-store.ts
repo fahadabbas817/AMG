@@ -1,7 +1,6 @@
 import { create } from 'zustand'
-import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
 
-const ACCESS_TOKEN = 'thisisjustarandomstring'
+const ACCESS_TOKEN = 'access_token'
 
 interface AuthUser {
   accountNo?: string // Optional as per user example
@@ -24,8 +23,9 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()((set) => {
-  const cookieState = getCookie(ACCESS_TOKEN)
-  const initToken = cookieState ? JSON.parse(cookieState) : ''
+  const tokenString = typeof window !== 'undefined' ? localStorage.getItem(ACCESS_TOKEN) : null
+  let initToken = tokenString || ''
+  
   return {
     auth: {
       user: null,
@@ -34,17 +34,17 @@ export const useAuthStore = create<AuthState>()((set) => {
       accessToken: initToken,
       setAccessToken: (accessToken) =>
         set((state) => {
-          setCookie(ACCESS_TOKEN, JSON.stringify(accessToken))
+          localStorage.setItem(ACCESS_TOKEN, accessToken)
           return { ...state, auth: { ...state.auth, accessToken } }
         }),
       resetAccessToken: () =>
         set((state) => {
-          removeCookie(ACCESS_TOKEN)
+          localStorage.removeItem(ACCESS_TOKEN)
           return { ...state, auth: { ...state.auth, accessToken: '' } }
         }),
       reset: () =>
         set((state) => {
-          removeCookie(ACCESS_TOKEN)
+          localStorage.removeItem(ACCESS_TOKEN)
           return {
             ...state,
             auth: { ...state.auth, user: null, accessToken: '' },

@@ -95,7 +95,7 @@ export function UserAuthForm({
       }
 
       auth.setUser(user)
-      auth.setAccessToken('token-stored-in-cookie') // Token is in httpOnly cookie
+      auth.setAccessToken(response.access_token) // Token is now stored in localStorage
 
       // Show success toast
       toast.success(`Welcome back, ${userData.email}!`)
