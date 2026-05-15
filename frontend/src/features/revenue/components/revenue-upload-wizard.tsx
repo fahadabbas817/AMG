@@ -25,6 +25,7 @@ export const RevenueUploadWizard = () => {
 
   const [previewData, setPreviewData] = useState<any>(null)
   const [mapping, setMapping] = useState<Record<string, string>>({})
+  const [headerRowIndex, setHeaderRowIndex] = useState<number>(0)
 
   const previewMutation = usePreviewRevenueReport()
   const dryRunMutation = useDryRunRevenueReport()
@@ -45,10 +46,32 @@ export const RevenueUploadWizard = () => {
       if (data.suggestedMapping) {
         setMapping(data.suggestedMapping)
       }
+      setHeaderRowIndex(data.headerRowIndex)
 
       setStep(2)
     } catch (error: any) {
       toast.error('Failed to preview file')
+      console.error(error)
+    }
+  }
+
+  // Re-run preview when header row index changes explicitly
+  const handleHeaderRowChange = async (newIndex: number) => {
+    if (!step1Data.file || !step1Data.platformId) return
+    setHeaderRowIndex(newIndex)
+
+    try {
+      const data = await previewMutation.mutateAsync({
+        file: step1Data.file,
+        platformId: step1Data.platformId,
+        headerRowIndex: newIndex,
+      })
+      setPreviewData(data)
+      if (data.suggestedMapping) {
+        setMapping(data.suggestedMapping)
+      }
+    } catch (error: any) {
+      toast.error('Failed to preview file with new header row')
       console.error(error)
     }
   }
@@ -65,6 +88,7 @@ export const RevenueUploadWizard = () => {
         totalAmount: parseFloat(step1Data.totalAmount),
         mapping: mapping,
         invoiceNumber: step1Data.invoiceNumber,
+        headerRowIndex: headerRowIndex,
       })
 
       setDryRunSummary(summary)
@@ -87,6 +111,7 @@ export const RevenueUploadWizard = () => {
         mapping: mapping,
         invoiceNumber: step1Data.invoiceNumber,
         paymentStatus: step1Data.paymentStatus,
+        headerRowIndex: headerRowIndex,
       })
 
       toast.success('Revenue report saved and synced successfully.')
@@ -132,6 +157,9 @@ export const RevenueUploadWizard = () => {
           previewRows={previewData.sampleRows}
           mapping={mapping}
           onChange={setMapping}
+          headerRowIndex={headerRowIndex}
+          onHeaderRowChange={handleHeaderRowChange}
+          isPreviewing={previewMutation.isPending}
           onSave={handleDryRun}
           onBack={() => setStep(1)}
           isSaving={dryRunMutation.isPending}

@@ -64,7 +64,7 @@ export class EmailService {
     const rawToken = crypto.randomBytes(32).toString('hex');
     const tokenHash = await bcrypt.hash(rawToken, 10);
     const expiry = new Date();
-    expiry.setHours(expiry.getHours() + 1); // 1 Hour
+    expiry.setHours(expiry.getHours() + 48); // 48 Hours
 
     // Save to Vendor
     await this.prisma.vendor.update({
@@ -83,7 +83,7 @@ export class EmailService {
     // Prepare Brevo Email
     const sendSmtpEmail = new Brevo.SendSmtpEmail();
     sendSmtpEmail.subject = 'Reset Your Password - AMG Portal';
-    sendSmtpEmail.to = [{ email: vendor.email, name: vendor.contactName }];
+    sendSmtpEmail.to = [{ email: vendor.email, name: vendor.companyName }];
     sendSmtpEmail.htmlContent = this.getCompiledHtml('reset-password', {
       link,
     });
@@ -138,7 +138,6 @@ export class EmailService {
         let context: any = { body: bodyOrTemplate };
 
         if (type === 'WELCOME') {
-          templateName = 'welcome';
           // Generate a setup token for welcome flow if they are new
           const rawToken = crypto.randomBytes(32).toString('hex');
           const tokenHash = await bcrypt.hash(rawToken, 10);
@@ -155,16 +154,34 @@ export class EmailService {
           });
 
           const link = `${frontendUrl}/reset-password?token=${rawToken}&email=${vendor.email}`;
-          context = { name: vendor.contactName || vendor.companyName, link };
+
+          // Perform variable replacements for WELCOME type
+          let personalizedBody = bodyOrTemplate
+            .replace(
+              /{{name}}/g,
+              vendor.companyName || vendor.contactName || 'Partner',
+            )
+            .replace(/{{vendorNumber}}/g, vendor.vendorNumber || 'N/A')
+            .replace(/{{email}}/g, vendor.email || 'N/A')
+            .replace(/{{link}}/g, link);
+
+          // Convert newlines to <br> for HTML email
+          personalizedBody = personalizedBody.replace(/\n/g, '<br>');
+
+          context = { body: personalizedBody };
         }
 
         // Templating replacement for custom text
         if (type === 'CUSTOM') {
           // Basic replacement for internal variable before passing to template
-          const personalizedBody = bodyOrTemplate.replace(
+          let personalizedBody = bodyOrTemplate.replace(
             /{{name}}/g,
-            vendor.contactName || vendor.companyName || 'Partner',
+            vendor.companyName || vendor.contactName || 'Partner',
           );
+
+          // Convert newlines to <br> for HTML email
+          personalizedBody = personalizedBody.replace(/\n/g, '<br>');
+
           context = { body: personalizedBody };
         }
 

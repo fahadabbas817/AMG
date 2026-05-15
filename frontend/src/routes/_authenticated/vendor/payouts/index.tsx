@@ -1,10 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { useGetVendorPayouts } from '@/features/vendor-dashboard/api/useGetVendorPayouts'
 import { VendorPayoutsTable } from '@/features/vendor-dashboard/components/vendor-payouts-table'
 
@@ -17,16 +14,6 @@ function VendorPayoutsPage() {
 
   return (
     <>
-      <Header>
-        <div className='flex items-center gap-4'>
-          {/* Breadcrumb or Title placeholder */}
-        </div>
-        <div className='ms-auto flex items-center space-x-4'>
-          <ThemeSwitch />
-          <ProfileDropdown />
-        </div>
-      </Header>
-
       <Main>
         <div className='flex flex-1 flex-col gap-4'>
           <div className='flex items-center justify-between space-y-2'>

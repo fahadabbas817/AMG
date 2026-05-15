@@ -40,6 +40,9 @@ type Props = {
   previewRows: any[][]
   mapping: Record<string, string> // systemKey -> headerName
   onChange: (mapping: Record<string, string>) => void
+  headerRowIndex: number
+  onHeaderRowChange: (index: number) => void
+  isPreviewing: boolean
   onSave: () => void
   onBack: () => void
   isSaving: boolean
@@ -50,6 +53,9 @@ export const RevenueUploadStep2: React.FC<Props> = ({
   previewRows,
   mapping,
   onChange,
+  headerRowIndex,
+  onHeaderRowChange,
+  isPreviewing,
   onSave,
   onBack,
   isSaving,
@@ -82,6 +88,48 @@ export const RevenueUploadStep2: React.FC<Props> = ({
 
   return (
     <div className='mx-auto max-w-6xl space-y-6'>
+      {/* 0. Header Row Selection */}
+      <Card>
+        <CardHeader className='pb-3'>
+          <CardTitle>Data Settings</CardTitle>
+          <p className='text-muted-foreground text-sm'>
+            If the system didn't detect the correct header row automatically,
+            you can manually specify which row contains your column headers.
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className='flex items-center gap-4'>
+            <div className='grid max-w-xs flex-1 gap-1.5'>
+              <Label htmlFor='header-row'>Header Row Index</Label>
+              <div className='flex gap-2'>
+                <input
+                  id='header-row'
+                  type='number'
+                  min={0}
+                  className='border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50'
+                  value={headerRowIndex}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value, 10)
+                    if (!isNaN(val) && val >= 0) {
+                      onHeaderRowChange(val)
+                    }
+                  }}
+                  disabled={isPreviewing || isSaving}
+                />
+              </div>
+              <p className='text-muted-foreground text-xs'>
+                0-indexed (row 1 in excel is 0)
+              </p>
+            </div>
+            {isPreviewing && (
+              <div className='text-muted-foreground mt-4 animate-pulse text-sm'>
+                Refreshing format...
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* 1. Mapping Section */}
       <Card>
         <CardHeader>

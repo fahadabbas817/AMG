@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsUUID } from 'class-validator';
+import { IsArray, IsNotEmpty, IsUUID, IsString } from 'class-validator';
 
 export class CreatePayoutDto {
   @ApiProperty({ description: 'UUID of the Vendor' })
-  @IsUUID()
+  @IsString()
   @IsNotEmpty()
   vendorId: string;
 

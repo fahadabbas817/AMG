@@ -67,7 +67,7 @@ export function PayoutsTable({ data }: PayoutsTableProps) {
   return (
     <div className='flex flex-1 flex-col gap-4'>
       <PayoutsTableToolbar table={table} />
-      <div className='rounded-md border'>
+      <div className='overflow-x-auto rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

@@ -578,56 +578,54 @@ export class QuickbooksSyncService {
       throw new BadRequestException('Vendor not linked to QBO');
     }
 
-    const platforms = [
+    const platformsText = [
       ...new Set(payout.items.map((i) => i.platform.name)),
     ].join(', ');
+    const platformName = payout.items[0]?.platform?.name || 'Unknown Platform';
     const month =
       payout.items[0]?.periodStart.toISOString().slice(0, 7) || 'Unknown Month';
 
-    const billData = {
+    const billData: any = {
       VendorRef: {
         value: payout.vendor.qbVendorId,
       },
       DocNumber: invoiceRef
         ? `${invoiceRef}-${payout.payoutNumber}`
         : String(payout.payoutNumber),
+      PrivateNote: `Payout #${payout.payoutNumber} for ${payout.vendor.companyName}. Platform: ${platformsText}`,
       Line: [
         {
           DetailType: 'AccountBasedExpenseLineDetail',
           Amount: Number(payout.totalAmount),
+          Description: `Payout #${payout.payoutNumber} for ${platformsText} (${month})`,
           AccountBasedExpenseLineDetail: {
             AccountRef: {
               value: '1',
             },
           },
-          Description: `Payout #${payout.payoutNumber} for ${platforms} (${month})`,
         },
       ],
     };
 
-    // 3. Send to QBO (Expense Account Lookup Logic)
-    const accountQuery =
-      "select * from Account where AccountType = 'Cost of Goods Sold' maxresults 1";
+    // 3. Send to QBO (Expense Account & Customer Lookup Logic)
     try {
-      const accRes = await this.quickbooksService.makeApiCall(
-        'GET',
-        `/query?query=${encodeURIComponent(accountQuery)}`,
-      );
-      if (accRes.QueryResponse?.Account?.length > 0) {
-        billData.Line[0].AccountBasedExpenseLineDetail.AccountRef.value =
-          accRes.QueryResponse.Account[0].Id;
-      } else {
-        const anyExp = await this.quickbooksService.makeApiCall(
-          'GET',
-          `/query?query=${encodeURIComponent("select * from Account where AccountType = 'Expense' maxresults 1")}`,
-        );
-        if (anyExp.QueryResponse?.Account?.length > 0) {
-          billData.Line[0].AccountBasedExpenseLineDetail.AccountRef.value =
-            anyExp.QueryResponse.Account[0].Id;
-        }
-      }
+      const accountId = await this.quickbooksService.getRevenueShareAccountId();
+      billData.Line[0].AccountBasedExpenseLineDetail.AccountRef.value =
+        accountId;
     } catch (e) {
       this.logger.warn("Could not fetch expense account, using Id '1'", e);
+    }
+
+    try {
+      const customerId =
+        await this.quickbooksService.getQbCustomerIdByName(platformName);
+      if (customerId) {
+        billData.Line[0].AccountBasedExpenseLineDetail.CustomerRef = {
+          value: customerId,
+        };
+      }
+    } catch (e) {
+      this.logger.warn('Could not fetch Customer ID for platform tagging', e);
     }
 
     const createdBill = await this.quickbooksService.makeApiCall(

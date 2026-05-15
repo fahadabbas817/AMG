@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
   type SortingState,
   type VisibilityState,
@@ -51,7 +51,6 @@ export function VendorsTable({
     onColumnFiltersChange,
     pagination,
     onPaginationChange,
-    ensurePageInRange,
   } = useTableUrlState({
     search,
     navigate,
@@ -69,6 +68,7 @@ export function VendorsTable({
     columns,
     rowCount,
     manualPagination: true,
+    manualFiltering: true,
     state: {
       sorting,
       pagination,
@@ -89,10 +89,6 @@ export function VendorsTable({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
-
-  useEffect(() => {
-    ensurePageInRange(table.getPageCount())
-  }, [table, ensurePageInRange])
 
   const selectedVendorIds = table
     .getFilteredSelectedRowModel()
@@ -124,7 +120,7 @@ export function VendorsTable({
           Compose Email ({selectedVendorIds.length})
         </Button>
       </DataTableToolbar>
-      <div className='overflow-hidden rounded-md border'>
+      <div className='overflow-x-auto rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

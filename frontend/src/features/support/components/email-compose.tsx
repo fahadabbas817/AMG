@@ -71,8 +71,12 @@ export function EmailCompose() {
   const form = useForm<EmailFormValues>({
     resolver: zodResolver(emailSchema),
     defaultValues: {
-      subject: '',
-      body: '',
+      subject: 'Update from All Media Group',
+      body: `Hi {{name}},
+
+[Your message here]
+
+The AMG Team`,
       type: 'CUSTOM',
       vendorIds: [],
     },
@@ -96,9 +100,6 @@ export function EmailCompose() {
   }
 
   const selectedVendorIds = form.watch('vendorIds')
-  const selectedVendors = vendors.filter((v) =>
-    selectedVendorIds.includes(v.id)
-  )
 
   // Template change handler
   const onTemplateChange = (
@@ -112,11 +113,33 @@ export function EmailCompose() {
       form.setValue('subject', 'Welcome to AMG Vendor Portal')
       form.setValue(
         'body',
-        'Your account has been created. Please click the link below to set your password and access the portal.'
+        `Dear {{name}}, 
+I hope you're doing well. Apologies for the recently delayed revenue share payouts. We've been busy developing a database that will allow you to login and see your monthly statistics from the different platforms where we place your content. You will also be able to track your payouts, both previous and pending. 
+
+Reports will not be shown for months prior to December 2025 unless AMG receives the payout for an older report sometime in 2026. Then it will appear in the database. 
+
+Please take a minute to reset your password to ensure you're able to access your account. Also make sure your banking details are correct. If they are not, we request that you submit your updated payout information as soon as possible to avoid future delays. 
+
+Here is the link: {{link}}
+Your Vendor Number is: {{vendorNumber}}
+
+Any questions, feel free to reach out. 
+
+Thanks for your continued support!
+
+The AMG Team`
       )
     } else {
-      form.setValue('subject', '')
-      form.setValue('body', '')
+      // CUSTOM template
+      form.setValue('subject', 'Update from All Media Group')
+      form.setValue(
+        'body',
+        `Hi {{name}},
+
+[Your message here]
+
+The AMG Team`
+      )
     }
   }
 

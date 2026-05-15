@@ -26,7 +26,11 @@ export class RevenueService {
     private readonly qbSyncService: QuickbooksSyncService,
   ) {}
 
-  async previewRevenueReport(file: Express.Multer.File, platformId: string) {
+  async previewRevenueReport(
+    file: Express.Multer.File,
+    platformId: string,
+    explicitHeaderRowIndex?: number,
+  ) {
     // 1. Get Platform
     const platform = await this.prisma.platform.findUnique({
       where: { id: platformId },
@@ -39,43 +43,51 @@ export class RevenueService {
     // 2. Parse Raw Data (Array of Arrays)
     const rawRows = parseSheet(file.buffer, { raw: true });
 
-    // 3. Smart Scan for Header
-    const autoHeaderIndex = scanForHeader(rawRows);
-    let headerRowIndex = autoHeaderIndex;
+    // 3. Header Index Selection
+    let headerRowIndex = 0;
 
-    // Check if we have a saved template
-    if (platform.mappingTemplate) {
-      const templateIndex = platform.mappingTemplate.headerRowIndex;
-      // If template index is valid
-      if (templateIndex < rawRows.length) {
-        // Compare scores to decide whether to trust template or auto-scan
-        // We need calculateRowScore imported from universal-parser
-        const { calculateRowScore } = require('./utils/universal-parser.util');
-        const templateScore = calculateRowScore(rawRows[templateIndex]);
-        const autoScore = calculateRowScore(rawRows[autoHeaderIndex]);
+    if (explicitHeaderRowIndex !== undefined) {
+      headerRowIndex = explicitHeaderRowIndex;
+    } else {
+      const autoHeaderIndex = scanForHeader(rawRows);
+      headerRowIndex = autoHeaderIndex;
 
-        // Trust template UNLESS auto-scan is significantly better
-        // And if template score is very low (e.g. 0 or 1 like a title row)
-        // If template score is >= 2, we respect it (user might have chosen a weird header)
-        // But if template score < 2 AND auto > template, we switch.
-        // Actually, for this specific case: Template=0 (Title="Dec...", score=0 or 1), Auto=1 (Header, score=6).
-        console.log(
-          `[SmartScan] Template Index: ${templateIndex} (Score: ${templateScore}) | Auto Index: ${autoHeaderIndex} (Score: ${autoScore})`,
-        );
+      // Check if we have a saved template
+      if (platform.mappingTemplate) {
+        const templateIndex = platform.mappingTemplate.headerRowIndex;
+        // If template index is valid
+        if (templateIndex < rawRows.length) {
+          // Compare scores to decide whether to trust template or auto-scan
+          // We need calculateRowScore imported from universal-parser
+          const {
+            calculateRowScore,
+          } = require('./utils/universal-parser.util');
+          const templateScore = calculateRowScore(rawRows[templateIndex]);
+          const autoScore = calculateRowScore(rawRows[autoHeaderIndex]);
 
-        // Override if Auto-Scan is significantly better (diff >= 2)
-        // OR if Auto-Scan is better match and template score is low (< 3)
-        // This handles:
-        // Case 1: Title Row (Score ~3) vs Header Row (Score ~8) -> 8 > 3+2 (True) -> Override
-        // Case 2: Metadata Row (Score ~2) vs Header Row (Score ~6) -> 6 > 2+2 (True) -> Override
-        // Case 3: Valid Header A (Score 6) vs Valid Header B (Score 6) -> No Override
-        if (autoScore > templateScore + 2) {
-          console.warn(
-            `[SmartScan] Overriding Template (Index ${templateIndex}) with Auto-Detected (Index ${autoHeaderIndex}) due to better score.`,
+          // Trust template UNLESS auto-scan is significantly better
+          // And if template score is very low (e.g. 0 or 1 like a title row)
+          // If template score is >= 2, we respect it (user might have chosen a weird header)
+          // But if template score < 2 AND auto > template, we switch.
+          // Actually, for this specific case: Template=0 (Title="Dec...", score=0 or 1), Auto=1 (Header, score=6).
+          console.log(
+            `[SmartScan] Template Index: ${templateIndex} (Score: ${templateScore}) | Auto Index: ${autoHeaderIndex} (Score: ${autoScore})`,
           );
-          headerRowIndex = autoHeaderIndex;
-        } else {
-          headerRowIndex = templateIndex;
+
+          // Override if Auto-Scan is significantly better (diff >= 2)
+          // OR if Auto-Scan is better match and template score is low (< 3)
+          // This handles:
+          // Case 1: Title Row (Score ~3) vs Header Row (Score ~8) -> 8 > 3+2 (True) -> Override
+          // Case 2: Metadata Row (Score ~2) vs Header Row (Score ~6) -> 6 > 2+2 (True) -> Override
+          // Case 3: Valid Header A (Score 6) vs Valid Header B (Score 6) -> No Override
+          if (autoScore > templateScore + 2) {
+            console.warn(
+              `[SmartScan] Overriding Template (Index ${templateIndex}) with Auto-Detected (Index ${autoHeaderIndex}) due to better score.`,
+            );
+            headerRowIndex = autoHeaderIndex;
+          } else {
+            headerRowIndex = templateIndex;
+          }
         }
       }
     }
@@ -119,6 +131,7 @@ export class RevenueService {
     platformId: string,
     month: Date,
     mapping?: Record<string, string>,
+    explicitHeaderRowIndex?: number,
   ) {
     const platform = await this.prisma.platform.findUnique({
       where: { id: platformId },
@@ -134,7 +147,10 @@ export class RevenueService {
 
     let headerRowIndex = 0;
 
-    if (mapping) {
+    if (explicitHeaderRowIndex !== undefined) {
+      headerRowIndex = explicitHeaderRowIndex;
+      if (mapping) usageMapping = mapping;
+    } else if (mapping) {
       usageMapping = mapping;
       const rawRows = parseSheet(file.buffer, { raw: true });
       headerRowIndex = scanForHeader(rawRows);
@@ -230,12 +246,19 @@ export class RevenueService {
     totalAmount: number | null,
     mapping?: Record<string, string>,
     invoiceNumber?: string,
+    explicitHeaderRowIndex?: number,
   ) {
     // 1. Process Data (In-Memory)
     const {
       params: { platform },
       matchedData,
-    } = await this.processReportData(file, platformId, month, mapping);
+    } = await this.processReportData(
+      file,
+      platformId,
+      month,
+      mapping,
+      explicitHeaderRowIndex,
+    );
 
     // 2. Calculate Summary (In-Memory)
     // Need to fetch splits and vendor details for matched records
@@ -330,6 +353,7 @@ export class RevenueService {
     mapping?: Record<string, string>,
     invoiceNumber?: string,
     paymentStatus?: 'PAID' | 'PENDING',
+    explicitHeaderRowIndex?: number,
   ) {
     // 1. Calculate Fingerprint (SHA-256 of header + first 5 rows)
     // We use a partial content hash to detect "Same Content" even if filename differs,
@@ -388,6 +412,7 @@ export class RevenueService {
       platformId,
       month,
       mapping,
+      explicitHeaderRowIndex,
     );
 
     // Persist Mapping if provided (using detected header row)
@@ -453,7 +478,7 @@ export class RevenueService {
             totalRecords: matchedData.length,
           };
         },
-        { timeout: 20000 },
+        { maxWait: 10000, timeout: 120000 },
       );
 
       // 5. Trigger Sync (This is now the FINAL Step, so we auto-sync)
@@ -778,40 +803,43 @@ export class RevenueService {
 
     // 4. Transactional Save
     try {
-      const result = await this.prisma.$transaction(async (tx) => {
-        const report = await tx.revenueReport.create({
-          data: {
-            filename: 'Platform Total',
-            rawFileUrl: '', // No physical file
-            status: 'PROCESSED',
-            platformId: platform.id,
-            totalAmount: totalAmount,
-            month: new Date(month),
-            invoiceRef: invoiceNumber || null,
-          },
-        });
+      const result = await this.prisma.$transaction(
+        async (tx) => {
+          const report = await tx.revenueReport.create({
+            data: {
+              filename: 'Platform Total',
+              rawFileUrl: '', // No physical file
+              status: 'PROCESSED',
+              platformId: platform.id,
+              totalAmount: totalAmount,
+              month: new Date(month),
+              invoiceRef: invoiceNumber || null,
+            },
+          });
 
-        await tx.revenueRecord.createMany({
-          data: processedRows.map((row) => ({
+          await tx.revenueRecord.createMany({
+            data: processedRows.map((row) => ({
+              reportId: report.id,
+              vendorId: row.vendorId || null,
+              rawVendorName: row.vendorName,
+              platformId: platform.id,
+              periodStart: new Date(month),
+              periodEnd: new Date(month),
+              grossRevenue: row.grossRevenue,
+              lineItemName: row.lineItemName || 'Platform Total',
+              status: row.status,
+              metadata: {},
+            })),
+          });
+
+          return {
+            message: 'Manual report saved successfully',
             reportId: report.id,
-            vendorId: row.vendorId || null,
-            rawVendorName: row.vendorName,
-            platformId: platform.id,
-            periodStart: new Date(month),
-            periodEnd: new Date(month),
-            grossRevenue: row.grossRevenue,
-            lineItemName: row.lineItemName || 'Platform Total',
-            status: row.status,
-            metadata: {},
-          })),
-        });
-
-        return {
-          message: 'Manual report saved successfully',
-          reportId: report.id,
-          totalRecords: processedRows.length,
-        };
-      });
+            totalRecords: processedRows.length,
+          };
+        },
+        { maxWait: 10000, timeout: 60000 },
+      );
 
       // AUTOMATED SYNC: Immediately try to sync the report (Best Effort)
       this.syncReport(result.reportId).catch((err) => {
@@ -1215,7 +1243,7 @@ export class RevenueService {
           }
         }
       },
-      { timeout: 10000 },
+      { maxWait: 10000, timeout: 60000 },
     );
 
     // 4. Create Payouts & Sync (Post-Update)

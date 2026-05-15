@@ -59,8 +59,13 @@ export function EmailComposeModal({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      subject: '',
-      body: '',
+      subject: 'Update from All Media Group',
+      body: `Hi {{name}},
+
+[Your message here]
+
+
+The AMG Team`,
       type: 'CUSTOM',
     },
   })
@@ -74,11 +79,32 @@ export function EmailComposeModal({
       form.setValue('subject', 'Welcome to AMG Vendor Portal')
       form.setValue(
         'body',
-        'Welcome! Click the link below to set up your account: {{link}}'
-      ) // Placeholder logic
+        `Dear {{name}}, 
+I hope you're doing well. Apologies for the recently delayed revenue share payouts. We've been busy developing a database that will allow you to login and see your monthly statistics from the different platforms where we place your content. You will also be able to track your payouts, both previous and pending. 
+
+Reports will not be shown for months prior to December 2025 unless AMG receives the payout for an older report sometime in 2026. Then it will appear in the database. 
+
+Please take a minute to reset your password to ensure you're able to access your account. Also make sure your banking details are correct. If they are not, we request that you submit your updated payout information as soon as possible to avoid future delays. 
+
+Here is the link: {{link}}
+Your Vendor Number is: {{vendorNumber}}
+
+Any questions, feel free to reach out. 
+
+Thanks for your continued support!
+
+The AMG Team`
+      )
     } else {
-      form.setValue('subject', '')
-      form.setValue('body', '')
+      form.setValue('subject', 'Update from All Media Group')
+      form.setValue(
+        'body',
+        `Hi {{name}},
+
+[Your message here]
+
+The AMG Team`
+      )
     }
   }
 
@@ -108,7 +134,7 @@ export function EmailComposeModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className='sm:max-w-[600px]'>
+      <DialogContent className='no-scrollbar max-h-[90vh] overflow-y-scroll sm:max-w-[600px]'>
         <DialogHeader>
           <DialogTitle>Compose Email</DialogTitle>
           <DialogDescription>
@@ -126,7 +152,7 @@ export function EmailComposeModal({
                   <FormLabel>Template</FormLabel>
                   <Select
                     onValueChange={(val) => handleTemplateChange(val as any)}
-                    defaultValue={field.value}
+                    value={field.value || ''}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -166,7 +192,7 @@ export function EmailComposeModal({
                   <FormControl>
                     <Textarea
                       placeholder='Type your message here...'
-                      className='min-h-[200px]'
+                      className='no-scrollbar max-h-[50vh] min-h-[200px] resize-none overflow-y-auto font-mono text-sm'
                       {...field}
                     />
                   </FormControl>

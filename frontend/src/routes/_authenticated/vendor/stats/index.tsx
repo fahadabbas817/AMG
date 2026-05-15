@@ -34,9 +34,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Header } from '@/components/layout/header'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { useGetVendorPlatforms } from '@/features/vendor-dashboard/api/useGetVendorPlatforms'
 import { useGetVendorStats } from '@/features/vendor-dashboard/api/useGetVendorStats'
 
@@ -98,15 +95,6 @@ function VendorStatsPage() {
 
   return (
     <>
-      <Header>
-        <div className='flex items-center gap-4'>
-          {/* Breadcrumb or Title placeholder */}
-        </div>
-        <div className='ms-auto flex items-center space-x-4'>
-          <ThemeSwitch />
-          <ProfileDropdown />
-        </div>
-      </Header>
       <div className='flex flex-1 flex-col gap-4 p-8 pt-6'>
         <div className='flex items-center justify-between space-y-2'>
           <h2 className='text-3xl font-bold tracking-tight'>
@@ -230,7 +218,7 @@ function VendorStatsPage() {
             <CardTitle>Detailed Breakdown</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='rounded-md border'>
+            <div className='overflow-x-auto rounded-md border'>
               <Table>
                 <TableHeader>
                   <TableRow>

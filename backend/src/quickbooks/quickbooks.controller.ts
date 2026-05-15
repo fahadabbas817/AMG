@@ -108,6 +108,15 @@ export class QuickbooksController {
     const vendors = await this.quickbooksService.searchVendors(name);
     return vendors;
   }
+
+  @Get('debug/customer')
+  async inspectCustomer(@Query('name') name: string) {
+    return this.quickbooksService.makeApiCall(
+      'GET',
+      `/query?query=${encodeURIComponent(`SELECT * FROM Customer WHERE DisplayName = '${name}'`)}`,
+    );
+  }
+
   @Post('sync/payment-status')
   async syncPaymentStatus() {
     return this.syncService.syncBillStatus();

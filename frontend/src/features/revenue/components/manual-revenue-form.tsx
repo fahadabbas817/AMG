@@ -147,7 +147,10 @@ export const ManualRevenueForm = () => {
                 name='platformId'
                 rules={{ required: 'Platform is required' }}
                 render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value || ''}
+                  >
                     <SelectTrigger
                       className={errors.platformId ? 'border-red-500' : ''}
                     >
@@ -321,7 +324,7 @@ export const ManualRevenueForm = () => {
                             return (
                               <Select
                                 onValueChange={field.onChange}
-                                value={field.value}
+                                value={field.value || ''}
                               >
                                 <SelectTrigger>
                                   <SelectValue placeholder='Select Sub-Label' />

@@ -119,7 +119,7 @@ export function AddSplitDialog({
                         )
                       }
                     }}
-                    defaultValue={field.value}
+                    value={field.value || ''}
                   >
                     <FormControl>
                       <SelectTrigger>

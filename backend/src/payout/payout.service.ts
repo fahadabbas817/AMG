@@ -273,8 +273,8 @@ export class PayoutService {
         };
       },
       {
-        maxWait: 5000,
-        timeout: 120000,
+        maxWait: 10000,
+        timeout: 300000,
       },
     );
   }
@@ -351,8 +351,8 @@ export class PayoutService {
         return payout;
       },
       {
-        maxWait: 5000,
-        timeout: 10000,
+        maxWait: 10000,
+        timeout: 60000,
       },
     );
 
@@ -413,21 +413,24 @@ export class PayoutService {
       }
     }
 
-    return await this.prisma.$transaction(async (tx) => {
-      // 1. Revert Revenue Records
-      await tx.revenueRecord.updateMany({
-        where: { payoutId: id },
-        data: {
-          payoutId: null,
-          status: 'MATCHED', // Revert to MATCHED so they show up in "Unpaid" list again
-        },
-      });
+    return await this.prisma.$transaction(
+      async (tx) => {
+        // 1. Revert Revenue Records
+        await tx.revenueRecord.updateMany({
+          where: { payoutId: id },
+          data: {
+            payoutId: null,
+            status: 'MATCHED', // Revert to MATCHED so they show up in "Unpaid" list again
+          },
+        });
 
-      // 2. Delete Payout
-      return await tx.payout.delete({
-        where: { id },
-      });
-    });
+        // 2. Delete Payout
+        return await tx.payout.delete({
+          where: { id },
+        });
+      },
+      { maxWait: 10000, timeout: 60000 },
+    );
   }
 
   async exportPayout(id: string, format: 'pdf' | 'xlsx') {
