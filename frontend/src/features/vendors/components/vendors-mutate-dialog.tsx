@@ -229,9 +229,16 @@ export function VendorsMutateDialog({
 
       onOpenChange(false)
       queryClient.invalidateQueries({ queryKey: ['vendors'] })
-    } catch (error) {
+    } catch (error: any) {
       console.error(error)
-      toast.error('Something went wrong')
+      let errorMessage = 'Something went wrong'
+      if (error.response?.data?.message) {
+        const msg = error.response.data.message
+        errorMessage = Array.isArray(msg) ? msg[0] : msg
+      } else if (error.message) {
+        errorMessage = error.message
+      }
+      toast.error(errorMessage)
     }
   }
 

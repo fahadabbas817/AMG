@@ -18,6 +18,7 @@ import { AuthService } from './auth.service';
 import { LoginAuthDto, LoginVendorDto } from './dto/login-auth.dto';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import express from 'express';
 
@@ -117,7 +118,7 @@ export class AuthController {
   })
   getProfile(@Request() req) {
     return {
-      userId: req.user.userId,
+      userId: req.user.id,
       email: req.user.email,
       role: req.user.role, // 👈 This is what you need
       name: req.user.name,
@@ -133,6 +134,24 @@ export class AuthController {
       resetDto.token,
       resetDto.newPassword,
       resetDto.email,
+    );
+  }
+
+  @Post('change-password')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Change Admin Password' })
+  @ApiResponse({ status: 200, description: 'Password changed successfully.' })
+  @ApiResponse({ status: 401, description: 'Invalid current password.' })
+  @ApiResponse({ status: 403, description: 'Forbidden. Requires ADMIN role.' })
+  async changePassword(@Request() req, @Body() changeDto: ChangePasswordDto) {
+    if (req.user.role !== 'ADMIN') {
+      throw new UnauthorizedException('Only admins can change password through this endpoint');
+    }
+    return this.authService.changeAdminPassword(
+      req.user.id,
+      changeDto.currentPassword,
+      changeDto.newPassword,
     );
   }
 }

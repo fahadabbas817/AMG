@@ -46,6 +46,28 @@ export class AuthService {
     return null;
   }
 
+  async changeAdminPassword(userId: string, currentPass: string, newPass: string) {
+    const admin = await this.prisma.admin.findUnique({ where: { id: userId } });
+    if (!admin) {
+      throw new UnauthorizedException('Admin not found');
+    }
+
+    const isMatch = await bcrypt.compare(currentPass, admin.password);
+    if (!isMatch) {
+      throw new UnauthorizedException('Invalid current password');
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(newPass, salt);
+
+    await this.prisma.admin.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+
+    return { message: 'Password updated successfully' };
+  }
+
   async validateVendor(
     email: string,
     pass: string,

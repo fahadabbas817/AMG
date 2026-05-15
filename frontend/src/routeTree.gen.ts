@@ -36,6 +36,7 @@ import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_auth
 import { Route as AuthenticatedVendorsVendorIdRouteImport } from './routes/_authenticated/vendors/$vendorId'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
+import { Route as AuthenticatedSettingsChangePasswordRouteImport } from './routes/_authenticated/settings/change-password'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedRevenueListRouteImport } from './routes/_authenticated/revenue/list'
@@ -230,6 +231,12 @@ const AuthenticatedSettingsDisplayRoute =
     path: '/display',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedSettingsChangePasswordRoute =
+  AuthenticatedSettingsChangePasswordRouteImport.update({
+    id: '/change-password',
+    path: '/change-password',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
 const AuthenticatedSettingsAppearanceRoute =
   AuthenticatedSettingsAppearanceRouteImport.update({
     id: '/appearance',
@@ -318,6 +325,7 @@ export interface FileRoutesByFullPath {
   '/revenue/list': typeof AuthenticatedRevenueListRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/vendors/$vendorId': typeof AuthenticatedVendorsVendorIdRoute
@@ -358,6 +366,7 @@ export interface FileRoutesByTo {
   '/revenue/list': typeof AuthenticatedRevenueListRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/vendors/$vendorId': typeof AuthenticatedVendorsVendorIdRoute
@@ -401,6 +410,7 @@ export interface FileRoutesById {
   '/_authenticated/revenue/list': typeof AuthenticatedRevenueListRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/_authenticated/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/_authenticated/vendors/$vendorId': typeof AuthenticatedVendorsVendorIdRoute
@@ -444,6 +454,7 @@ export interface FileRouteTypes {
     | '/revenue/list'
     | '/settings/account'
     | '/settings/appearance'
+    | '/settings/change-password'
     | '/settings/display'
     | '/settings/notifications'
     | '/vendors/$vendorId'
@@ -484,6 +495,7 @@ export interface FileRouteTypes {
     | '/revenue/list'
     | '/settings/account'
     | '/settings/appearance'
+    | '/settings/change-password'
     | '/settings/display'
     | '/settings/notifications'
     | '/vendors/$vendorId'
@@ -526,6 +538,7 @@ export interface FileRouteTypes {
     | '/_authenticated/revenue/list'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
+    | '/_authenticated/settings/change-password'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
     | '/_authenticated/vendors/$vendorId'
@@ -768,6 +781,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsDisplayRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/settings/change-password': {
+      id: '/_authenticated/settings/change-password'
+      path: '/change-password'
+      fullPath: '/settings/change-password'
+      preLoaderRoute: typeof AuthenticatedSettingsChangePasswordRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
     '/_authenticated/settings/appearance': {
       id: '/_authenticated/settings/appearance'
       path: '/appearance'
@@ -851,6 +871,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedSettingsRouteRouteChildren {
   AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
   AuthenticatedSettingsAppearanceRoute: typeof AuthenticatedSettingsAppearanceRoute
+  AuthenticatedSettingsChangePasswordRoute: typeof AuthenticatedSettingsChangePasswordRoute
   AuthenticatedSettingsDisplayRoute: typeof AuthenticatedSettingsDisplayRoute
   AuthenticatedSettingsNotificationsRoute: typeof AuthenticatedSettingsNotificationsRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
@@ -860,6 +881,8 @@ const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteCh
   {
     AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
     AuthenticatedSettingsAppearanceRoute: AuthenticatedSettingsAppearanceRoute,
+    AuthenticatedSettingsChangePasswordRoute:
+      AuthenticatedSettingsChangePasswordRoute,
     AuthenticatedSettingsDisplayRoute: AuthenticatedSettingsDisplayRoute,
     AuthenticatedSettingsNotificationsRoute:
       AuthenticatedSettingsNotificationsRoute,
