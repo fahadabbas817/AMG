@@ -70,6 +70,14 @@ export function ProfileDropdown() {
               <DropdownMenuSeparator />
             </>
           )}
+          <DropdownMenuGroup>
+            <DropdownMenuItem asChild>
+              <Link to='/settings/change-password'>
+                Change Password
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
           <DropdownMenuItem variant='destructive' onClick={() => setOpen(true)}>
             Sign out
             <DropdownMenuShortcut className='text-current'>

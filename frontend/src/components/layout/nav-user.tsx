@@ -1,4 +1,5 @@
-import { ChevronsUpDown, LogOut } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { ChevronsUpDown, LogOut, KeyRound } from 'lucide-react'
 import useDialogState from '@/hooks/use-dialog-state'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -82,6 +83,13 @@ export function NavUser({ user }: NavUserProps) {
                   </div>
                 </div>
               </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to='/settings/change-password'>
+                  <KeyRound className='mr-2 h-4 w-4' />
+                  Change Password
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
 
               <DropdownMenuItem

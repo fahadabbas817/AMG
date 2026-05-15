@@ -19,6 +19,12 @@ export const AuthService = {
     return response.data
   },
 
+  // Change Password
+  changePassword: async (credentials: any) => {
+    const response = await api.post('/auth/change-password', credentials)
+    return response.data
+  },
+
   // Logout
   //   logout: () => {
   //     localStorage.removeItem('token');
