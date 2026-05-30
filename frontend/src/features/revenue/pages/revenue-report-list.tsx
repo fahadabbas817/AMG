@@ -57,6 +57,7 @@ interface RevenueReport {
   month: string
   status: 'PENDING' | 'PROCESSED' | 'ERROR'
   totalAmount: number | null
+  invoiceRef: string | null
   platform: {
     id: string
     name: string
@@ -204,6 +205,7 @@ export default function RevenueReportList() {
               <TableRow>
                 <TableHead>Filename</TableHead>
                 <TableHead>Platform</TableHead>
+                <TableHead>Invoice/Ref</TableHead>
                 <TableHead>Report Month</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className='text-right'>Records</TableHead>
@@ -240,6 +242,9 @@ export default function RevenueReportList() {
                     </TableCell>
                     <TableCell>
                       <Badge variant='outline'>{report.platform.name}</Badge>
+                    </TableCell>
+                    <TableCell className='text-muted-foreground'>
+                      {report.invoiceRef || report.filename}
                     </TableCell>
                     <TableCell>
                       <div className='flex items-center gap-1.5'>

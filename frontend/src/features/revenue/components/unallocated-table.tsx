@@ -244,6 +244,8 @@ export function UnallocatedTable({
                                 <TableHeader>
                                   <TableRow>
                                     <TableHead>Date</TableHead>
+                                    <TableHead>Platform</TableHead>
+                                    <TableHead>Invoice/Ref</TableHead>
                                     <TableHead>Description</TableHead>
                                     <TableHead className='text-right'>
                                       Amount
@@ -258,6 +260,12 @@ export function UnallocatedTable({
                                         {new Date(
                                           record.periodStart
                                         ).toLocaleDateString()}
+                                      </TableCell>
+                                      <TableCell>
+                                        {record.platform?.name || 'Unknown'}
+                                      </TableCell>
+                                      <TableCell>
+                                        {record.report?.invoiceRef || record.report?.filename || 'N/A'}
                                       </TableCell>
                                       <TableCell>
                                         {record.lineItemName}
@@ -298,7 +306,7 @@ export function UnallocatedTable({
         </Table>
       </div>
 
-      {selectedGroupForAssign && (
+      {selectedGroupForAssign !== null && (
         <AssignVendorDialog
           open={assignDialogOpen}
           onOpenChange={setAssignDialogOpen}

@@ -43,6 +43,12 @@ export class PayoutController {
     return this.payoutService.createPayout(dto);
   }
 
+  @Get('vendor/:vendorId')
+  @ApiOperation({ summary: 'Get all payouts for a specific vendor' })
+  findByVendor(@Param('vendorId') vendorId: string) {
+    return this.payoutService.findByVendor(vendorId);
+  }
+
   @Get()
   @ApiOperation({ summary: 'Get all payouts' })
   findAll() {

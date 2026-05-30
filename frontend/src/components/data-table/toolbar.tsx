@@ -24,7 +24,7 @@ type DataTableToolbarProps<TData> = {
 function DebouncedInput({
   value: initialValue,
   onChange,
-  debounce = 300,
+  debounce = 800,
   ...props
 }: {
   value: string | number

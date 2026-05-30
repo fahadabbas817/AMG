@@ -301,6 +301,30 @@ export class PayoutService {
     });
   }
 
+  async findByVendor(vendorId: string) {
+    return this.prisma.payout.findMany({
+      where: { vendorId },
+      include: {
+        vendor: {
+          select: {
+            id: true,
+            companyName: true,
+            vendorNumber: true,
+            qbVendorId: true,
+          },
+        },
+        items: {
+          select: {
+            id: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
   async getPayout(id: string) {
     const payout = await this.prisma.payout.findUnique({
       where: { id },

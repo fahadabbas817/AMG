@@ -114,7 +114,13 @@ export class VendorsService {
     );
   }
 
-  async findAll(page: number = 1, limit: number = 10, search?: string) {
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+    sortBy?: string,
+    sortOrder: 'asc' | 'desc' = 'desc'
+  ) {
     const pageNumber = Number(page);
     const limitNumber = Number(limit);
 
@@ -129,6 +135,13 @@ export class VendorsService {
       ];
     }
 
+    const orderBy: any = {};
+    if (sortBy) {
+      orderBy[sortBy] = sortOrder;
+    } else {
+      orderBy.createdAt = 'desc';
+    }
+
     const [data, total] = await Promise.all([
       this.prisma.vendor.findMany({
         where,
@@ -137,7 +150,7 @@ export class VendorsService {
         include: {
           bankDetails: true,
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy,
       }),
       this.prisma.vendor.count({ where }),
     ]);

@@ -6,6 +6,8 @@ interface GetVendorsParams {
   page?: number
   limit?: number
   search?: string
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
 }
 
 export const getVendorsQueryOptions = (params?: GetVendorsParams) =>

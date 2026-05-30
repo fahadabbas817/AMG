@@ -3,6 +3,7 @@ import type {
   ColumnFiltersState,
   OnChangeFn,
   PaginationState,
+  SortingState,
 } from '@tanstack/react-table'
 
 type SearchRecord = Record<string, unknown>
@@ -17,6 +18,10 @@ type UseTableUrlStateParams = {
     pageSizeKey?: string
     defaultPage?: number
     defaultPageSize?: number
+  }
+  sorting?: {
+    sortKey?: string
+    sortOrderKey?: string
   }
   globalFilter?: {
     enabled?: boolean
@@ -52,6 +57,9 @@ type UseTableUrlStateReturn = {
   // Pagination
   pagination: PaginationState
   onPaginationChange: OnChangeFn<PaginationState>
+  // Sorting
+  sorting: SortingState
+  onSortingChange: OnChangeFn<SortingState>
   // Helpers
   ensurePageInRange: (
     pageCount: number,
@@ -215,6 +223,33 @@ export function useTableUrlState(
     [pageKey, defaultPage]
   )
 
+  const sortKey = params.sorting?.sortKey ?? 'sortBy'
+  const sortOrderKey = params.sorting?.sortOrderKey ?? 'sortOrder'
+
+  const sorting: SortingState = useMemo(() => {
+    const rawSort = (search as SearchRecord)[sortKey]
+    const rawOrder = (search as SearchRecord)[sortOrderKey]
+    if (typeof rawSort === 'string' && rawSort) {
+      return [{ id: rawSort, desc: rawOrder === 'desc' }]
+    }
+    return []
+  }, [search, sortKey, sortOrderKey])
+
+  const onSortingChange: OnChangeFn<SortingState> = (updater) => {
+    const next = typeof updater === 'function' ? updater(sorting) : updater
+    navigate({
+      replace: true,
+      search: (prev: SearchRecord) => {
+        const nextSort = next[0]
+        return {
+          ...(prev as SearchRecord),
+          [sortKey]: nextSort ? nextSort.id : undefined,
+          [sortOrderKey]: nextSort ? (nextSort.desc ? 'desc' : 'asc') : undefined,
+        }
+      },
+    })
+  }
+
   return {
     globalFilter: globalFilterEnabled ? (globalFilter ?? '') : undefined,
     onGlobalFilterChange,
@@ -222,6 +257,8 @@ export function useTableUrlState(
     onColumnFiltersChange,
     pagination,
     onPaginationChange,
+    sorting,
+    onSortingChange,
     ensurePageInRange,
   }
 }

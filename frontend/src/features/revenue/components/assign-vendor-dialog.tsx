@@ -51,7 +51,7 @@ import { useGetVendors } from '@/features/vendors/api/useGetVendors'
 const formSchema = z.object({
   vendorId: z.string().min(1, 'Vendor is required'),
   subLabel: z.string().optional(),
-  addToVendorSubLabels: z.boolean().default(false).optional(),
+  addToVendorSubLabels: z.boolean().default(true).optional(),
 })
 
 interface AssignVendorDialogProps {
@@ -83,7 +83,7 @@ export function AssignVendorDialog({
     defaultValues: {
       vendorId: '',
       subLabel: '',
-      addToVendorSubLabels: false,
+      addToVendorSubLabels: true,
     },
   })
 

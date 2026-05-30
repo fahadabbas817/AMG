@@ -210,6 +210,11 @@ export class RevenueService {
           return null;
         }
 
+        // Filter out blank/aggregate rows with no identifiable product/vendor info
+        if (!rawVendorName && !lineItemName && !csvVendorId) {
+          return null;
+        }
+
         // Filter out "Total" rows (Common in CSV reports)
         if (
           (rawVendorName &&
@@ -1112,6 +1117,10 @@ export class RevenueService {
         rawVendorName: rawVendorName,
         vendorId: null,
         status: { in: ['UNPROCESSED', 'UNMATCHED'] },
+      },
+      include: {
+        platform: true,
+        report: true,
       },
       orderBy: { grossRevenue: 'desc' },
     });

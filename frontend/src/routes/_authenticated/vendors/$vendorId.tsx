@@ -25,6 +25,7 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Card,
   CardContent,
@@ -55,6 +56,7 @@ import { useGetUnpaidSummaries } from '@/features/payouts/api/useGetUnpaidSummar
 import { useDeleteUnpaid } from '@/features/revenue/api/useDeleteUnpaid'
 import { PlatformSplit, useRemoveSplit } from '@/features/vendors/api/splits'
 import { getVendorQueryOptions } from '@/features/vendors/api/useGetVendor'
+import { useGetVendorPayouts } from '@/features/payouts/api/useGetVendorPayouts'
 import { QboLinkCard } from '@/features/vendors/components/qbo-link-card'
 import { ResetPasswordDialog } from '@/features/vendors/components/reset-password-dialog'
 import {
@@ -91,6 +93,8 @@ function VendorDetails() {
   const { data: unpaidSummaries, error } = useGetUnpaidSummaries(vendorId)
 
   if (error) console.error('Unpaid Summaries Error:', error)
+
+  const { data: payouts, isLoading: isPayoutsLoading } = useGetVendorPayouts(vendorId)
 
   const { mutate: createPayout, isPending: isCreatingPayout } =
     useCreatePayout()
@@ -635,6 +639,78 @@ function VendorDetails() {
                   </Button>
                 </div>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Section 5: Recent Payouts */}
+        <Card className='overflow-hidden'>
+          <CardHeader className='border-b pb-4'>
+            <div className='flex items-center gap-2'>
+              <Wallet className='text-primary h-5 w-5' />
+              <div>
+                <CardTitle>Recent Payouts</CardTitle>
+                <CardDescription className='text-xs'>
+                  History of generated and paid payouts
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className='p-6'>
+            <div className='overflow-x-auto rounded-md border'>
+              <Table>
+                <TableHeader>
+                  <TableRow className='bg-muted/50 hover:bg-muted/50'>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Payout #</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className='text-right'>Amount</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {isPayoutsLoading ? (
+                    Array.from({ length: 3 }).map((_, i) => (
+                      <TableRow key={i}>
+                        <TableCell colSpan={4}>
+                          <Skeleton className='h-8 w-full' />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : payouts?.length ? (
+                    payouts.map((payout) => (
+                      <TableRow key={payout.id}>
+                        <TableCell>
+                          {format(new Date(payout.createdAt), 'MMM dd, yyyy')}
+                        </TableCell>
+                        <TableCell className='font-mono'>
+                          {payout.payoutNumber}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              payout.status === 'PAID' ? 'default' : 'secondary'
+                            }
+                          >
+                            {payout.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className='text-right font-medium'>
+                          ${Number(payout.totalAmount).toFixed(2)}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={4}
+                        className='text-muted-foreground h-24 text-center'
+                      >
+                        No payouts found.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
             </div>
           </CardContent>
         </Card>

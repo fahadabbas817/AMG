@@ -19,7 +19,7 @@ export function NavigationProgress() {
       color='var(--muted-foreground)'
       ref={ref}
       shadow={true}
-      height={2}
+      height={5}
     />
   )
 }

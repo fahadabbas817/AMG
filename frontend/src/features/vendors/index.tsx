@@ -22,11 +22,15 @@ export function Vendors() {
     (searchObj?.companyName as string) ||
     (searchObj?.vendorNumber as string) ||
     undefined
+  const sortBy = (searchObj?.sortBy as string) || undefined
+  const sortOrder = (searchObj?.sortOrder as 'asc' | 'desc') || undefined
 
   const { data: vendorsResponse, isLoading } = useGetVendors({
     page,
     limit,
     search: searchQuery,
+    sortBy,
+    sortOrder,
   })
 
   const vendors = vendorsResponse?.data || []

@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import {
-  type SortingState,
   type VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -43,7 +42,6 @@ export function VendorsTable({
 }: VendorsTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [sorting, setSorting] = useState<SortingState>([])
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false)
 
   const {
@@ -51,6 +49,8 @@ export function VendorsTable({
     onColumnFiltersChange,
     pagination,
     onPaginationChange,
+    sorting,
+    onSortingChange,
   } = useTableUrlState({
     search,
     navigate,
@@ -69,6 +69,7 @@ export function VendorsTable({
     rowCount,
     manualPagination: true,
     manualFiltering: true,
+    manualSorting: true,
     state: {
       sorting,
       pagination,
@@ -80,7 +81,7 @@ export function VendorsTable({
     onPaginationChange,
     onColumnFiltersChange,
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
+    onSortingChange,
     onColumnVisibilityChange: setColumnVisibility,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
