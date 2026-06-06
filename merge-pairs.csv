@@ -1,4 +1,0 @@
-keepId,deleteId
-# Add your pairs here. keepId = Line Above, deleteId = Line Below
-# Example:
-# uuid-of-vendor-to-keep,uuid-of-vendor-to-delete
